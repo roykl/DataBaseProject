@@ -173,3 +173,6 @@ Caused by: java.io.IOException: The process cannot access the file because anoth
 
 !ENTRY org.eclipse.equinox.security 1 0 2013-05-02 19:01:44.324
 !MESSAGE New keyring password generated. 
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-05-03 10:15:48.751
+!MESSAGE Failed to open search index.

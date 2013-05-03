@@ -1,0 +1,16 @@
+package Parsing;
+ 
+
+public class YagoParser {
+
+
+	public YagoParser(){
+		;
+	}
+	
+	public getMovies(String path){
+		
+	}
+	
+	
+}

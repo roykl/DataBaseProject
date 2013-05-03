@@ -1,0 +1,20 @@
+package Parsing;
+ 
+
+public class YagoParsing {
+
+	private String file2Parse;
+
+	
+	
+	// geters & setters
+	public String getFile2Parse() {
+		return file2Parse;
+	}
+
+	public void setFile2Parse(String file2Parse) {
+		this.file2Parse = file2Parse;
+	}
+	
+	
+}
