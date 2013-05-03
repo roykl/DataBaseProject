@@ -15,7 +15,7 @@ public class TestConsole {
 	public static void main(String[] args) {
 		ArrayList<String> arr = new ArrayList<String>();
 		YagoParser yp = new YagoParser();
-		arr = (ArrayList<String>) yp.getEntityList("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl", Entity.DIRECTOR);
+		arr = (ArrayList<String>) yp.getEntityList("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl", Entity.ACTOR);
 		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
 		try {
 			FileWriter fw = new FileWriter(file);

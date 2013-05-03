@@ -34,8 +34,8 @@ public class YagoParser {
 		;
 	}
 
-	/**expect to get the file yagoSimpleTpyes.ttl and an entity, and pull all the instances of that entity*/
-	public List<String> getEntityList(String path, Entity ent){
+	/**expect to get the file yagoTpyes.ttl and pull all the movies from it*/
+	public List<String> getMovies(String path, Entity ent){
 		//make sure the path is not null or empty and that it's the correct file
 		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_TYPES)== 0){			
 			try{
