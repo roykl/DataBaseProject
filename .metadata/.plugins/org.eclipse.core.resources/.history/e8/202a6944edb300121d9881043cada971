@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+	<Parsing>
+		<getEntityFileName>yagoSimpleTypes.ttl</getEntityFileName> 
+	</Parsing>
+</Configuration>

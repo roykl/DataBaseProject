@@ -28,7 +28,6 @@ public class YagoParser {
 
 	//final String YAGO_TYPES = "yagoTypes.ttl";
 	final String YAGO_TYPES = "yagoSimpleTypes.ttl";
-	final String MOVIE_ID = "106613686";
 
 	public YagoParser(){
 		;
@@ -55,7 +54,7 @@ public class YagoParser {
 			}
 			catch(Exception ex){
 				//to-do
-			}
+			}	
 		}
 		System.out.println("Wrong Path. Please Provide a correct path");
 		return null;

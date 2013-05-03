@@ -1,0 +1,53 @@
+package Parsing;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import Parsing.YagoParser.Entity;
+
+public class TestConsole {
+	
+
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	
+	/*
+	public static void main(String[] args) throws IOException {
+		ArrayList<String> arr = new ArrayList<String>();
+		YagoParser yp = new YagoParser();
+		arr = (ArrayList<String>) yp.getEntityList("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl", Entity.ACTOR);
+		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
+		try {
+			FileWriter fw = new FileWriter(file);
+			for(String str : arr)
+			{
+				fw.write(str);
+				fw.write(System.getProperty("line.separator"));
+			}
+			fw.close();
+		}
+		catch(Exception ex){
+			//
+		}
+		
+		*/
+		
+		
+		////////////////////////////
+		BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoTypes.ttl"));
+		BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\Roy\\Desktop\\test\\try.txt"));
+		for (int i=0; i< 550000;i++){
+			bw.write(br.readLine());
+		}
+		br.close();
+		bw.close();
+	}
+}

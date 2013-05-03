@@ -3,3 +3,8 @@
 1367510783936	Encapsulate field 'file2Parse'
 1367564669897	Rename compilation unit 'Movies.java'
 1367582806432	Rename method 'getMovies'
+1367584135798	Delete element
+1367584241204	Delete element
+1367584272272	Rename resource 'Configxml.xml'
+1367584288302	Rename resource 'Config'
+1367584389122	Move file
