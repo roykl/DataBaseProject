@@ -12,9 +12,10 @@ public class Movie{
 	private List<Person> actorsLst;
 	private String wikiURL;
 	private String youuTubeURL;
+	private String roy;
 	
-	/* constructor */
-	/*roy*/
+	/* constructor */	
+	
 	 public Movie(String name){
 		 this.name = name;
 	 }
