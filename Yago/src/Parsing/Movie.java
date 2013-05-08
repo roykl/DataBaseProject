@@ -8,11 +8,10 @@ public class Movie{
 	private int duration;
 	private String genre;
 	private String language;
-	private String director;
-	private List<Person> actorsLst;
+	private Person director;
+	private List<Person> actorsLst = null;
 	private String wikiURL;
 	private String youuTubeURL;
-	private String roy;
 	
 	
 	/* constructor */	
@@ -56,11 +55,11 @@ public class Movie{
 		this.language = language;
 	}
 	
-	public String getDirector() {
+	public Person getDirector() {
 		return director;
 	}
 	
-	public void setDirector(String director) {
+	public void setDirector(Person director) {
 		this.director = director;
 	}
 
@@ -68,8 +67,8 @@ public class Movie{
 		return actorsLst;
 	}
 
-	public void setActorsLst(List<Person> actorsLst) {
-		this.actorsLst = actorsLst;
+	public void setActorsLst(Person actor) {
+		this.actorsLst.add(actor);
 	}
 
 	public String getWikiURL() {
@@ -83,7 +82,6 @@ public class Movie{
 	public String getYouuTubeURL() {
 		return youuTubeURL;
 	}
-
 
 	public void setYouuTubeURL(String youuTubeURL) {
 		this.youuTubeURL = youuTubeURL;

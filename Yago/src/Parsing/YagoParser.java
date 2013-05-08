@@ -13,7 +13,7 @@ public class YagoParser {
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";
-	
+
 	private static List<Movie> moviesLst = new ArrayList<Movie>();
 	private static List<Person> actorsLst = new ArrayList<Person>();
 	private static List<Person> directorsLst = new ArrayList<Person>();
@@ -72,7 +72,7 @@ public class YagoParser {
 	/**expect to get the file yagoFacts.ttl and update the entities*/
 	public static void parseYagoFacts(String path){
 		//make sure the path is not null or empty and that it's the correct file
-		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_TYPES_FILE)== 0){			
+		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_FACTS_FILE)== 0){			
 			try{
 				// create a buffered reader for the current file
 				BufferedReader br = new BufferedReader(new FileReader(path));
@@ -80,18 +80,28 @@ public class YagoParser {
 				String[] strArr = new String[3]; //array with 3 cells to parse each line				
 				while((line = br.readLine()) != null){ //read line	
 					strArr = line.split("\\t"); //split the line by tabs - we know there are 2 tabs in each line				
-					if(strArr.length >= 3 && strArr[1].contains(ACTED_IN){
-						moviesLst.add(new Movie(strArr[0]));
-						continue;
+					if(strArr.length >= 3 && strArr[1].contains(ACTED_IN)){
+						for(Movie m : getMoviesLst()){
+							if(m.getName()== strArr[2]){
+								for(Person p : getActorsLst()){
+									if(p.getName() == strArr[0]){
+										m.setActorsLst(p);
+									}
+								}								
+							}
+						}
 					}
-					else if(strArr.length >= 3 && strArr[2].contains(Entity.ACTOR.getId())){
-						actorsLst.add(new Person(strArr[0]));
-						continue;
-					}
-					else if(strArr.length >= 3 && strArr[2].contains(Entity.DIRECTOR.getId())){
-						directorsLst.add(new Person(strArr[0]));
-						continue;
-					}
+					else if(strArr.length >= 3 && strArr[1].contains(DIRECTED)){
+						for(Movie m : getMoviesLst()){
+							if(m.getName()== strArr[2]){
+								for(Person p : getDirectorsLst()){
+									if(p.getName() == strArr[0]){
+										m.setDirector(p);
+									}
+								}								
+							}
+						}
+					}	
 				}
 				br.close();
 				return;
@@ -99,12 +109,12 @@ public class YagoParser {
 			catch(Exception ex){
 				//to-do
 			}	
-			}
+		}
 	}
-	
-	
-	
-	
+
+
+
+
 	/* 1 approach */
 	/**expect to get the file yagoSimpleTpyes.ttl and an entity, and pull all the instances of that entity*/
 	public List<String> getEntityList(String path, Entity ent){

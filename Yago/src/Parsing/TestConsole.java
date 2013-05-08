@@ -25,13 +25,14 @@ public class TestConsole {
 		
 	//	readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl","C:\\Users\\Roy\\Desktop\\test\\try.txt",1550000);
 		YagoParser.parseYagoTypes("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
+		YagoParser.parseYagoFacts("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl");
 		//List<Movie> movies = yp.getMoviesList("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
 		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
 		try {
 			FileWriter fw = new FileWriter(file);
 			for(Person m : YagoParser.getActorsLst())
 			{
-				fw.write(m.getName());
+				fw.write(m.getName() + "actors: " + YagoParser.getActorsLst().toString());
 				fw.write(System.getProperty("line.separator"));
 			}
 			fw.close();
