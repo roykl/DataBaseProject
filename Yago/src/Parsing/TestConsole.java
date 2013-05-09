@@ -10,7 +10,6 @@ import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 
-import Parsing.YagoParser.Entity;
 
 public class TestConsole {
 
@@ -39,7 +38,13 @@ public class TestConsole {
 			FileWriter fw = new FileWriter(file);
 			for(Movie m : yp.getMoviesTable().values())
 			{
-				fw.write("Movie: " +m.getName() + " Actors: " + m.getActorsLst().toString());				
+				fw.write("Movie: " +m.getName());
+				fw.write(System.getProperty("line.separator"));
+				fw.write("Actors: " + m.getActorsLst().toString());				
+				fw.write(System.getProperty("line.separator"));
+				if(m.getDirector() != null)
+					fw.write("Director: " + m.getDirector().toString());
+				fw.write(System.getProperty("line.separator"));
 				fw.write(System.getProperty("line.separator"));
 			}
 			fw.close();

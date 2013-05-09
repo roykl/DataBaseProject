@@ -14,28 +14,15 @@ public class YagoParser implements Iparser{
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";
+	final static String MOVIE_ID = "106613686";
+	final static String ACTOR_ID = "109765278";
+	final static String DIRECTOR_ID = "110088200";
 
 	private HashMap<String, Movie> moviesTable; // key= movie name, value = Movie object
 	private HashMap<String,Person> actorsTable; // key= actor name, value = Person object
 	private HashMap<String,Person> directorsTable; // key = director name, value = Person object
 
-	//enum to represent the entities: Movie, Actor, Director
-	public enum Entity{
-		MOVIE("106613686"),
-		ACTOR("109765278"),
-		DIRECTOR("110088200");
-
-		private String id;
-
-		private Entity(String id){
-			this.id = id;
-		}
-
-		public String getId(){
-			return id;
-		}
-	}
-
+	
 	/* constructor */
 	public YagoParser(){
 		this.moviesTable = new HashMap<String,Movie>();
@@ -43,7 +30,10 @@ public class YagoParser implements Iparser{
 		this.directorsTable = new HashMap<String,Person>();
 	}
 
-	/**expect to get the file yagoSimpleTpyes.ttl and populate movieTable, actorTable, directorTable*/
+	
+	/* public function */
+	
+	/** expect to get the file yagoSimpleTpyes.ttl and populate movieTable, actorTable, directorTable */
 	public void parseYagoTypes(String path){
 		//check that the path is correct (the right yago file)
 		if (isFileCorrect(path, YAGO_TYPES_FILE)){			
@@ -54,17 +44,17 @@ public class YagoParser implements Iparser{
 				//parse the next line by tabs to String[3]
 				while ((strArr = parseLine2Array(br)) != null){ 					
 					//in case of Movie Entity
-					if(strArr.length >= 3 && strArr[2].contains(Entity.MOVIE.getId())){
+					if(strArr.length >= 3 && strArr[2].contains(MOVIE_ID)){
 						moviesTable.put(strArr[0],new Movie(strArr[0])); 
 						continue;
 					}
 					//in case of Actor Entity	
-					else if(strArr.length >= 3 && strArr[2].contains(Entity.ACTOR.getId())){
+					else if(strArr.length >= 3 && strArr[2].contains(ACTOR_ID)){
 						actorsTable.put(strArr[0], new Person(strArr[0]));
 						continue;
 					}
 					//in case of Director Entity	
-					else if(strArr.length >= 3 && strArr[2].contains(Entity.DIRECTOR.getId())){
+					else if(strArr.length >= 3 && strArr[2].contains(DIRECTOR_ID)){
 						directorsTable.put(strArr[0], new Person(strArr[0]));
 						continue;
 					}					
@@ -80,7 +70,7 @@ public class YagoParser implements Iparser{
 			System.out.println("Wrong Path. Please Provide a correct path");
 	}
 
-	/**expect to get the file yagoFacts.ttl and update the entities*/
+	/** expect to get the file yagoFacts.ttl and update the fats: "actedIn" and "directed" */
 	public void parseYagoFacts(String path){
 		//make sure the path is not null or empty and that it's the correct file
 		if (isFileCorrect(path,YAGO_FACTS_FILE)){			
