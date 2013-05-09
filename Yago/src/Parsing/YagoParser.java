@@ -3,6 +3,7 @@ package Parsing;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.security.acl.LastOwnerException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,11 +12,16 @@ public class YagoParser implements Iparser{
 
 	final static String YAGO_TYPES_FILE = "yagoSimpleTypes.ttl";
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
-	final static String YAGO_LITERAL_FACTS_FILE = "yagoLiteralFacts";
+	final static String YAGO_LITERAL_FACTS_FILE = "yagoLiteralFacts.ttl";
+	final static String YAGO_LABELS_FILE = "yagoLabels.ttl";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";
 	final static String CREATED_ON = "wasCreatedOnDate";
 	final static String DURATION = "hasDuration";
+	final static String LABEL = "rdfs:label";
+	final static String FAMILY_NAME = "hasFamilyName";
+	final static String FIRST_NAME = "hasGivenName";
+	final static String PREFERRED_MEAN = "isPreferredMeaningOf";
 	final static String MOVIE_ID = "106613686";
 	final static String ACTOR_ID = "109765278";
 	final static String DIRECTOR_ID = "110088200";
@@ -24,7 +30,7 @@ public class YagoParser implements Iparser{
 	private HashMap<String,Person> actorsTable; // key= actor name, value = Person object
 	private HashMap<String,Person> directorsTable; // key = director name, value = Person object
 
-	
+
 	/* constructor */
 	public YagoParser(){
 		this.moviesTable = new HashMap<String,Movie>();
@@ -32,9 +38,9 @@ public class YagoParser implements Iparser{
 		this.directorsTable = new HashMap<String,Person>();
 	}
 
-	
+
 	/* public function */
-	
+
 	/** expect to get the file yagoSimpleTpyes.ttl and populate movieTable, actorTable, directorTable */
 	public void parseYagoTypes(String path){
 		//check that the path is correct (the right yago file)
@@ -98,12 +104,13 @@ public class YagoParser implements Iparser{
 
 	/** expect the filename yagoLiteralFacts and it updates: "createdOnDate" and "duration" */
 	public void parseYagoLiteralFacts(String path){
-		if (isFileCorrect(path,YAGO_FACTS_FILE)){			
+		if (isFileCorrect(path,YAGO_LITERAL_FACTS_FILE)){			
 			try{
 				// create a buffered reader for the current file
 				BufferedReader br = new BufferedReader(new FileReader(path));
 				String[] strArr;
 				while((strArr = parseLine2Array(br)) != null){
+					//add to the movie the literal if it is createdOnDate or Duration
 					if(strArr.length >= 3 && (strArr[1].contains(CREATED_ON) || strArr[1].contains(DURATION))){
 						addLiteral(strArr);
 					}
@@ -117,16 +124,43 @@ public class YagoParser implements Iparser{
 		}
 	}
 
+	/** expect the filename yagoLabels.ttl and update the correct labels */
+	public void parseYagoLabels(String path){
+		if(isFileCorrect(path, YAGO_LABELS_FILE)){
+			try{
+				// create a buffered reader for the current file
+				BufferedReader br = new BufferedReader(new FileReader(path));
+				String[] strArr;
+				while((strArr = parseLine2Array(br)) != null){
+					//add to the movie the literal if it is createdOnDate or Duration
+					if(strArr.length >= 3 && strArr[1].contains(PREFERRED_MEAN)){
+						addLabelPrefMean(strArr);
+					}
+					else if (strArr.length >= 3 &&( strArr[1].contains(FIRST_NAME) || strArr[1].contains(FAMILY_NAME))){
+						addLabelNames(strArr);
+					}
+				}
+				br.close();
+				return;
+			}
+			catch(Exception ex){
+				System.out.println(ex.toString());
+			}	
+		}		
+	}
+
 	/* helper functions */
-	
+
 
 	/** check that the filePath is correct and it's the right fileName from yago*/
 	private boolean isFileCorrect(String path, String fileName2compare){
 		//make sure the path is not null or empty and that it's the correct file
 		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(fileName2compare)== 0)
 			return true;
-		else
+		else{
+			System.out.println("Wrong path! you gave path = " +path + ". we expected = " + fileName2compare);
 			return false;
+		}
 	}
 
 	/**get a BufferedReader, read the next line and split line by tabs*/
@@ -149,27 +183,27 @@ public class YagoParser implements Iparser{
 
 	/** add the fact: <actor> <actedIn> <movie> OR <director> <directed> <movie>*/
 	private void addFact(String[] strArr){		
-			//get the movie name from strArr[2]
-			String currentMovie = strArr[2].substring(0, strArr[2].length()-2);
-			//get the person name from strArr[0]
-			String personName = strArr[0];
-			//get the movie object and check it's not null
-			Movie movie = getMoviesTable().get(currentMovie);
-			if(movie == null){
-				System.out.println("No such movie object with the name: " + currentMovie);
-				return;
-			}
-			//in case of an actor
-			if (strArr[1].contains(ACTED_IN)){
-				Person actor = getActorsTable().get(personName);
-				//add the Actor to the Movie actorsList
-				movie.addActor(actor);	
-			}
-			//in case of a director
-			else{
-				Person director = getDirectorsTable().get(personName);
-				movie.setDirector(director);	
-			}
+		//get the movie name from strArr[2]
+		String currentMovie = strArr[2].substring(0, strArr[2].length()-2);
+		//get the person name from strArr[0]
+		String personName = strArr[0];
+		//get the movie object and check it's not null
+		Movie movie = getMoviesTable().get(currentMovie);
+		if(movie == null){
+			System.out.println("No such movie object with the name: " + currentMovie);
+			return;
+		}
+		//in case of an actor
+		if (strArr[1].contains(ACTED_IN)){
+			Person actor = getActorsTable().get(personName);
+			//add the Actor to the Movie actorsList
+			movie.addActor(actor);	
+		}
+		//in case of a director
+		else{
+			Person director = getDirectorsTable().get(personName);
+			movie.setDirector(director);	
+		}
 	}
 
 	/** add the literal: <movie> <wasCreatedOnDate> <date> OR <movie> <hasDuration> <duration> */
@@ -194,36 +228,83 @@ public class YagoParser implements Iparser{
 			movie.setDuration(literal);	
 		}		
 	}
-	
-	/* getters */
 
-	public HashMap<String,Movie> getMoviesTable() {
-		return moviesTable;
+	/** add the correct labels as appear in yago */
+	private void addLabelPrefMean(String[] strArr) {
+		//get the movie/actor/director
+		String entity = strArr[0];
+		//get the label from strArr[2]
+		String label = strArr[2].substring(0, strArr[2].length()-2);
+		if(getMoviesTable().containsKey(entity)){
+			Movie movie = getMoviesTable().get(entity);
+			movie.setPreferredMean(label);
+		}
+		else if(getActorsTable().containsKey(entity)){
+			Person p = getActorsTable().get(entity);
+			p.setPreferredMean(label);
+		}
+		else if(getDirectorsTable().containsKey(entity)){
+			Person p = getDirectorsTable().get(entity);
+			p.setPreferredMean(label);
+		}
 	}
 
-	public HashMap<String,Person> getActorsTable() {
-		return actorsTable;
-	}
+	private void addLabelNames(String[] strArr){
+		//get the person
+		String personName = strArr[0];
+		//get the label from strArr[2]
+		String label = strArr[2].substring(0, strArr[2].length()-2);
 
-	public HashMap<String,Person> getDirectorsTable() {
-		return directorsTable;
+		if(strArr[1].contains(FIRST_NAME)){
+			if(getActorsTable().containsKey(personName)){
+				Person p = getActorsTable().get(personName);
+				p.setFirstName(label);
+			}
+			else if(getDirectorsTable().containsKey(personName)){
+				Person p = getDirectorsTable().get(personName);
+				p.setFirstName(label);
+			}
+		}
+		else  if(strArr[1].contains(FAMILY_NAME)){
+			if(getActorsTable().containsKey(personName)){
+				Person p = getActorsTable().get(personName);
+				p.setLastName(label);
+			}
+			else if(getDirectorsTable().containsKey(personName)){
+				Person p = getDirectorsTable().get(personName);
+				p.setLastName(label);
+			}
+		}
 	}
+		/* getters */
+
+		public HashMap<String,Movie> getMoviesTable() {
+			return moviesTable;
+		}
+
+		public HashMap<String,Person> getActorsTable() {
+			return actorsTable;
+		}
+
+		public HashMap<String,Person> getDirectorsTable() {
+			return directorsTable;
+		}
 
 
-	/* interface function implementation */
-	
-	@Override
-	public HashMap<String, Movie> getMovie(String fileName) {
-		return getMoviesTable();
-	}
+		/* interface function implementation */
 
-	@Override
-	public HashMap<String, Person> getActor(String fileName) {
-		return getActorsTable();
-	}
+		@Override
+		public HashMap<String, Movie> getMovie(String fileName) {
+			return getMoviesTable();
+		}
 
-	@Override
-	public HashMap<String, Person> getDirector(String fileName) {
-		return getDirectorsTable();
+		@Override
+		public HashMap<String, Person> getActor(String fileName) {
+			return getActorsTable();
+		}
+
+		@Override
+		public HashMap<String, Person> getDirector(String fileName) {
+			return getDirectorsTable();
+		}
 	}
-}

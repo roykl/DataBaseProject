@@ -11,6 +11,7 @@ public class Movie{
 	private String genre;
 	private String language;
 	private Person director;
+	private String preferredMean;
 	private List<Person> actorsLst = new ArrayList<Person>();
 	private String wikiURL;
 	private String youuTubeURL;
@@ -99,6 +100,16 @@ public class Movie{
 
 	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+
+
+	public String getPreferredMean() {
+		return preferredMean;
+	}
+
+
+	public void setPreferredMean(String preferredMean) {
+		this.preferredMean = preferredMean;
 	}
 
 }

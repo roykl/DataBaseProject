@@ -21,18 +21,18 @@ public class TestConsole {
 	public static void main(String[] args) throws IOException {
 		
 
-		readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoLiteralFacts.ttl","C:\\Users\\Roy\\Desktop\\test\\try.txt",1550000);
+		//readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoWikipediaInfo.ttl","C:\\Users\\Roy\\Desktop\\test\\yagoWikipediaInfo.ttl",1550000);
 	
 		
-	/*	YagoParser yp = new YagoParser();
-		yp.parseYagoTypes("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
+		YagoParser yp = new YagoParser();
+		yp.parseYagoTypes("C:\\Users\\Roy\\Desktop\\test\\yagoSimpleTypes.ttl");
 		
-		System.out.println("Num Movies = " + yp.getMoviesTable().size());
-		System.out.println("Num Movies = " + yp.getActorsTable().size());
+	    yp.parseYagoFacts("C:\\Users\\Roy\\Desktop\\test\\yagoFacts.ttl");
 		
-	    yp.parseYagoFacts("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl");
+		yp.parseYagoLiteralFacts("C:\\Users\\Roy\\Desktop\\test\\yagoLiteralFacts.ttl");
 		
-		
+		yp.parseYagoLabels("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoLabels.ttl");
+	    
 		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
 		try {
 			FileWriter fw = new FileWriter(file);
@@ -42,8 +42,13 @@ public class TestConsole {
 				fw.write(System.getProperty("line.separator"));
 				fw.write("Actors: " + m.getActorsLst().toString());				
 				fw.write(System.getProperty("line.separator"));
-				if(m.getDirector() != null)
-					fw.write("Director: " + m.getDirector().toString());
+				if(m.getDirector() != null){
+					fw.write("Director: " + m.getDirector().getPreferredMean());
+				    fw.write(System.getProperty("line.separator"));
+				}
+				fw.write("Created On: " + m.getDateCreated() + ", Duration: " + m.getDuration());
+				fw.write(System.getProperty("line.separator"));
+				fw.write("IsPreferredMeaning: " + m.getPreferredMean());
 				fw.write(System.getProperty("line.separator"));
 				fw.write(System.getProperty("line.separator"));
 			}
@@ -52,7 +57,8 @@ public class TestConsole {
 		catch(Exception ex){
 			//
 		}
-	*/
+		
+	
 /*		
 		ArrayList<String> arr = new ArrayList<String>();
 		YagoParser yp = new YagoParser();
@@ -74,7 +80,7 @@ public class TestConsole {
 
 	public static void readBigYagoFile(String bigfilePath, String outpath, int numRows2read) throws IOException
 	{
-		BufferedReader br = new BufferedReader(new FileReader(bigfilePath));
+		BufferedReader br = new BufferedReader(new FileReader(bigfilePath));		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(outpath));
 		for (int i=0; i< numRows2read;i++){
 			bw.write(br.readLine());
