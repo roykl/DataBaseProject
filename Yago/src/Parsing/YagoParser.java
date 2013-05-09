@@ -3,7 +3,6 @@ package Parsing;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,8 +11,11 @@ public class YagoParser implements Iparser{
 
 	final static String YAGO_TYPES_FILE = "yagoSimpleTypes.ttl";
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
+	final static String YAGO_LITERAL_FACTS_FILE = "yagoLiteralFacts";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";
+	final static String CREATED_ON = "wasCreatedOnDate";
+	final static String DURATION = "hasDuration";
 	final static String MOVIE_ID = "106613686";
 	final static String ACTOR_ID = "109765278";
 	final static String DIRECTOR_ID = "110088200";
@@ -94,9 +96,30 @@ public class YagoParser implements Iparser{
 		}
 	}
 
+	/** expect the filename yagoLiteralFacts and it updates: "createdOnDate" and "duration" */
+	public void parseYagoLiteralFacts(String path){
+		if (isFileCorrect(path,YAGO_FACTS_FILE)){			
+			try{
+				// create a buffered reader for the current file
+				BufferedReader br = new BufferedReader(new FileReader(path));
+				String[] strArr;
+				while((strArr = parseLine2Array(br)) != null){
+					if(strArr.length >= 3 && (strArr[1].contains(CREATED_ON) || strArr[1].contains(DURATION))){
+						addLiteral(strArr);
+					}
+				}
+				br.close();
+				return;
+			}
+			catch(Exception ex){
+				System.out.println(ex.toString());
+			}
+		}
+	}
 
 	/* helper functions */
 	
+
 	/** check that the filePath is correct and it's the right fileName from yago*/
 	private boolean isFileCorrect(String path, String fileName2compare){
 		//make sure the path is not null or empty and that it's the correct file
@@ -149,6 +172,28 @@ public class YagoParser implements Iparser{
 			}
 	}
 
+	/** add the literal: <movie> <wasCreatedOnDate> <date> OR <movie> <hasDuration> <duration> */
+	private void addLiteral(String[] strArr) {
+		//get the movie name from strArr[0]
+		String currentMovie = strArr[0];
+		//get the literal from strArr[2]
+		String literal = strArr[2].substring(0, strArr[2].length()-2);
+		//get the movie object and check it's not null
+		Movie movie = getMoviesTable().get(currentMovie);
+		if(movie == null){
+			System.out.println("No such movie object with the name: " + currentMovie);
+			return;
+		}
+		//in case of an createdOnDate
+		if (strArr[1].contains(CREATED_ON)){
+			//add the creation date of the Movie 
+			movie.setDateCreated(literal);	
+		}
+		//in case of a Duration
+		else{			
+			movie.setDuration(literal);	
+		}		
+	}
 	
 	/* getters */
 
@@ -168,22 +213,17 @@ public class YagoParser implements Iparser{
 	/* interface function implementation */
 	
 	@Override
-	public List<Movie> getMovie(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
+	public HashMap<String, Movie> getMovie(String fileName) {
+		return getMoviesTable();
 	}
 
-
 	@Override
-	public List<Person> getActor(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
+	public HashMap<String, Person> getActor(String fileName) {
+		return getActorsTable();
 	}
 
-
 	@Override
-	public List<Person> getDirector(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
+	public HashMap<String, Person> getDirector(String fileName) {
+		return getDirectorsTable();
 	}
 }

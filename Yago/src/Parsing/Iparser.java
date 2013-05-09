@@ -1,13 +1,14 @@
 package Parsing;
 
-import java.util.List;
+import java.util.HashMap;
+
 
 
 
 public interface Iparser {
 
-	public List<Movie> getMovie(String filePath); 
-	public List<Person> getActor(String filePath);
-	public List<Person> getDirector(String filePath);
+	public HashMap<String, Movie> getMovie(String filePath); 
+	public HashMap<String, Person> getActor(String filePath);
+	public HashMap<String, Person> getDirector(String filePath);
 
 }

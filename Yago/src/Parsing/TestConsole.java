@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 public class TestConsole {
@@ -23,8 +21,10 @@ public class TestConsole {
 	public static void main(String[] args) throws IOException {
 		
 
-	//	readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl","C:\\Users\\Roy\\Desktop\\test\\try.txt",1550000);
-		YagoParser yp = new YagoParser();
+		readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoLiteralFacts.ttl","C:\\Users\\Roy\\Desktop\\test\\try.txt",1550000);
+	
+		
+	/*	YagoParser yp = new YagoParser();
 		yp.parseYagoTypes("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
 		
 		System.out.println("Num Movies = " + yp.getMoviesTable().size());
@@ -52,7 +52,7 @@ public class TestConsole {
 		catch(Exception ex){
 			//
 		}
-	
+	*/
 /*		
 		ArrayList<String> arr = new ArrayList<String>();
 		YagoParser yp = new YagoParser();

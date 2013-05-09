@@ -6,7 +6,8 @@ import java.util.List;
 public class Movie{
 
 	private String name;
-	private int duration;
+	private String duration;
+	private String dateCreated;
 	private String genre;
 	private String language;
 	private Person director;
@@ -38,11 +39,11 @@ public class Movie{
 		this.name = name;
 	}
 
-	public int getDuration() {
+	public String getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(String duration) {
 		this.duration = duration;
 	}
 
@@ -88,6 +89,16 @@ public class Movie{
 
 	public void setYouuTubeURL(String youuTubeURL) {
 		this.youuTubeURL = youuTubeURL;
+	}
+
+
+	public String getDateCreated() {
+		return dateCreated;
+	}
+
+
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 }
