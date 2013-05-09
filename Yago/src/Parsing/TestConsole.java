@@ -23,16 +23,23 @@ public class TestConsole {
 
 	public static void main(String[] args) throws IOException {
 		
+
 	//	readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl","C:\\Users\\Roy\\Desktop\\test\\try.txt",1550000);
-		YagoParser.parseYagoTypes("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
-		YagoParser.parseYagoFacts("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl");
-		//List<Movie> movies = yp.getMoviesList("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
+		YagoParser yp = new YagoParser();
+		yp.parseYagoTypes("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoSimpleTypes.ttl");
+		
+		System.out.println("Num Movies = " + yp.getMoviesTable().size());
+		System.out.println("Num Movies = " + yp.getActorsTable().size());
+		
+	    yp.parseYagoFacts("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoFacts.ttl");
+		
+		
 		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
 		try {
 			FileWriter fw = new FileWriter(file);
-			for(Person m : YagoParser.getActorsLst())
+			for(Movie m : yp.getMoviesTable().values())
 			{
-				fw.write(m.getName() + "actors: " + YagoParser.getActorsLst().toString());
+				fw.write("Movie: " +m.getName() + " Actors: " + m.getActorsLst().toString());				
 				fw.write(System.getProperty("line.separator"));
 			}
 			fw.close();

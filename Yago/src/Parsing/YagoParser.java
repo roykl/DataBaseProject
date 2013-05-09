@@ -4,19 +4,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
-public class YagoParser {
+public class YagoParser implements Iparser{
 
 	final static String YAGO_TYPES_FILE = "yagoSimpleTypes.ttl";
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";
 
-	private static List<Movie> moviesLst = new ArrayList<Movie>();
-	private static List<Person> actorsLst = new ArrayList<Person>();
-	private static List<Person> directorsLst = new ArrayList<Person>();
+	private HashMap<String, Movie> moviesTable; // key= movie name, value = Movie object
+	private HashMap<String,Person> actorsTable; // key= actor name, value = Person object
+	private HashMap<String,Person> directorsTable; // key = director name, value = Person object
 
 	//enum to represent the entities: Movie, Actor, Director
 	public enum Entity{
@@ -35,29 +36,38 @@ public class YagoParser {
 		}
 	}
 
-	/**expect to get the file yagoSimpleTpyes.ttl and populate movieLst, actorLst, directorLst*/
-	public static void parseYagoTypes(String path){
-		//make sure the path is not null or empty and that it's the correct file
-		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_TYPES_FILE)== 0){			
+	/* constructor */
+	public YagoParser(){
+		this.moviesTable = new HashMap<String,Movie>();
+		this.actorsTable = new HashMap<String,Person>();
+		this.directorsTable = new HashMap<String,Person>();
+	}
+
+	/**expect to get the file yagoSimpleTpyes.ttl and populate movieTable, actorTable, directorTable*/
+	public void parseYagoTypes(String path){
+		//check that the path is correct (the right yago file)
+		if (isFileCorrect(path, YAGO_TYPES_FILE)){			
 			try{
 				// create a buffered reader for the current file
-				BufferedReader br = new BufferedReader(new FileReader(path));
-				String line;
-				String[] strArr = new String[3]; //array with 3 cells to parse each line				
-				while((line = br.readLine()) != null){ //read line	
-					strArr = line.split("\\t"); //split the line by tabs - we know there are 2 tabs in each line				
+				BufferedReader br = new BufferedReader(new FileReader(path));					
+				String[] strArr;
+				//parse the next line by tabs to String[3]
+				while ((strArr = parseLine2Array(br)) != null){ 					
+					//in case of Movie Entity
 					if(strArr.length >= 3 && strArr[2].contains(Entity.MOVIE.getId())){
-						moviesLst.add(new Movie(strArr[0]));
+						moviesTable.put(strArr[0],new Movie(strArr[0])); 
 						continue;
 					}
+					//in case of Actor Entity	
 					else if(strArr.length >= 3 && strArr[2].contains(Entity.ACTOR.getId())){
-						actorsLst.add(new Person(strArr[0]));
+						actorsTable.put(strArr[0], new Person(strArr[0]));
 						continue;
 					}
+					//in case of Director Entity	
 					else if(strArr.length >= 3 && strArr[2].contains(Entity.DIRECTOR.getId())){
-						directorsLst.add(new Person(strArr[0]));
+						directorsTable.put(strArr[0], new Person(strArr[0]));
 						continue;
-					}
+					}					
 				}
 				br.close();
 				return;
@@ -66,123 +76,124 @@ public class YagoParser {
 				//to-do
 			}			
 		}
-		System.out.println("Wrong Path. Please Provide a correct path");
+		else
+			System.out.println("Wrong Path. Please Provide a correct path");
 	}
 
 	/**expect to get the file yagoFacts.ttl and update the entities*/
-	public static void parseYagoFacts(String path){
+	public void parseYagoFacts(String path){
 		//make sure the path is not null or empty and that it's the correct file
-		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_FACTS_FILE)== 0){			
+		if (isFileCorrect(path,YAGO_FACTS_FILE)){			
 			try{
 				// create a buffered reader for the current file
 				BufferedReader br = new BufferedReader(new FileReader(path));
-				String line;
-				String[] strArr = new String[3]; //array with 3 cells to parse each line				
-				while((line = br.readLine()) != null){ //read line	
-					strArr = line.split("\\t"); //split the line by tabs - we know there are 2 tabs in each line				
-					if(strArr.length >= 3 && strArr[1].contains(ACTED_IN)){
-						for(Movie m : getMoviesLst()){
-							if(m.getName()== strArr[2]){
-								for(Person p : getActorsLst()){
-									if(p.getName() == strArr[0]){
-										m.setActorsLst(p);
-									}
-								}								
-							}
-						}
+				String[] strArr;	
+				//read line and parse it by tabs	
+				while((strArr = parseLine2Array(br)) != null){ 			
+					//if it contains "actedIn" or "directed" add that fact
+					if(strArr.length >= 3 && (strArr[1].contains(ACTED_IN) || strArr[1].contains(DIRECTED))){
+						addFact(strArr);
 					}
-					else if(strArr.length >= 3 && strArr[1].contains(DIRECTED)){
-						for(Movie m : getMoviesLst()){
-							if(m.getName()== strArr[2]){
-								for(Person p : getDirectorsLst()){
-									if(p.getName() == strArr[0]){
-										m.setDirector(p);
-									}
-								}								
-							}
-						}
-					}	
 				}
 				br.close();
 				return;
 			} 
 			catch(Exception ex){
-				//to-do
+				System.out.println(ex.toString());
 			}	
 		}
 	}
 
 
-
-
-	/* 1 approach */
-	/**expect to get the file yagoSimpleTpyes.ttl and an entity, and pull all the instances of that entity*/
-	public List<String> getEntityList(String path, Entity ent){
+	/* helper functions */
+	
+	/** check that the filePath is correct and it's the right fileName from yago*/
+	private boolean isFileCorrect(String path, String fileName2compare){
 		//make sure the path is not null or empty and that it's the correct file
-		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_TYPES_FILE)== 0){			
-			try{
-				// create a buffered reader of the current file
-				BufferedReader br = new BufferedReader(new FileReader(path));
-				String line;
-				String[] strArr = new String[3];
-				ArrayList<String> movieNames = new ArrayList<String>();
-				while((line = br.readLine()) != null){ //read line 
-					if(!line.contains(ent.getId()))
-						continue;						
-					strArr = line.split("\\t"); //split the line by tabs - we know there are 2 tabs in each line
-					movieNames.add(strArr[0]); // add the movie name
-				}
-				br.close();
-				return movieNames;
+		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(fileName2compare)== 0)
+			return true;
+		else
+			return false;
+	}
+
+	/**get a BufferedReader, read the next line and split line by tabs*/
+	private String[] parseLine2Array(BufferedReader br){		
+		String line;
+		String[] strArr = new String[3]; //array with 3 cells to parse each line
+		try{
+			if((line = br.readLine()) != null){ //read line	
+				strArr = line.split("\\t"); //split the line by tabs - we know there are 2 tabs in each line				
+				return strArr;
 			}
-			catch(Exception ex){
-				//to-do
-			}	
+			else
+				return null;
 		}
-		System.out.println("Wrong Path. Please Provide a correct path");
+		catch (Exception ex){
+			System.out.println("Could not read line");
+		}
 		return null;
 	}
 
-
-	/* 2 approach */
-	/**expect to get the file yagoSimpleTpyes.ttl and return a list<movies>*/
-	public List<Movie> getMoviesList(String path){
-		if (path != null && !path.isEmpty() && new File(path).getName().compareTo(YAGO_TYPES_FILE)== 0){			
-			try{
-				// create a buffered reader of the current file
-				BufferedReader br = new BufferedReader(new FileReader(path));
-				String line;
-				String[] strArr = new String[3];
-				ArrayList<Movie> movieLst = new ArrayList<Movie>();
-				while((line = br.readLine()) != null){ //read line 
-					if(!line.contains(Entity.MOVIE.getId()))
-						continue;						
-					strArr = line.split("\\t"); //split the line by tabs - we know there are 2 tabs in each line
-					movieLst.add(new Movie(strArr[0])); //create a movie object with that name and add it to the list
-				}
-				br.close();
-				return movieLst;
+	/** add the fact: <actor> <actedIn> <movie> OR <director> <directed> <movie>*/
+	private void addFact(String[] strArr){		
+			//get the movie name from strArr[2]
+			String currentMovie = strArr[2].substring(0, strArr[2].length()-2);
+			//get the person name from strArr[0]
+			String personName = strArr[0];
+			//get the movie object and check it's not null
+			Movie movie = getMoviesTable().get(currentMovie);
+			if(movie == null){
+				System.out.println("No such movie object with the name: " + currentMovie);
+				return;
 			}
-			catch(Exception ex){
-				//todo
+			//in case of an actor
+			if (strArr[1].contains(ACTED_IN)){
+				Person actor = getActorsTable().get(personName);
+				//add the Actor to the Movie actorsList
+				movie.addActor(actor);	
 			}
-		}
-		System.out.println("Wrong Path. Please Provide a correct path");
-		return null;
+			//in case of a director
+			else{
+				Person director = getDirectorsTable().get(personName);
+				movie.setDirector(director);	
+			}
 	}
 
-
+	
 	/* getters */
 
-	public static List<Movie> getMoviesLst() {
-		return moviesLst;
+	public HashMap<String,Movie> getMoviesTable() {
+		return moviesTable;
 	}
 
-	public static List<Person> getActorsLst() {
-		return actorsLst;
+	public HashMap<String,Person> getActorsTable() {
+		return actorsTable;
 	}
 
-	public static List<Person> getDirectorsLst() {
-		return directorsLst;
+	public HashMap<String,Person> getDirectorsTable() {
+		return directorsTable;
+	}
+
+
+	/* interface function implementation */
+	
+	@Override
+	public List<Movie> getMovie(String fileName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Person> getActor(String fileName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Person> getDirector(String fileName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
