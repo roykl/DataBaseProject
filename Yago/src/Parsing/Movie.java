@@ -8,13 +8,13 @@ public class Movie{
 	private String name;
 	private String duration;
 	private String dateCreated;
-	private String genre;
-	private String language;
+	private String genre; // need to do
+	private String language; // need to do
 	private Person director;
-	private String preferredMean;
+	private String preferredMean; // cancelled
 	private List<Person> actorsLst = new ArrayList<Person>();
 	private String wikiURL;
-	private String youuTubeURL;
+	private String youTubeURL; // need to do
 
 
 	/* constructor */	
@@ -84,12 +84,12 @@ public class Movie{
 		this.wikiURL = wikiURL;
 	}
 
-	public String getYouuTubeURL() {
-		return youuTubeURL;
+	public String getYouTubeURL() {
+		return youTubeURL;
 	}
 
-	public void setYouuTubeURL(String youuTubeURL) {
-		this.youuTubeURL = youuTubeURL;
+	public void setYouTubeURL(String youuTubeURL) {
+		this.youTubeURL = youuTubeURL;
 	}
 
 

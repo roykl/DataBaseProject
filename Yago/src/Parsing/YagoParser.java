@@ -3,9 +3,8 @@ package Parsing;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.security.acl.LastOwnerException;
 import java.util.HashMap;
-import java.util.List;
+
 
 
 public class YagoParser implements Iparser{
@@ -14,6 +13,7 @@ public class YagoParser implements Iparser{
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
 	final static String YAGO_LITERAL_FACTS_FILE = "yagoLiteralFacts.ttl";
 	final static String YAGO_LABELS_FILE = "yagoLabels.ttl";
+	final static String YAGO_WIKIPEDIA_FILE = "yagoWikipediaInfo.ttl";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";
 	final static String CREATED_ON = "wasCreatedOnDate";
@@ -21,7 +21,8 @@ public class YagoParser implements Iparser{
 	final static String LABEL = "rdfs:label";
 	final static String FAMILY_NAME = "hasFamilyName";
 	final static String FIRST_NAME = "hasGivenName";
-	final static String PREFERRED_MEAN = "isPreferredMeaningOf";
+	final static String WIKI = "hasWikipediaUrl";
+	final static String PREFERRED_MEAN = "skos:prefLabel";
 	final static String MOVIE_ID = "106613686";
 	final static String ACTOR_ID = "109765278";
 	final static String DIRECTOR_ID = "110088200";
@@ -124,6 +125,7 @@ public class YagoParser implements Iparser{
 		}
 	}
 
+	@Deprecated
 	/** expect the filename yagoLabels.ttl and update the correct labels */
 	public void parseYagoLabels(String path){
 		if(isFileCorrect(path, YAGO_LABELS_FILE)){
@@ -149,8 +151,29 @@ public class YagoParser implements Iparser{
 		}		
 	}
 
+	public void parseYagoWikiInfo(String path){
+		if(isFileCorrect(path, YAGO_WIKIPEDIA_FILE)){
+			try{
+				// create a buffered reader for the current file
+				BufferedReader br = new BufferedReader(new FileReader(path));
+				String[] strArr;
+				while((strArr = parseLine2Array(br)) != null){
+					//add to the movie the literal if it is createdOnDate or Duration
+					if(strArr.length >= 3 && strArr[1].contains(WIKI)){
+						addWikiInfo(strArr);
+					}
+				}
+				br.close();
+				return;
+			}
+			catch(Exception ex){
+				System.out.println(ex.toString());
+			}	
+		}	
+	}
+	
+	
 	/* helper functions */
-
 
 	/** check that the filePath is correct and it's the right fileName from yago*/
 	private boolean isFileCorrect(String path, String fileName2compare){
@@ -229,12 +252,15 @@ public class YagoParser implements Iparser{
 		}		
 	}
 
-	/** add the correct labels as appear in yago */
+	@Deprecated
+	/** add the correct preferred meaning as appear in yago */
 	private void addLabelPrefMean(String[] strArr) {
-		//get the movie/actor/director
+		// get the movie/actor/director
 		String entity = strArr[0];
-		//get the label from strArr[2]
+		// get the label from strArr[2]
 		String label = strArr[2].substring(0, strArr[2].length()-2);
+		// parse the label- cut what comes after '@' including it 
+		label = label.split("@")[0];
 		if(getMoviesTable().containsKey(entity)){
 			Movie movie = getMoviesTable().get(entity);
 			movie.setPreferredMean(label);
@@ -249,6 +275,7 @@ public class YagoParser implements Iparser{
 		}
 	}
 
+	@Deprecated
 	private void addLabelNames(String[] strArr){
 		//get the person
 		String personName = strArr[0];
@@ -276,35 +303,48 @@ public class YagoParser implements Iparser{
 			}
 		}
 	}
-		/* getters */
 
-		public HashMap<String,Movie> getMoviesTable() {
-			return moviesTable;
-		}
-
-		public HashMap<String,Person> getActorsTable() {
-			return actorsTable;
-		}
-
-		public HashMap<String,Person> getDirectorsTable() {
-			return directorsTable;
-		}
-
-
-		/* interface function implementation */
-
-		@Override
-		public HashMap<String, Movie> getMovie(String fileName) {
-			return getMoviesTable();
-		}
-
-		@Override
-		public HashMap<String, Person> getActor(String fileName) {
-			return getActorsTable();
-		}
-
-		@Override
-		public HashMap<String, Person> getDirector(String fileName) {
-			return getDirectorsTable();
-		}
+	/** add the wikiURL to the movie */
+	private void addWikiInfo(String[] strArr) {
+		//get the movie name from strArr[0]
+		String currentMovie = strArr[0];
+		//get the literal from strArr[2]
+		String wikiURL = strArr[2].substring(0, strArr[2].length()-2);
+		if(getMoviesTable().containsKey(currentMovie)){
+			Movie movie = getMoviesTable().get(currentMovie);
+			movie.setWikiURL(wikiURL);
+		}		
 	}
+
+	/* getters */
+
+	public HashMap<String,Movie> getMoviesTable() {
+		return moviesTable;
+	}
+
+	public HashMap<String,Person> getActorsTable() {
+		return actorsTable;
+	}
+
+	public HashMap<String,Person> getDirectorsTable() {
+		return directorsTable;
+	}
+
+
+	/* interface function implementation */
+
+	@Override
+	public HashMap<String, Movie> getMovie(String fileName) {
+		return getMoviesTable();
+	}
+
+	@Override
+	public HashMap<String, Person> getActor(String fileName) {
+		return getActorsTable();
+	}
+
+	@Override
+	public HashMap<String, Person> getDirector(String fileName) {
+		return getDirectorsTable();
+	}
+}

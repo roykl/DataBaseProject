@@ -32,6 +32,8 @@ public class TestConsole {
 		yp.parseYagoLiteralFacts("C:\\Users\\Roy\\Desktop\\test\\yagoLiteralFacts.ttl");
 		
 		yp.parseYagoLabels("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoLabels.ttl");
+		
+		yp.parseYagoWikiInfo("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoWikipediaInfo.ttl");
 	    
 		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
 		try {
@@ -43,12 +45,12 @@ public class TestConsole {
 				fw.write("Actors: " + m.getActorsLst().toString());				
 				fw.write(System.getProperty("line.separator"));
 				if(m.getDirector() != null){
-					fw.write("Director: " + m.getDirector().getPreferredMean());
+					fw.write("Director: " + m.getDirector().getName());
 				    fw.write(System.getProperty("line.separator"));
 				}
 				fw.write("Created On: " + m.getDateCreated() + ", Duration: " + m.getDuration());
 				fw.write(System.getProperty("line.separator"));
-				fw.write("IsPreferredMeaning: " + m.getPreferredMean());
+				fw.write("WikiURL: "+ m.getWikiURL());
 				fw.write(System.getProperty("line.separator"));
 				fw.write(System.getProperty("line.separator"));
 			}
