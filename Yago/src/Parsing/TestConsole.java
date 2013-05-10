@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 
 
 
@@ -21,8 +22,11 @@ public class TestConsole {
 	public static void main(String[] args) throws IOException {
 		
 
-		//readBigYagoFile("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoWikipediaInfo.ttl","C:\\Users\\Roy\\Desktop\\test\\yagoWikipediaInfo.ttl",1550000);
-	
+		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
+
+	        
+	        IMDBParser im = new IMDBParser();
+	        im.parseGenre(new HashMap<String,Movie>());
 		
 		YagoParser yp = new YagoParser();
 		yp.parseYagoTypes("C:\\Users\\Roy\\Desktop\\test\\yagoSimpleTypes.ttl");
