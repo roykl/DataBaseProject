@@ -1,6 +1,0 @@
-package Parsing;
- 
-
-public class YagoParsing {
-
-}
