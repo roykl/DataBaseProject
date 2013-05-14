@@ -35,7 +35,8 @@ public class TestConsole {
 		
 		yp.parseYagoLiteralFacts("C:\\Users\\Roy\\Desktop\\test\\yagoLiteralFacts.ttl");
 		
-		yp.parseYagoLabels("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoLabels.ttl");
+		// obsolete
+		//yp.parseYagoLabels("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoLabels.ttl");
 		
 		yp.parseYagoWikiInfo("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoWikipediaInfo.ttl");
 	    

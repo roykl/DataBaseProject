@@ -1,7 +1,6 @@
 package Parsing;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 
@@ -13,7 +12,7 @@ public class IMDBParser {
 	public void parseGenre(HashMap<String,Movie> moviesTable){
 		//get the current directory
 		String currentDir = System.getProperty("user.dir");
-		//seet the file path
+		//set the file path
 		String filePath = currentDir+"\\"+GENRE_FILE;
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(filePath));					
