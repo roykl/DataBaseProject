@@ -22,13 +22,17 @@ public class TestConsole {
 	public static void main(String[] args) throws IOException {
 		
 
-		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
-
-	        
-	        IMDBParser im = new IMDBParser();
-	        im.parseGenre(new HashMap<String,Movie>());
+		
+		
+//		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
+//
+//	        
+//	        IMDBParser im = new IMDBParser();
+//	        im.parseGenre(new HashMap<String,Movie>());
 		
 		YagoParser yp = new YagoParser();
+
+		
 		yp.parseYagoTypes("C:\\Users\\Roy\\Desktop\\test\\yagoSimpleTypes.ttl");
 		
 	    yp.parseYagoFacts("C:\\Users\\Roy\\Desktop\\test\\yagoFacts.ttl");

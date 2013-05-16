@@ -31,17 +31,20 @@ public class YagoParser implements Iparser{
 	private HashMap<String,Person> actorsTable; // key= actor name, value = Person object
 	private HashMap<String,Person> directorsTable; // key = director name, value = Person object
 
-
+	/*=============*/
 	/* constructor */
+	/*=============*/
+	
 	public YagoParser(){
 		this.moviesTable = new HashMap<String,Movie>();
 		this.actorsTable = new HashMap<String,Person>();
 		this.directorsTable = new HashMap<String,Person>();
 	}
 
-
+	/*=================*/
 	/* public function */
-
+	/*=================*/
+	
 	/** expect to get the file yagoSimpleTpyes.ttl and populate movieTable, actorTable, directorTable */
 	public void parseYagoTypes(String path){
 		//check that the path is correct (the right yago file)
@@ -125,6 +128,29 @@ public class YagoParser implements Iparser{
 		}
 	}
 
+	/** expect the filename yagoWikiPediaInfo and update the wiki url for each movie */
+	public void parseYagoWikiInfo(String path){
+		if(isFileCorrect(path, YAGO_WIKIPEDIA_FILE)){
+			try{
+				// create a buffered reader for the current file
+				BufferedReader br = new BufferedReader(new FileReader(path));
+				String[] strArr;
+				while((strArr = parseLine2Array(br)) != null){
+					//add to the movie the literal if it is createdOnDate or Duration
+					if(strArr.length >= 3 && strArr[1].contains(WIKI)){
+						addWikiInfo(strArr);
+					}
+				}
+				br.close();
+				return;
+			}
+			catch(Exception ex){
+				System.out.println(ex.toString());
+			}	
+		}	
+	}
+
+	
 	@Deprecated
 	/** expect the filename yagoLabels.ttl and update the correct labels */
 	public void parseYagoLabels(String path){
@@ -151,30 +177,13 @@ public class YagoParser implements Iparser{
 		}		
 	}
 
-	public void parseYagoWikiInfo(String path){
-		if(isFileCorrect(path, YAGO_WIKIPEDIA_FILE)){
-			try{
-				// create a buffered reader for the current file
-				BufferedReader br = new BufferedReader(new FileReader(path));
-				String[] strArr;
-				while((strArr = parseLine2Array(br)) != null){
-					//add to the movie the literal if it is createdOnDate or Duration
-					if(strArr.length >= 3 && strArr[1].contains(WIKI)){
-						addWikiInfo(strArr);
-					}
-				}
-				br.close();
-				return;
-			}
-			catch(Exception ex){
-				System.out.println(ex.toString());
-			}	
-		}	
-	}
-	
-	
-	/* helper functions */
 
+	
+	/*==================*/
+	/* helper functions */
+	/*==================*/
+	
+	
 	/** check that the filePath is correct and it's the right fileName from yago*/
 	private boolean isFileCorrect(String path, String fileName2compare){
 		//make sure the path is not null or empty and that it's the correct file
@@ -316,7 +325,26 @@ public class YagoParser implements Iparser{
 		}		
 	}
 
+	/** get rid of the '<' and '>' in the entity name */
+	private String pullEntityName(String entity){
+		if(entity == null || entity.length() < 2)
+			return null;
+		String name = entity.substring(1, entity.length()-1);
+		return name;
+	}
+	
+	/**pull the year from the date format of yago */
+	private  String pullYear(String date){
+		if(date == null || date.length() < 5)
+			return null;
+		String year = date.substring(1,5);
+		return year;
+	}
+	
+	
+	/*=========*/
 	/* getters */
+	/*=========*/
 
 	public HashMap<String,Movie> getMoviesTable() {
 		return moviesTable;
@@ -330,9 +358,12 @@ public class YagoParser implements Iparser{
 		return directorsTable;
 	}
 
-
+	
+	/*===================================*/
 	/* interface function implementation */
-
+	/*===================================*/
+	
+	
 	@Override
 	public HashMap<String, Movie> getMovie(String fileName) {
 		return getMoviesTable();
