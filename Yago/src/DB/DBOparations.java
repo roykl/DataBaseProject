@@ -1,5 +1,7 @@
 package DB;
 
+import java.sql.ResultSet;
+
 public class DBOparations implements IdbOparations {
 
 	
@@ -7,23 +9,20 @@ public DBOparations(){
 	
 }
 
-public  void importData(){
+
+public  int update(){
 	
 }
 
-public  void update(){
+public  boolean delete(){
 	
 }
 
-public  void delete(){
+public  boolean insert(){
 	
 }
 
-public  void insert(){
-	
-}
-
-public  void select(){
+public  ResultSet select(){
 	
 }
 
