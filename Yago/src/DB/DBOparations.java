@@ -10,20 +10,32 @@ public DBOparations(){
 }
 
 
-public  int update(){
-	
+
+@Override
+public int update(String statment) {
+	// TODO Auto-generated method stub
+	return 0;
 }
 
-public  boolean delete(){
-	
+
+@Override
+public int delete(String statment) {
+	// TODO Auto-generated method stub
+	return 0;
 }
 
-public  boolean insert(){
-	
+
+@Override
+public int insert(String statment) {
+	// TODO Auto-generated method stub
+	return 0;
 }
 
-public  ResultSet select(){
-	
+
+@Override
+public ResultSet select(String statment) {
+	// TODO Auto-generated method stub
+	return null;
 }
 
 
