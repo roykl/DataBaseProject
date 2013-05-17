@@ -10,21 +10,17 @@ public DBOparations(){
 	
 }
 
-
-
 @Override
-public int update(String statment) {
+public int update(String tableNamr, String column, String predicates) {
 	// TODO Auto-generated method stub
 	return 0;
 }
 
-
 @Override
-public int delete(String statment) {
+public int delete(String tableNamr, String whereStatment) {
 	// TODO Auto-generated method stub
 	return 0;
 }
-
 
 @Override
 public int insert(String statment) {
@@ -32,14 +28,11 @@ public int insert(String statment) {
 	return 0;
 }
 
-
 @Override
-public ResultSet select(String statment) {
+public ResultSet select(String select, String from, String where) {
 	// TODO Auto-generated method stub
 	return null;
 }
-
-
 
 
 }
