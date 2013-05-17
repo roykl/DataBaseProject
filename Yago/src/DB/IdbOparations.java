@@ -7,6 +7,6 @@ public interface IdbOparations {
 	
 	public  int update(String statment);
 	public  int delete(String statment);
-	public  int insert();
-	public  ResultSet select();
+	public  int insert(String statment);
+	public  ResultSet select(String statment);
 }
