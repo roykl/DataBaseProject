@@ -8,7 +8,7 @@ public class Movie{
 	private String name;
 	private String duration;
 	private String dateCreated;
-	private String genre; // need to do
+	private List<String> genres; // need to do
 	private String language; // need to do
 	private Person director;
 	private String preferredMean; // cancelled
@@ -48,12 +48,12 @@ public class Movie{
 		this.duration = duration;
 	}
 
-	public String getGenre() {
-		return genre;
+	public List<String> getGenre() {
+		return genres;
 	}
 
-	public void setGenre(String genre) {
-		this.genre = genre;
+	public void setGenre(List<String> genre) {
+		this.genres = genre;
 	}
 
 	public String getLanguage() {
