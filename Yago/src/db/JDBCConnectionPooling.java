@@ -1,4 +1,4 @@
-package DB;
+package db;
 import java.util.*;
 import java.sql.*;
 
@@ -10,6 +10,8 @@ public class JDBCConnectionPooling implements Runnable {
         String connectionUrl ;
         String userName;
         String userPassword ;
+        
+        
         public JDBCConnectionPooling(String url,String userName, String userPass) throws SQLException {
                 try {
                         this.connectionUrl = url;
