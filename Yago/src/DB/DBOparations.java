@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 
 public class DBOparations implements IdbOparations {
 
+//One row oparations
 	
 public DBOparations(){
 	
