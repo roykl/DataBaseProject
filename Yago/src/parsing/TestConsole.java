@@ -20,8 +20,7 @@ public class TestConsole {
 
 
 	public static void main(String[] args) throws IOException {
-		
-
+		  
 		
 		
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);

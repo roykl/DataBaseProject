@@ -9,6 +9,7 @@ public class IMDBParser {
 	public final String GENRE_FILE = "genres.list";
 	public final String GENRE_LIST = "8: THE GENRES LIST";
 
+	
 	public void parseGenre(HashMap<String,Movie> moviesTable){
 		//get the current directory
 		String currentDir = System.getProperty("user.dir");
@@ -39,4 +40,7 @@ public class IMDBParser {
 		}
 	}
 
+	public void parsePlot(HashMap<String,Movie> moviesTable){
+		//implement
+	}
 }
