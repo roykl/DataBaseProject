@@ -14,6 +14,7 @@ public class Movie{
 	private String preferredMean; // cancelled
 	private List<Person> actorsLst = new ArrayList<Person>();
 	private String wikiURL;
+	private String plot;
 	private String youTubeURL; // need to do
 
 
@@ -110,6 +111,16 @@ public class Movie{
 
 	public void setPreferredMean(String preferredMean) {
 		this.preferredMean = preferredMean;
+	}
+	
+	
+	public String getPlot() {
+		return plot;
+	}
+
+	
+	public void setPlot(String plot) {
+		this.plot = plot;
 	}
 
 }
