@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.Configuration;
+
+import utils.Confuguration;
+
 
 
 public class TestConsole {
@@ -21,7 +26,8 @@ public class TestConsole {
 
 	public static void main(String[] args) throws IOException {
 		  
-		
+		Confuguration c = new utils.Confuguration();
+		c.toString();
 		
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
 //
