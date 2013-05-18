@@ -17,7 +17,10 @@ public class TestConsole {
 public static void main(String[] args) throws IOException {
 		  
 		utils.Configuration c = new Configuration();
-		c.toString();
+		System.out.println(c.getYagoSimpleTypes());
+		System.out.println(c.getYagoFacts());
+		System.out.println(c.getYagoLiteralFacts());
+		System.out.println(c.getYagoWikipediaInfo());
 		
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
 //

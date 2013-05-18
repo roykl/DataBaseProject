@@ -2,9 +2,9 @@
 <Configuration>
 	<Parsing>
 		<YagoSimpleTypesFilePath>yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
-		<YagoFactsFilePath>yagoSimpleTypes.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
-		<YagoLiteralFactsFilePath>" "</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
-		<YagoWikipediaInfoFilePath>" "</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->
-		 
+		<YagoFactsFilePath>yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
+		<YagoLiteralFactsFilePath>yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
+		<YagoWikipediaInfoFilePath>yagoWikipediaInfo</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->		 
 	</Parsing>
-	<DB></DB></Configuration>
+	<DB></DB>
+</Configuration>
