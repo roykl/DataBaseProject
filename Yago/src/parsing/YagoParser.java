@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 
+import utils.Configuration;
+
 
 
 public class YagoParser implements Iparser{
@@ -39,6 +41,15 @@ public class YagoParser implements Iparser{
 		this.moviesTable = new HashMap<String,Movie>();
 		this.actorsTable = new HashMap<String,Person>();
 		this.directorsTable = new HashMap<String,Person>();
+		
+		// get the configuration file
+		utils.Configuration settings = new Configuration();
+		
+		//parse yago files 		
+		parseYagoTypes(settings.getYagoSimpleTypes());
+		parseYagoFacts(settings.getYagoFacts());
+		parseYagoLiteralFacts(settings.getYagoLiteralFacts());
+		parseYagoWikiInfo(settings.getYagoWikipediaInfo());
 	}
 
 	/*=================*/

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Movie{
 
+
 	private String name;
 	private String duration;
 	private String dateCreated;
@@ -30,6 +31,20 @@ public class Movie{
 		if(actor != null)
 			this.actorsLst.add(actor);
 	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Movie [name=" + name + ", duration=" + duration
+				+ ", dateCreated=" + dateCreated + ", genres=" + genres
+				+ ", language=" + language + ", director=" + director
+				+ ", preferredMean=" + preferredMean + ", actorsLst="
+				+ actorsLst + ", wikiURL=" + wikiURL + ", plot=" + plot
+				+ ", youTubeURL=" + youTubeURL + "]";
+	}
+
+	
 
 	/* getters & setters */
 

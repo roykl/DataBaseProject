@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Parsing>
-		<YagoSimpleTypesFilePath>yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
-		<YagoFactsFilePath>yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
-		<YagoLiteralFactsFilePath>yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
-		<YagoWikipediaInfoFilePath>yagoWikipediaInfo</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->		 
+		<YagoSimpleTypesFilePath>C:\Users\Roy\Desktop\test\yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
+		<YagoFactsFilePath>C:\Users\Roy\Desktop\test\yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
+		<YagoLiteralFactsFilePath>C:\Users\Roy\Desktop\test\yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
+		<YagoWikipediaInfoFilePath>C:\Users\Roy\Desktop\test\yagoWikipediaInfo.ttl</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->		 
 	</Parsing>
-	<DB></DB>
+	<DB>
+		<Host>localhost</Host>
+		<Port>3305</Port>		
+	</DB>
 </Configuration>
