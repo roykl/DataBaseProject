@@ -7,26 +7,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-
-import javax.security.auth.login.AppConfigurationEntry;
-import javax.security.auth.login.Configuration;
-
-import utils.Confuguration;
+import utils.Configuration;
 
 
 
 public class TestConsole {
 
 
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-
-
-	public static void main(String[] args) throws IOException {
+public static void main(String[] args) throws IOException {
 		  
-		Confuguration c = new utils.Confuguration();
+		utils.Configuration c = new Configuration();
 		c.toString();
 		
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
