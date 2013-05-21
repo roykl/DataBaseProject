@@ -1,7 +1,9 @@
 package parsing;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Movie{
 
@@ -9,7 +11,7 @@ public class Movie{
 	private String name;
 	private String duration;
 	private String dateCreated;
-	private List<String> genres; // need to do
+	private Set<String> genreList = new LinkedHashSet<String>();
 	private String language; // need to do
 	private Person director;
 	private String preferredMean; // cancelled
@@ -26,18 +28,22 @@ public class Movie{
 	}
 
 
-	/**adding an actor to the actors List*/
+	/** adding an actor to the actors List */
 	public void addActor(Person actor) {
 		if(actor != null)
 			this.actorsLst.add(actor);
 	}
 	
+	/** adding genre to the genreList */
+	public void addGenre(String genre) {
+		this.genreList.add(genre);
+	}
 	
 	
 	@Override
 	public String toString() {
 		return "Movie [name=" + name + ", duration=" + duration
-				+ ", dateCreated=" + dateCreated + ", genres=" + genres
+				+ ", dateCreated=" + dateCreated + ", genres=" + genreList
 				+ ", language=" + language + ", director=" + director
 				+ ", preferredMean=" + preferredMean + ", actorsLst="
 				+ actorsLst + ", wikiURL=" + wikiURL + ", plot=" + plot
@@ -64,12 +70,12 @@ public class Movie{
 		this.duration = duration;
 	}
 
-	public List<String> getGenre() {
-		return genres;
+	public Set<String> getGenre() {
+		return genreList;
 	}
 
-	public void setGenre(List<String> genre) {
-		this.genres = genre;
+	public void setGenre(Set<String> genreList) {
+		this.genreList = genreList;
 	}
 
 	public String getLanguage() {
