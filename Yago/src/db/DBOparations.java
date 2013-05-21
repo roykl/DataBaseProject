@@ -16,25 +16,25 @@ public class DBOparations implements IdbOparations {
 	}
 	
 	@Override
-	public synchronized int update(String tableNamr, String column, String predicates) {
+	public  int update(String tableNamr, String column, String predicates) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
-	public synchronized int delete(String tableNamr, String whereStatment) {
+	public  int delete(String tableNamr, String whereStatment) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
-	public synchronized int insert(String statment) {
+	public  int insert(String statment) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
-	public synchronized ResultSet select(String select, String from, String where) {
+	public  ResultSet select(String select, String from, String where) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -42,7 +42,7 @@ public class DBOparations implements IdbOparations {
 	
 
 		@Override
-		public synchronized void importData(String path) {
+		public void importData(String path) {
 			// TODO Auto-generated method stub
 
 		}
