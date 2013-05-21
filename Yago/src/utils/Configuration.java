@@ -57,6 +57,16 @@ public class Configuration {
 		return getConfig(PARSING, "YagoWikipediaInfoFilePath");
 	}
 	
+	/** get the path of the file genres.list provided by IMDB */
+	public String getImdbGenres(){
+		return getConfig(PARSING, "IMDBgenreListFilePath");
+	}
+	
+	/** get the path of the file plot.list provided by IMDB */
+	public String getImdbPlot(){
+		return getConfig(PARSING, "IMDBplotListFilePath");
+	}
+	
 	
 	/** returns the value of the element configElem, child of packageName element */
 	private String getConfig(String packageName, String configElem){

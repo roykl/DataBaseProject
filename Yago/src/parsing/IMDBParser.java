@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 
+import utils.Configuration;
+
 /*************************************************************************
  * TODO - Issues:
  *  1. Decide genre list format.
@@ -21,6 +23,7 @@ public class IMDBParser {
 	public final String LANGUAGE_FILE = "language.list";
 	/*Current user directory*/
 	private String currentDir;
+	private Configuration settings = new Configuration(); 
 
 	/**
 	 * Default Constructor
@@ -35,7 +38,11 @@ public class IMDBParser {
 	 **/
 	public void parseGenre(HashMap<String,Movie> movies){
 		//set the file path
-		String filePath = currentDir+"\\"+GENRE_FILE;
+		String filePath;
+		if (settings.getImdbGenres().isEmpty() || settings.getImdbGenres() == null)
+			 filePath = currentDir + "\\" + GENRE_FILE;
+		else
+			 filePath = settings.getImdbGenres();
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(filePath));	
 			boolean listStartReached = false;
