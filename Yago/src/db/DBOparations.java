@@ -7,11 +7,11 @@ import com.mysql.jdbc.Connection;
 public class DBOparations implements IdbOparations {
 
 
-	Connection conn;
+	JDBCConnectionPooling conn;
 		
 	//One row operations
 		
-	public DBOparations(Connection connParam){
+	public DBOparations(JDBCConnectionPooling connParam){
 		conn = connParam;
 	}
 	
@@ -42,7 +42,7 @@ public class DBOparations implements IdbOparations {
 	
 
 		@Override
-		public void importData(String path) {
+		public void importData() {
 			// TODO Auto-generated method stub
 
 		}
