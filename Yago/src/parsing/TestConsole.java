@@ -30,7 +30,7 @@ public static void main(String[] args) throws IOException {
 		
 		
 		
-		YagoParser yp = new YagoParser();
+		Parser yp = new Parser();
 		
 		
 		yp.parse();

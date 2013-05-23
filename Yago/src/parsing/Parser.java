@@ -17,6 +17,7 @@ public class Parser implements Iparser {
 	@Override
 	public void parse(){
 		YagoParser yp = new YagoParser();
+		yp.parse();
     	IMDBParser imdbPars = new IMDBParser(yp.getMoviesTable()); 
     	moviesTable = yp.getMoviesTable();
     	actorsTable = yp.getActorsTable();
