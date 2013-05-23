@@ -3,12 +3,11 @@ package parsing;
 import java.util.HashMap;
 
 
-
-
 public interface Iparser {
 
-	public HashMap<String, Movie> getMovie(String filePath); 
-	public HashMap<String, Person> getActor(String filePath);
-	public HashMap<String, Person> getDirector(String filePath);
+	public void parse();
+	public HashMap<String, Movie> getMoviesTable(); 
+	public HashMap<String, Person> getActorsTable();
+	public HashMap<String, Person> getDirectorsTable();
 
 }

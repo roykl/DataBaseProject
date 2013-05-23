@@ -3,12 +3,12 @@ package parsing;
 public class Person {
 	
 	private String name;
-	private String preferredMean;
+	private String id;
 	private String firstName;
 	private String lastName;
 	
-	public Person(String name){
-		setName(name);
+	public Person(String id){
+		this.id = id;
 	}
 
 	public String getName() {
@@ -22,14 +22,6 @@ public class Person {
 	public String toString(){
 		return this.name;
 		
-	}
-
-	public String getPreferredMean() {
-		return preferredMean;
-	}
-
-	public void setPreferredMean(String preferredMean) {
-		this.preferredMean = preferredMean;
 	}
 
 	public String getLastName() {
@@ -46,6 +38,14 @@ public class Person {
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

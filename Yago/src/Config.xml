@@ -5,8 +5,8 @@
 		<YagoFactsFilePath>C:\Users\Roy\Desktop\test\yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
 		<YagoLiteralFactsFilePath>C:\Users\Roy\Desktop\test\yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
 		<YagoWikipediaInfoFilePath>C:\Users\Roy\Desktop\test\yagoWikipediaInfo.ttl</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->
-		<IMDBgenreListFilePath>""</IMDBgenreListFilePath> <!-- genres.list file path. if empty, use the file attached with the application  -->
-		<IMDBplotListFilePath>"" </<IMDBplotListFilePath> <!-- plot.list file path. if empty, use the file attached with the application  -->	 
+		<IMDBgenreListFilePath> </IMDBgenreListFilePath> <!-- genres.list file path. if empty, use the file attached with the application  -->
+		<IMDBplotListFilePath> </IMDBplotListFilePath> <!-- plot.list file path. if empty, use the file attached with the application  -->	 
 	</Parsing>
 	<DB>
 		<Host>localhost</Host>

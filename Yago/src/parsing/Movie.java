@@ -9,12 +9,12 @@ public class Movie{
 
 
 	private String name;
+	private String id;
 	private String duration;
 	private String dateCreated;
 	private Set<String> genreList = new LinkedHashSet<String>();
 	private String language; // need to do
 	private Person director;
-	private String preferredMean; // cancelled
 	private List<Person> actorsLst = new ArrayList<Person>();
 	private String wikiURL;
 	private String plot;
@@ -23,8 +23,8 @@ public class Movie{
 
 	/* constructor */	
 
-	public Movie(String name){
-		this.name = name;
+	public Movie(String id){
+		this.id = id;
 	}
 
 
@@ -45,7 +45,7 @@ public class Movie{
 		return "Movie [name=" + name + ", duration=" + duration
 				+ ", dateCreated=" + dateCreated + ", genres=" + genreList
 				+ ", language=" + language + ", director=" + director
-				+ ", preferredMean=" + preferredMean + ", actorsLst="
+			    + ", actorsLst="
 				+ actorsLst + ", wikiURL=" + wikiURL + ", plot=" + plot
 				+ ", youTubeURL=" + youTubeURL + "]";
 	}
@@ -123,16 +123,6 @@ public class Movie{
 	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-
-
-	public String getPreferredMean() {
-		return preferredMean;
-	}
-
-
-	public void setPreferredMean(String preferredMean) {
-		this.preferredMean = preferredMean;
-	}
 	
 	
 	public String getPlot() {
@@ -142,6 +132,16 @@ public class Movie{
 	
 	public void setPlot(String plot) {
 		this.plot = plot;
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

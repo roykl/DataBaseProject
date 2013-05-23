@@ -28,7 +28,14 @@ public static void main(String[] args) throws IOException {
 //	        IMDBParser im = new IMDBParser();
 //	        im.parseGenre(new HashMap<String,Movie>());
 		
+		
+		
 		YagoParser yp = new YagoParser();
+		
+		
+		yp.parse();
+		
+		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
 
 		
 //		yp.parseYagoTypes("C:\\Users\\Roy\\Desktop\\test\\yagoSimpleTypes.ttl");		

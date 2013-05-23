@@ -28,21 +28,26 @@ public class IMDBParser {
 	/**
 	 * Default Constructor
 	 **/
-	public IMDBParser(){
+	public IMDBParser(HashMap<String,Movie> movies){
 		currentDir = System.getProperty("user.dir");
+		parseGenre(movies);
+		parsePlot(movies);
 	}
 
 	/**
 	 * Parses the IMDB genres file and updates the movie table accordingly 
 	 * @param movies - the movie table.
 	 **/
-	public void parseGenre(HashMap<String,Movie> movies){
-		//set the file path
+	public void parseGenre(HashMap<String,Movie> movies){		
 		String filePath;
+		
+		// set the file path- if exist in the configuration= take it from it   
 		if (settings.getImdbGenres().isEmpty() || settings.getImdbGenres() == null)
 			 filePath = currentDir + "\\" + GENRE_FILE;
 		else
+			// take it from the current directory
 			 filePath = settings.getImdbGenres();
+		
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(filePath));	
 			boolean listStartReached = false;
@@ -117,49 +122,3 @@ public class IMDBParser {
 
 
 
-//package parsing;
-//
-//import java.io.BufferedReader;
-//import java.io.FileReader;
-//import java.util.HashMap;
-//
-//public class IMDBParser {
-//
-//	public final String GENRE_FILE = "genres.list";
-//	public final String GENRE_LIST = "8: THE GENRES LIST";
-//
-//	
-//	public void parseGenre(HashMap<String,Movie> moviesTable){
-//		//get the current directory
-//		String currentDir = System.getProperty("user.dir");
-//		//set the file path
-//		String filePath = currentDir+"\\"+GENRE_FILE;
-//		try{
-//			BufferedReader br = new BufferedReader(new FileReader(filePath));					
-//			String[] strArr;
-//			@SuppressWarnings("unused")
-//			String line , movieName, genre;
-//			//read each line
-//			while((line = br.readLine()) != null){
-//				//if we got the the place in the file with the genres list
-//				if (line.contains(GENRE_LIST) && br.readLine().contains("======")){
-//					while((line = br.readLine()) != null){
-//						//split by tab and get the movie name and genre
-//						strArr = line.split("\\t");
-//						movieName = strArr[0];
-//						genre =strArr[strArr.length-1];
-//					}
-//					break;
-//				}
-//			}
-//			br.close();
-//		}
-//		catch(Exception ex){
-//			
-//		}
-//	}
-//
-//	public void parsePlot(HashMap<String,Movie> moviesTable){
-//		//implement
-//	}
-//}
