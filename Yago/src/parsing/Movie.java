@@ -42,12 +42,9 @@ public class Movie{
 	
 	@Override
 	public String toString() {
-		return "Movie [name=" + name + ", duration=" + duration
-				+ ", dateCreated=" + dateCreated + ", genres=" + genreList
-				+ ", language=" + language + ", director=" + director
-			    + ", actorsLst="
-				+ actorsLst + ", wikiURL=" + wikiURL + ", plot=" + plot
-				+ ", youTubeURL=" + youTubeURL + "]";
+		return "id= " + getId() + ",   name=" + name + "\n" + "actors= " + actorsLst +"\n"
+				+ "director= " + getDirector() +"\n" + "year= " + getDateCreated()
+				+ ", duration= " + getDuration() + "\n"+ "wiki= " + getWikiURL() +"\n";
 	}
 
 	

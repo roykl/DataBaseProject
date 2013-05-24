@@ -7,6 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import utils.Configuration;
 
 
@@ -30,12 +33,18 @@ public static void main(String[] args) throws IOException {
 		
 		
 		
-		Parser yp = new Parser();
-		
-		
+		YagoParser yp = new YagoParser();		
 		yp.parse();
 		
 		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
+		Set<Integer> keys = new HashSet<Integer>();
+		for( String id : yp.getMoviesTable().keySet())
+		{
+			System.out.println(id.hashCode() +"\n");
+			keys.add(id.hashCode());
+		}
+		
+		System.out.println("Num Of keys is: " + keys.size());
 
 		
 //		yp.parseYagoTypes("C:\\Users\\Roy\\Desktop\\test\\yagoSimpleTypes.ttl");		
