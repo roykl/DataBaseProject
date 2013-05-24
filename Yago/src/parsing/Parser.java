@@ -4,10 +4,12 @@ import java.util.HashMap;
 
 public class Parser implements Iparser {
 
-	private HashMap<String, Movie> moviesTable;
-	private HashMap<String, Person> actorsTable;
-	private HashMap<String, Person> directorsTable;
+	private HashMap<String, Movie> moviesTable; // key = the movie id (String), value = movie object
+	private HashMap<String, Person> actorsTable; // key = actor id (String), value = person object
+	private HashMap<String, Person> directorsTable; // key = director id (String), value = person object
 
+	
+	// constructor
 	public Parser(){
 		this.moviesTable = new HashMap<String,Movie>();
 		this.actorsTable = new HashMap<String,Person>();
@@ -16,15 +18,20 @@ public class Parser implements Iparser {
 
 	@Override
 	public void parse(){
+		// parse yago file - get all the information from yago
 		YagoParser yp = new YagoParser();
 		yp.parse();
+		
+		// parse IMDB files - get missing information from imdb (genre, plot, language)
     	IMDBParser imdbPars = new IMDBParser(yp.getMoviesTable()); 
+    	
+    	// update the movies/actors/directors tables
     	moviesTable = yp.getMoviesTable();
     	actorsTable = yp.getActorsTable();
     	directorsTable = yp.getDirectorsTable();
 	}
 
-
+	@Override
 	public HashMap<String, Movie> getMoviesTable() {
 		return moviesTable;
 	}
@@ -33,6 +40,7 @@ public class Parser implements Iparser {
 		this.moviesTable = moviesTable;
 	}
 
+	@Override
 	public HashMap<String, Person> getActorsTable() {
 		return actorsTable;
 	}
@@ -41,6 +49,7 @@ public class Parser implements Iparser {
 		this.actorsTable = actorsTable;
 	}
 
+	@Override
 	public HashMap<String, Person> getDirectorsTable() {
 		return directorsTable;
 	}

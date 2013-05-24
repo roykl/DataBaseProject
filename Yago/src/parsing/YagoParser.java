@@ -43,8 +43,7 @@ public class YagoParser extends Parser{
 	/*=================*/
 	/* public function */
 	/*=================*/
-	
-	
+		
 	@Override
 	public void parse(){
 		// get the configuration file
@@ -73,7 +72,7 @@ public class YagoParser extends Parser{
 				//parse the next line by tabs to String[3]
 				while ((strArr = parseLine2Array(br)) != null){ 
 					
-					//in case of Movie Entity
+					//in case of Movie Entity - add to moviesTable
 					if(strArr.length >= 3 && strArr[2].contains(MOVIE_ID)){
 						String movieName = pullEntityName(strArr[0]);
 						Movie m = new Movie(strArr[0]);
@@ -82,7 +81,7 @@ public class YagoParser extends Parser{
 						continue;
 					}
 					
-					//in case of Actor Entity	
+					//in case of Actor Entity - add to actorsTable
 					else if(strArr.length >= 3 && strArr[2].contains(ACTOR_ID)){
 						String actorName = pullEntityName(strArr[0]);
 						Person p = new Person(strArr[0]);
@@ -91,7 +90,7 @@ public class YagoParser extends Parser{
 						continue;
 					}
 					
-					//in case of Director Entity	
+					//in case of Director Entity - add to directorsTable	
 					else if(strArr.length >= 3 && strArr[2].contains(DIRECTOR_ID)){
 						String directorName = pullEntityName(strArr[0]);
 						Person p = new Person(strArr[0]);
