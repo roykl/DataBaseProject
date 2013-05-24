@@ -49,7 +49,7 @@ public class YagoParser extends Parser{
 		// get the configuration file
 		utils.Configuration settings = new Configuration();
 		
-		//parse yago files 		
+		//parse yago files 				
 		parseYagoTypes(settings.getYagoSimpleTypes());
 		parseYagoFacts(settings.getYagoFacts());
 		parseYagoLiteralFacts(settings.getYagoLiteralFacts());
@@ -298,12 +298,17 @@ public class YagoParser extends Parser{
 	}
 	
 	/** pull the time in minutes from the duration format */
-	private String pullDuration(String duration){
-		String min = duration.replace("^^<s>", "");
-		min = min.substring(1, min.length()-3);	
-		int sec = Integer.parseInt(min);
-		sec = sec/60;
-		min = String.valueOf(sec);
-		return min;
+	private String pullDuration(String duration){	
+		try {
+			int i = duration.indexOf(".");
+			String min = duration.substring(1, i);
+			int sec = Integer.parseInt(min);
+			sec = sec/60;
+			min = String.valueOf(sec);
+			return min;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "0";
+		}
 	}
 }

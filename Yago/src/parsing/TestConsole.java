@@ -33,7 +33,9 @@ public static void main(String[] args) throws IOException {
 		
 		
 		
-		YagoParser yp = new YagoParser();		
+		YagoParser yp = new YagoParser();
+		
+	//	System.out.println(yp.pullDuration("'5940.0'^^<s>"));
 		yp.parse();
 		
 		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
