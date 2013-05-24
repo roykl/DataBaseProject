@@ -8,16 +8,16 @@ import java.util.Set;
 public class Movie{
 
 
-	private String name;
-	private String id;
-	private String duration;
-	private String dateCreated;
-	private Set<String> genreList = new LinkedHashSet<String>();
+	private String name; // the "clean" name of the movie
+	private String id; // the movie name as appear in yago files (with "<" ">" and "(film)"
+	private String duration; // the movie duration in minutes
+	private String dateCreated; // the year created
+	private Set<String> genreList = new LinkedHashSet<String>(); // the list of genres
 	private String language; // need to do
-	private Person director;
-	private List<Person> actorsLst = new ArrayList<Person>();
-	private String wikiURL;
-	private String plot;
+	private Person director; // the director of the movie
+	private List<Person> actorsLst = new ArrayList<Person>();// actors list
+	private String wikiURL; // wikipedia url
+	private String plot; // plot of the movie
 	private String youTubeURL; // need to do
 
 
