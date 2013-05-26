@@ -33,7 +33,7 @@ public static void main(String[] args) throws IOException {
 		
 		
 		
-		YagoParser yp = new YagoParser();
+		Parser yp = new YagoParser();
 		
 	//	System.out.println(yp.pullDuration("'5940.0'^^<s>"));
 		yp.parse();

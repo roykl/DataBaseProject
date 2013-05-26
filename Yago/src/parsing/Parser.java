@@ -31,6 +31,9 @@ public class Parser implements Iparser {
     	directorsTable = yp.getDirectorsTable();
 	}
 
+	
+	// getters and setters
+	
 	@Override
 	public HashMap<String, Movie> getMoviesTable() {
 		return moviesTable;
