@@ -70,7 +70,6 @@ public class Configuration {
 	
 	/** returns the value of the element configElem, child of packageName element */
 	private String getConfig(String packageName, String configElem){
-
 		// get the element of the packageName provided (child of root element)
 		Node node = docEle.getElementsByTagName(packageName).item(0);
 

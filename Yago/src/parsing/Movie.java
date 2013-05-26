@@ -45,8 +45,8 @@ public class Movie{
 		return "id= " + getId() + ",   name=" + name + "\n" + "actors= " + actorsLst +"\n"
 				+ "director= " + getDirector() +"\n" + "year= " + getDateCreated()
 				+ ", duration= " + getDuration() + "\n"+ "wiki= " + getWikiURL() +"\n" +
-				"generes: " + getGenre() + "language: "+ getLanguage() + "\n"+
-				"Plot: " + getPlot();
+				"generes: " + getGenre() + " language: "+ getLanguage() + "\n"+
+				"Plot: " + getPlot() + "\n";
 	}
 
 	

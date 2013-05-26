@@ -54,7 +54,7 @@ public class IMDBParser {
 		String filePath;
 
 		// set the file path- if exist in the configuration= take it from it   
-		if (settings.getImdbGenres().isEmpty() || settings.getImdbGenres() == null)
+		if (settings.getImdbGenres() == null || settings.getImdbGenres().length() < 3)
 			filePath = currentDir + "\\" + GENRE_FILE;
 		else
 			// take it from the current directory
