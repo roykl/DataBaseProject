@@ -21,7 +21,7 @@ public class Parser implements Iparser {
 		// parse yago file - get all the information from yago
 		YagoParser yp = new YagoParser();
 		yp.parse();
-		
+System.out.print("Finished Yago Parsing");		
 		// parse IMDB files - get missing information from imdb (genre, plot, language)
     	IMDBParser imdbPars = new IMDBParser(yp.getMoviesTable()); 
     	

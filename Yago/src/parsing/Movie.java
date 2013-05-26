@@ -44,7 +44,9 @@ public class Movie{
 	public String toString() {
 		return "id= " + getId() + ",   name=" + name + "\n" + "actors= " + actorsLst +"\n"
 				+ "director= " + getDirector() +"\n" + "year= " + getDateCreated()
-				+ ", duration= " + getDuration() + "\n"+ "wiki= " + getWikiURL() +"\n";
+				+ ", duration= " + getDuration() + "\n"+ "wiki= " + getWikiURL() +"\n" +
+				"generes: " + getGenre() + "language: "+ getLanguage() + "\n"+
+				"Plot: " + getPlot();
 	}
 
 	
