@@ -3,9 +3,14 @@ package parsing;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,10 +32,20 @@ public static void main(String[] args) throws IOException {
 		
 		
 		
+		HashMap<String,Movie> p = new HashMap<String, Movie>();
 		Parser yp = new Parser();
+		try {
+			p = (HashMap<String,Movie>) getObjFromFile("C:\\Users\\Roy\\Desktop\\test\\object");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	//	System.out.println(yp.pullDuration("'5940.0'^^<s>"));
-		yp.parse();
+	//	yp.parse();
+		
+        writeObjectToFile(yp.getMoviesTable());
+		
 		
 		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
 		Set<Integer> keys = new HashSet<Integer>();
@@ -85,6 +100,18 @@ public static void main(String[] args) throws IOException {
 		}
 		br.close();
 		bw.close();
+	}
+	
+	public static void writeObjectToFile(Object obj) throws IOException{
+		FileOutputStream fout = new FileOutputStream("C:\\Users\\Roy\\Desktop\\test\\object");
+		ObjectOutputStream oos = new ObjectOutputStream(fout);
+		oos.writeObject(obj);
+	}
+	
+	public static Object getObjFromFile(String path) throws ClassNotFoundException, IOException{
+		FileInputStream fin = new FileInputStream(path);
+		ObjectInputStream ios = new ObjectInputStream(fin);
+		return ios.readObject();
 	}
 
 }

@@ -1,8 +1,9 @@
 package parsing;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Parser implements Iparser {
+public class Parser implements Iparser, Serializable {
 
 	private HashMap<String, Movie> moviesTable; // key = the movie id (String), value = movie object
 	private HashMap<String, Person> actorsTable; // key = actor id (String), value = person object

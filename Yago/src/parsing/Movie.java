@@ -1,11 +1,12 @@
 package parsing;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Movie{
+public class Movie implements Serializable{
 
 
 	private String name; // the "clean" name of the movie
