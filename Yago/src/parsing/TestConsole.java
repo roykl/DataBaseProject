@@ -34,8 +34,14 @@ public static void main(String[] args) throws IOException {
 		
 		HashMap<String,Movie> p = new HashMap<String, Movie>();
 		Parser yp = new Parser();
+		long start = System.currentTimeMillis();
+		yp.parse();
+		System.out.println((System.currentTimeMillis()-start)/1000F + " Seconds");
 		try {
-			p = (HashMap<String,Movie>) getObjFromFile("C:\\Users\\Roy\\Desktop\\test\\object");
+			long s = System.currentTimeMillis();
+			p = (HashMap<String,Movie>) getObjFromFile("F:\\Users\\Roy's Room\\Dropbox\\DB Project\\object");
+			System.out.println((System.currentTimeMillis()-s)/1000F + " Seconds");
+			System.out.println("Num of Movies is: " +p.size());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,7 +50,7 @@ public static void main(String[] args) throws IOException {
 	//	System.out.println(yp.pullDuration("'5940.0'^^<s>"));
 	//	yp.parse();
 		
-        writeObjectToFile(yp.getMoviesTable());
+   //     writeObjectToFile(yp.getMoviesTable());
 		
 		
 		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
