@@ -22,7 +22,7 @@ import db.JDBCConnectionPooling;
 import utils.Configuration;
 
 
-
+//new branch
 public class TestConsole {
 
 
@@ -53,7 +53,7 @@ public static void main(String[] args) throws IOException {
 		
 		JDBCConnectionPooling pl = null;
 				try {
-					pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3305/DbMysql05","DbMysql05", "DbMysql05");
+					pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
 					
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
