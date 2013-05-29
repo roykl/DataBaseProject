@@ -37,6 +37,28 @@ public class Configuration {
 		}	
 	}
 
+	
+	/** returns the value of the element configElem, child of packageName element */
+	private String getConfig(String packageName, String configElem){
+		// get the element of the packageName provided (child of root element)
+		Node node = docEle.getElementsByTagName(packageName).item(0);
+
+		if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+			Element e = (Element) node;
+			
+			//get the wanted element configuration (child of the "package" element)
+			NodeList nodeList = e.getElementsByTagName(configElem);
+			
+			//return the value 
+			return nodeList.item(0).getChildNodes().item(0).getNodeValue();
+		}
+		
+		return null;
+	}
+
+	
+	// yago config // 
+	
 	/** get the path of the file yagoSimpleTypes.ttl */
 	public String getYagoSimpleTypes(){		
 		return getConfig(PARSING, "YagoSimpleTypesFilePath");
@@ -57,6 +79,8 @@ public class Configuration {
 		return getConfig(PARSING, "YagoWikipediaInfoFilePath");
 	}
 	
+	// imdb config // 
+	
 	/** get the path of the file genres.list provided by IMDB */
 	public String getImdbGenres(){
 		return getConfig(PARSING, "IMDBgenreListFilePath");
@@ -67,23 +91,28 @@ public class Configuration {
 		return getConfig(PARSING, "IMDBplotListFilePath");
 	}
 	
-	
-	/** returns the value of the element configElem, child of packageName element */
-	private String getConfig(String packageName, String configElem){
-		// get the element of the packageName provided (child of root element)
-		Node node = docEle.getElementsByTagName(packageName).item(0);
-
-		if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
-			Element e = (Element) node;
-			
-			//get the wanted element configuration (child of the "package" element)
-			NodeList nodeList = e.getElementsByTagName(configElem);
-			
-			//return the value 
-			return nodeList.item(0).getChildNodes().item(0).getNodeValue();
-		}
-		
-		return null;
+	/** get the path of the file l.list provided by IMDB */
+	public String getImdblanguage(){
+		return getConfig(PARSING, "IMDBlanguageFilePat");
 	}
+	
+	// db config // 
+	
+	public String getHostAddress(){
+		return getConfig(DB, "Host");
+	}
+	
+	public String getPort(){
+		return getConfig(DB, "Port");
+	}
+	
+	public String getUserName(){
+		return getConfig(DB, "UserName");
+	}
+	
+	public String getPassword(){
+		return getConfig(DB, "Password");
+	}
+
 
 }
