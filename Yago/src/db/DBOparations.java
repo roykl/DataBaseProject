@@ -1,6 +1,5 @@
 package db;
 
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -153,18 +152,21 @@ public class DBOparations implements IdbOparations {
 			}
 		}
 	}
-
-	@Override
-	public synchronized void importData() {
-
+	
+	/** get a connection */
+	private Connection getConnection(){
 		Connection conn = null;
 		try {
 			conn = connPull.connectionCheck();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e1.printStackTrace();			
 		}
+		return conn;
+	}
 
+	/** get statement from the conn */
+	private Statement getStatement(Connection conn){
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
@@ -172,6 +174,10 @@ public class DBOparations implements IdbOparations {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return stmt;
+	}
+	
+	private void deleteAllTablesContent(Statement stmt){
 		// Delete all relevant tables
 		try {
 			stmt.executeUpdate("DELETE FROM ActorMovie");
@@ -179,67 +185,65 @@ public class DBOparations implements IdbOparations {
 			stmt.executeUpdate("DELETE FROM Movie");
 			stmt.executeUpdate("DELETE FROM Actor");
 			stmt.executeUpdate("DELETE FROM Director");
-
 			stmt.executeUpdate("DELETE FROM Language");
 			stmt.executeUpdate("DELETE FROM Genre");
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {			
 			System.out.println("Deleting Error");
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public synchronized void importData() {
 
-		finally {
-			safelyClose(stmt);
+		// get a connection and statement and delete tables content
+			Connection conn = getConnection();
+			Statement stmt = getStatement(conn);
+			
+		try {	
+			conn.setAutoCommit(false);
+
+			// Delete all relevant tables
+			deleteAllTablesContent(stmt);
+			
+		} catch (SQLException e1) {		
+			e1.printStackTrace();
 		}
 
+	try{
 		PreparedStatement pstmt = null;
+		// create Parser object, start parsing and get all movies details
+		Iparser yp = new Parser();
+		yp.parse();
+		HashMap<String, Movie> moviesList = yp.getMoviesTable();
 
-		try {
-
-			int i;
-
-			HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
-			Iparser yp = new Parser();
-			//yp.parse();
-			//moviesList = yp.getMoviesTable();
 			
-			/// roy's try
-			try {
-				moviesList  = (HashMap<String,Movie>) TestConsole.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			/// end roy's try
-			
-			conn.setAutoCommit(false);
+			// prepare statement 
 			pstmt = conn
-					.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
-
-			Statement verifier = null;
+					.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");		
 
 			ResultSet x;
-			verifier = conn.createStatement();
+			int hashValue;
+			
 			for (Movie movie : moviesList.values()) {
 				int a;
 				int genre = 0;
 				
-				i=movie.getId().hashCode();
+				hashValue = movie.getId().hashCode();
 				// putting the movie Id to the movie table, not adding batch yet
-				pstmt.setInt(1, i);
+				pstmt.setInt(1, hashValue);
+				
+				
 				if (movie.getLanguage() != null) {
-					x = verifier
+					x = stmt
 							.executeQuery("SELECT * FROM Language WHERE languageName='"
 									+ movie.getLanguage() + "'");
 					// First we check if the langugae of the film is already
 					// exists,
 					// otherwise we add it
 					if (!x.next()) {
-						x = verifier
+						x = stmt
 								.executeQuery("SELECT COUNT(*) FROM Language");
 						x.next();
 
@@ -248,7 +252,7 @@ public class DBOparations implements IdbOparations {
 												// Id next to the new language
 						System.out
 								.println("Language not located....new language is insert");
-						verifier.executeUpdate("INSERT INTO Language(idLanguage,languageName) VALUES("
+						stmt.executeUpdate("INSERT INTO Language(idLanguage,languageName) VALUES("
 								+ a + ",'" + movie.getLanguage() + "')");
 						// putting the language Id to the movie table in the
 						// correct
@@ -278,15 +282,29 @@ public class DBOparations implements IdbOparations {
 				if ((movie.getDirector() != null)
 						&& (movie.getDirector().getName() != null)) {
 
+					x=null;
 					try {
 
-						x = verifier
+						x = stmt
 								.executeQuery("SELECT * FROM Director WHERE directorName=\""
 										+ movie.getDirector().getName() + "\"");
 
+						
+					}
+					
+					
+					catch(SQLException expc){
+						
+						
+						
+						x = stmt
+								.executeQuery("SELECT * FROM Director WHERE directorName='"
+										+ movie.getDirector().getName() + "'");
+						
+					}
 						if (!x.next()) {
 
-							x = verifier
+							x = stmt
 									.executeQuery("SELECT COUNT(*) FROM Director");
 							x.next();
 							a = x.getInt(1) + 1; // number of keys so we put the
@@ -295,14 +313,32 @@ public class DBOparations implements IdbOparations {
 													// Director
 							System.out
 									.println("Director not located.... new Director is insert");
-							verifier.executeUpdate("INSERT INTO Director(idDirector,directorName) VALUES("
+							
+							
+							try{
+							stmt.executeUpdate("INSERT INTO Director(idDirector,directorName) VALUES("
 									+ a
 									+ ",\""
 									+ movie.getDirector().getName()
 									+ "\")");
 
-							pstmt.setInt(3, a);
+							
+							}
+							
+							catch(SQLException exp){
+								
+								stmt.executeUpdate("INSERT INTO Director(idDirector,directorName) VALUES("
+										+ a
+										+ ",'"
+										+ movie.getDirector().getName()
+										+ "')");
+								
+							
 
+						}
+							
+							pstmt.setInt(3, a);
+							
 						}
 
 						else { // The Director was located but we still need to
@@ -322,21 +358,7 @@ public class DBOparations implements IdbOparations {
 
 					}
 
-					catch (SQLException exp) {
-
-						System.out
-								.println("Error with the's name "+movie.getDirector().getName()+", parsing voilating the SQL command");
-
 					
-					
-					
-					}
-
-					finally {
-
-					}
-				}
-
 				else {
 
 					pstmt.setNull(3, 2);
@@ -363,11 +385,11 @@ public class DBOparations implements IdbOparations {
 
 					String currentGenre = itr.next();
 
-					x = verifier
+					x = stmt
 							.executeQuery("SELECT * FROM Genre WHERE genreName='"
 									+ currentGenre + "'");
 					if (!x.next()) {
-						x = verifier.executeQuery("SELECT COUNT(*) FROM Genre");
+						x = stmt.executeQuery("SELECT COUNT(*) FROM Genre");
 						x.next();
 						genre = x.getInt(1) + 1; // number of keys so we put the
 													// correct
@@ -375,18 +397,18 @@ public class DBOparations implements IdbOparations {
 						System.out
 								.println("Genre not located.... new Genre is insert");
 
-						verifier.executeUpdate("INSERT INTO Genre(idGenre,genreName) VALUES("
+						stmt.executeUpdate("INSERT INTO Genre(idGenre,genreName) VALUES("
 								+ genre + ",'" + currentGenre + "')");
 
-						verifier.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
-								+ genre + ",'" + i + "')");
+						stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
+								+ genre + ",'" + hashValue + "')");
 
 					}
 
 					else {
 
-						verifier.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
-								+ x.getInt(1) + ",'" + i + "')");
+						stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
+								+ x.getInt(1) + ",'" + hashValue + "')");
 
 					}
 				}
@@ -398,11 +420,20 @@ public class DBOparations implements IdbOparations {
 
 				while (j < actors.size()) {
 					try {
-						x = verifier
+						x = stmt
 								.executeQuery("SELECT * FROM Actor WHERE actorName=\""
 										+ actors.get(j).getName() + "\"");
+					}
+					
+					catch(SQLException sql){
+						x = stmt
+								.executeQuery("SELECT * FROM Actor WHERE actorName='"
+										+ actors.get(j).getName() + "'");
+						
+						
+					}
 						if (!x.next()) {
-							x = verifier
+							x = stmt
 									.executeQuery("SELECT COUNT(*) FROM Actor");
 							x.next();
 							a = x.getInt(1) + 1; // number of keys so we put the
@@ -412,33 +443,45 @@ public class DBOparations implements IdbOparations {
 							System.out
 									.println("Actor not located....new Actor is insert");
 
-							verifier.executeUpdate("INSERT INTO Actor(idActor,actorName) VALUES("
+							
+							try{
+							stmt.executeUpdate("INSERT INTO Actor(idActor,actorName) VALUES("
 									+ a + ",\"" + actors.get(j).getName() + "\")");
 
-							verifier.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-									+ a + ",\"" + i + "\")");
+							stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
+									+ a + ",\"" + hashValue + "\")");
 
+						}
+							
+							catch(SQLException exp){
+								stmt.executeUpdate("INSERT INTO Actor(idActor,actorName) VALUES("
+										+ a + ",'" + actors.get(j).getName() + "')");
+
+								stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
+										+ a + ",'" + hashValue + "')");
+							}
+							
 						}
 						
 						
 						else{
-							verifier.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-									+ x.getInt(1) + ",\"" + i + "\")");
 							
+							try{
+							stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
+									+ x.getInt(1) + ",\"" + hashValue + "\")");
+							}
+							
+							catch (SQLException sql){
+								
+								stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
+										+ x.getInt(1) + ",'" + hashValue + "')");
+								
 						}
 
 					}
 
-					catch (SQLException exp) {
-
-						System.out
-								.println("Error with the actor's name, parsing voilating the SQL command");
-
-					}
-
-					finally {
-						j++;
-					}
+											j++;
+					
 				}
 
 			}
@@ -446,7 +489,7 @@ public class DBOparations implements IdbOparations {
 			conn.commit();
 
 			safelyClose(pstmt);
-			safelyClose(verifier);
+			safelyClose(stmt);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
