@@ -11,9 +11,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import db.DBOparations;
+import db.JDBCConnectionPooling;
 
 import utils.Configuration;
 
@@ -31,21 +35,34 @@ public static void main(String[] args) throws IOException {
 //	        im.parseGenre(new HashMap<String,Movie>());
 		
 		
-		
-		HashMap<String,Movie> p = new HashMap<String, Movie>();
+//		
+//		HashMap<String,Movie> p = new HashMap<String, Movie>();
 		Parser yp = new Parser();
-		long start = System.currentTimeMillis();
-		yp.parse();
-		System.out.println((System.currentTimeMillis()-start)/1000F + " Seconds");
-		try {
-			long s = System.currentTimeMillis();
-			p = (HashMap<String,Movie>) getObjFromFile("F:\\Users\\Roy's Room\\Dropbox\\DB Project\\object");
-			System.out.println((System.currentTimeMillis()-s)/1000F + " Seconds");
-			System.out.println("Num of Movies is: " +p.size());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		long start = System.currentTimeMillis();
+//		yp.parse();
+//		System.out.println((System.currentTimeMillis()-start)/1000F + " Seconds");
+//		try {
+//			long s = System.currentTimeMillis();
+//			p = (HashMap<String,Movie>) getObjFromFile("F:\\Users\\Roy's Room\\Dropbox\\DB Project\\object");
+//			System.out.println((System.currentTimeMillis()-s)/1000F + " Seconds");
+//			System.out.println("Num of Movies is: " +p.size());
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		JDBCConnectionPooling pl = null;
+				try {
+					pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3305/DbMysql05","DbMysql05", "DbMysql05");
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+				DBOparations db= new DBOparations(pl);
+				db.importData();
+			
 		
 	//	System.out.println(yp.pullDuration("'5940.0'^^<s>"));
 	//	yp.parse();

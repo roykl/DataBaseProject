@@ -1,5 +1,6 @@
 package db;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -200,9 +201,20 @@ public class DBOparations implements IdbOparations {
 
 			HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
 			Iparser yp = new Parser();
-			yp.parse();
-			moviesList = yp.getMoviesTable();
-
+			//yp.parse();
+			//moviesList = yp.getMoviesTable();
+			
+			/// roy's try
+			try {
+				moviesList  = (HashMap<String,Movie>) TestConsole.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			/// end roy's try
 			
 			conn.setAutoCommit(false);
 			pstmt = conn
