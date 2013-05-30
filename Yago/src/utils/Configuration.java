@@ -98,18 +98,27 @@ public class Configuration {
 	
 	// db config // 
 	
+	/** get the server address */
 	public String getHostAddress(){
 		return getConfig(DB, "Host");
 	}
 	
+	/** get the port of the server */
 	public String getPort(){
 		return getConfig(DB, "Port");
 	}
 	
+	/** get the dbName(Schema name) */
+	public String getDbName(){
+		return getConfig(DB, "DbName");
+	}
+	
+	/** get the user name */
 	public String getUserName(){
 		return getConfig(DB, "UserName");
 	}
 	
+	/** get user password */
 	public String getPassword(){
 		return getConfig(DB, "Password");
 	}
