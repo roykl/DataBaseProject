@@ -22,7 +22,7 @@ import db.JDBCConnectionPooling;
 import utils.Configuration;
 
 
-
+//new branch
 public class TestConsole {
 
 
@@ -38,6 +38,16 @@ public static void main(String[] args) throws IOException {
 //		
 //		HashMap<String,Movie> p = new HashMap<String, Movie>();
 		Parser yp = new Parser();
+		yp.parse();
+		System.out.println(yp.getDirectorsTable().size());
+		Set<Integer> s = new HashSet<Integer>();
+		for(Movie l : yp.getMoviesTable().values()){
+			if(l.getDirector() != null)
+		    	s.add(l.getDirector().getId().hashCode());
+		}
+		System.out.println(s.size());
+		
+
 //		long start = System.currentTimeMillis();
 //		yp.parse();
 //		System.out.println((System.currentTimeMillis()-start)/1000F + " Seconds");
@@ -53,7 +63,7 @@ public static void main(String[] args) throws IOException {
 		
 		JDBCConnectionPooling pl = null;
 				try {
-					pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3305/DbMysql05","DbMysql05", "DbMysql05");
+					pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
 					
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -61,7 +71,7 @@ public static void main(String[] args) throws IOException {
 				}
 			
 				DBOparations db= new DBOparations(pl);
-				db.importData();
+//				db.importData();
 			
 		
 	//	System.out.println(yp.pullDuration("'5940.0'^^<s>"));
