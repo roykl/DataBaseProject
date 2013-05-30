@@ -20,13 +20,11 @@ CREATE TABLE `Genre` (
 ) ENGINE=InnoDB ;
 
 
-
 CREATE TABLE `Language` (
   `idLanguage` int(11) NOT NULL,
   `LanguageName` text,
   PRIMARY KEY (`idLanguage`)
 ) ENGINE=InnoDB ;
-
 
 
 CREATE TABLE `Movie` (
