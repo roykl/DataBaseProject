@@ -16,10 +16,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gdata.util.ServiceException;
+
 import db.DBOparations;
 import db.JDBCConnectionPooling;
 
 import utils.Configuration;
+import youTube.YouTubeManager;
 
 
 //new branch
@@ -27,6 +30,14 @@ public class TestConsole {
 
 
 public static void main(String[] args) throws IOException {
+	
+	YouTubeManager yt = new YouTubeManager();
+	try {
+		yt.getTrailer("reservoir dogs");
+	} catch (ServiceException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 		  
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
 //
