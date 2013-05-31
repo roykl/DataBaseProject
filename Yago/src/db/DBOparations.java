@@ -1,5 +1,6 @@
 package db;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,11 +9,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.sql.Connection;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLDataException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import parsing.*;
 
@@ -50,6 +57,21 @@ public class DBOparations implements IdbOparations {
 		}
 
 		return 1;
+	}
+
+	private void addSingleFacts(Movie movie, PreparedStatement pstmt) {
+		try {
+			pstmt.setString(4, movie.getName());
+			pstmt.setString(8, movie.getDuration());
+			pstmt.setString(5, movie.getDateCreated());
+			pstmt.setString(6, movie.getYouTubeURL());
+			pstmt.setString(7, movie.getWikiURL());
+			pstmt.setString(9, movie.getPlot());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -100,10 +122,11 @@ public class DBOparations implements IdbOparations {
 	}
 
 	@Override
-	public synchronized int insert(String table, String... values) {
+	public synchronized int insert(String table, String... values)
+			throws MySQLIntegrityConstraintViolationException {
 
 		int i;
-		String state = "INSERT INTO " + table + " VALUES+ (";
+		String state = "INSERT INTO " + table + " VALUES (";
 
 		for (i = 0; i < Array.getLength(values); i++) {
 			state = state + "'" + values[i] + "'";
@@ -112,6 +135,7 @@ public class DBOparations implements IdbOparations {
 				state = state + ",";
 		}
 
+		System.out.println(state);
 		Connection conn = null;
 		try {
 			conn = connPull.connectionCheck();
@@ -136,6 +160,25 @@ public class DBOparations implements IdbOparations {
 
 	}
 
+	public synchronized void insertidName(String table, String name,
+			int HashId, Statement sta) throws SQLException {
+
+		try {
+			String state = "INSERT INTO " + table + " VALUES (" + HashId + ",'"
+					+ name + "')";
+
+			sta.executeUpdate(state);
+
+		}
+
+		catch (SQLException exp) {
+
+			String state = "INSERT INTO " + table + " VALUES (" + HashId
+					+ ",\"" + name + "\")";
+			sta.executeUpdate(state);
+		}
+	}
+
 	@Override
 	public synchronized ResultSet select(String select, String from,
 			String where) {
@@ -152,21 +195,21 @@ public class DBOparations implements IdbOparations {
 			}
 		}
 	}
-	
+
 	/** get a connection */
-	private Connection getConnection(){
+	private Connection getConnection() {
 		Connection conn = null;
 		try {
 			conn = connPull.connectionCheck();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();			
+			e1.printStackTrace();
 		}
 		return conn;
 	}
 
 	/** get statement from the conn */
-	private Statement getStatement(Connection conn){
+	private Statement getStatement(Connection conn) {
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
@@ -176,8 +219,8 @@ public class DBOparations implements IdbOparations {
 		}
 		return stmt;
 	}
-	
-	private void deleteAllTablesContent(Statement stmt){
+
+	private void deleteAllTablesContent(Statement stmt) {
 		// Delete all relevant tables
 		try {
 			stmt.executeUpdate("DELETE FROM ActorMovie");
@@ -188,315 +231,217 @@ public class DBOparations implements IdbOparations {
 			stmt.executeUpdate("DELETE FROM Language");
 			stmt.executeUpdate("DELETE FROM Genre");
 
-		} catch (SQLException e) {			
+		} catch (SQLException e) {
 			System.out.println("Deleting Error");
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public synchronized void importData() {
+		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
+		try {
+			moviesList = (HashMap<String, Movie>) TestConsole
+					.getObjFromFile("C:\\Users\\Nir\\Dropbox\\DB Project\\object");
+		} catch (ClassNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 
-		// get a connection and statement and delete tables content
-			Connection conn = getConnection();
-			Statement stmt = getStatement(conn);
-			
-		try {	
+		Connection conn = getConnection();
+		Statement stmt = getStatement(conn);
+
+		try {
 			conn.setAutoCommit(false);
-
-			// Delete all relevant tables
 			deleteAllTablesContent(stmt);
-			
-		} catch (SQLException e1) {		
+		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 
-	try{
-		PreparedStatement pstmt = null;
-		// create Parser object, start parsing and get all movies details
-		Iparser yp = new Parser();
-		yp.parse();
-		HashMap<String, Movie> moviesList = yp.getMoviesTable();
-
-			
-			// prepare statement 
+		long start = 0;
+		try {
+			PreparedStatement pstmt = null;
 			pstmt = conn
-					.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");		
+					.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
 
-			ResultSet x;
-			int hashValue;
-			
+			int movieHashValue;
+			int count = 0;
+
+			HashSet<Integer> actorsSet = new HashSet<Integer>();
+			HashSet<Integer> directors = new HashSet<Integer>();
+			HashSet<Integer> genres = new HashSet<Integer>();
+			HashSet<Integer> languages = new HashSet<Integer>();
+
+			start = System.currentTimeMillis();
+
 			for (Movie movie : moviesList.values()) {
-				int a;
-				int genre = 0;
-				
-				hashValue = movie.getId().hashCode();
-				// putting the movie Id to the movie table, not adding batch yet
-				pstmt.setInt(1, hashValue);
 				
 				
-				if (movie.getLanguage() != null) {
-					x = stmt
-							.executeQuery("SELECT * FROM Language WHERE languageName='"
-									+ movie.getLanguage() + "'");
-					// First we check if the langugae of the film is already
-					// exists,
-					// otherwise we add it
-					if (!x.next()) {
-						x = stmt
-								.executeQuery("SELECT COUNT(*) FROM Language");
-						x.next();
-
-						a = x.getInt(1) + 1; // number of keys so we put the
-												// correct
-												// Id next to the new language
-						System.out
-								.println("Language not located....new language is insert");
-						stmt.executeUpdate("INSERT INTO Language(idLanguage,languageName) VALUES("
-								+ a + ",'" + movie.getLanguage() + "')");
-						// putting the language Id to the movie table in the
-						// correct
-						// movie, not adding batch yet
-						pstmt.setInt(2, a);
-
-					}
-
-					else { // The language was located but we still need to
-							// figure
-							// out its ID so we put the correct ID next to the
-							// movie
-
-						// now we at the first row of the table
-						// "SELECT * FROM Language WHERE languageName='"
-						int id = x.getInt(1); // now we have the language Id
-						pstmt.setInt(2, id); // we put the correct Id of the
-												// language to the current movie
-
-					}
-				} else {
-					pstmt.setNull(2, 2);
-				}
-				// Next we check if the Director of the film is already exists,
-				// otherwise we add it
-
-				if ((movie.getDirector() != null)
-						&& (movie.getDirector().getName() != null)) {
-
-					x=null;
-					try {
-
-						x = stmt
-								.executeQuery("SELECT * FROM Director WHERE directorName=\""
-										+ movie.getDirector().getName() + "\"");
-
-						
-					}
-					
-					
-					catch(SQLException expc){
-						
-						
-						
-						x = stmt
-								.executeQuery("SELECT * FROM Director WHERE directorName='"
-										+ movie.getDirector().getName() + "'");
-						
-					}
-						if (!x.next()) {
-
-							x = stmt
-									.executeQuery("SELECT COUNT(*) FROM Director");
-							x.next();
-							a = x.getInt(1) + 1; // number of keys so we put the
-													// correct
-													// Id next to the new
-													// Director
-							System.out
-									.println("Director not located.... new Director is insert");
-							
-							
-							try{
-							stmt.executeUpdate("INSERT INTO Director(idDirector,directorName) VALUES("
-									+ a
-									+ ",\""
-									+ movie.getDirector().getName()
-									+ "\")");
-
-							
-							}
-							
-							catch(SQLException exp){
-								
-								stmt.executeUpdate("INSERT INTO Director(idDirector,directorName) VALUES("
-										+ a
-										+ ",'"
-										+ movie.getDirector().getName()
-										+ "')");
-								
-							
-
-						}
-							
-							pstmt.setInt(3, a);
-							
-						}
-
-						else { // The Director was located but we still need to
-								// figure
-								// out its ID so we put the correct ID next to
-								// the movie
-
-							// now we at the first row of the table
-							// "SELECT * FROM Director WHERE DirectorName='"
-							int id = x.getInt(1); // now we have the language Id
-							pstmt.setInt(3, id); // we put the correct Id of the
-													// Director to the current
-													// movie,
-													// not batching yet!
-
-						}
-
-					}
-
-					
-				else {
-
-					pstmt.setNull(3, 2);
-
-				}
-				// Next we check if the the genre of the movie is already
-				// exists,
-				// otherwise we add it
-
-				pstmt.setString(4, movie.getName());
-				pstmt.setString(8, movie.getDuration());
-				pstmt.setString(5, movie.getDateCreated());
-				pstmt.setString(6, movie.getYouTubeURL());
-				pstmt.setString(7, movie.getWikiURL());
-				pstmt.setString(9, movie.getPlot());
+				movieHashValue = movie.getId().hashCode();
+				pstmt.setInt(1, movieHashValue);
+				addLanguage(movie, stmt, pstmt, languages);
+				addDirector(movie, stmt, directors, pstmt);
+				addSingleFacts(movie, pstmt);
 				pstmt.addBatch();
 				pstmt.executeBatch();
+				addGenres(movie, stmt, genres);
+				addActors(movie, stmt, actorsSet);
+			}
 
-				Set<String> genreList = new LinkedHashSet<String>();
-				genreList = movie.getGenre();
+			try {
+				conn.commit();
+			} catch (SQLException exp) {
+				System.out.println("I failed to commit");
+			}
 
-				Iterator<String> itr = genreList.iterator();
-				while (itr.hasNext()) {
+			try {
+				safelyClose(pstmt);
+				safelyClose(stmt);
+			} catch (Exception e) {
+				System.out.println("Failed - problem closing statements");
+			}
 
-					String currentGenre = itr.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-					x = stmt
-							.executeQuery("SELECT * FROM Genre WHERE genreName='"
-									+ currentGenre + "'");
-					if (!x.next()) {
-						x = stmt.executeQuery("SELECT COUNT(*) FROM Genre");
-						x.next();
-						genre = x.getInt(1) + 1; // number of keys so we put the
-													// correct
-													// Id next to the new Genre
-						System.out
-								.println("Genre not located.... new Genre is insert");
+		System.out.println("Time in sec= "
+				+ (System.currentTimeMillis() - start) / 1000F);
+	}
 
-						stmt.executeUpdate("INSERT INTO Genre(idGenre,genreName) VALUES("
-								+ genre + ",'" + currentGenre + "')");
-
-						stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
-								+ genre + ",'" + hashValue + "')");
-
-					}
-
-					else {
-
-						stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
-								+ x.getInt(1) + ",'" + hashValue + "')");
-
-					}
+	private void addLanguage(Movie movie, Statement stmt,
+			PreparedStatement pstmt, HashSet<Integer> languages) {
+		if (movie.getLanguage() != null) {
+			int hashValue = movie.getLanguage().hashCode();
+			try {
+				if (!languages.contains(hashValue)) {
+					insertidName("Language", movie.getLanguage(), hashValue,
+							stmt);
+					languages.add(hashValue);
 				}
+			} catch (SQLException exp) {
+				System.out.println("Language already in the table");
+			}
 
-				List<Person> actors = new ArrayList<Person>();
+			try {
+				pstmt.setInt(2, hashValue);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				pstmt.setNull(2, 2);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
-				actors = movie.getActorsLst();
-				int j = 0;
+	}
 
-				while (j < actors.size()) {
-					try {
-						x = stmt
-								.executeQuery("SELECT * FROM Actor WHERE actorName=\""
-										+ actors.get(j).getName() + "\"");
-					}
-					
-					catch(SQLException sql){
-						x = stmt
-								.executeQuery("SELECT * FROM Actor WHERE actorName='"
-										+ actors.get(j).getName() + "'");
-						
-						
-					}
-						if (!x.next()) {
-							x = stmt
-									.executeQuery("SELECT COUNT(*) FROM Actor");
-							x.next();
-							a = x.getInt(1) + 1; // number of keys so we put the
-													// correct Id next to the
-													// new
-													// Actor
-							System.out
-									.println("Actor not located....new Actor is insert");
+	private void addDirector(Movie movie, Statement stmt,
+			HashSet<Integer> directors, PreparedStatement pstmt) {
 
-							
-							try{
-							stmt.executeUpdate("INSERT INTO Actor(idActor,actorName) VALUES("
-									+ a + ",\"" + actors.get(j).getName() + "\")");
+		if ((movie.getDirector() != null)
+				&& (movie.getDirector().getName() != null)) {
 
-							stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-									+ a + ",\"" + hashValue + "\")");
+			int hashValue = movie.getDirector().getId().hashCode();
+			try {
+				if (!directors.contains(hashValue)) {
+					insertidName("Director", movie.getDirector().getName(),
+							hashValue, stmt);
+					directors.add(hashValue);
+				}
+			} catch (SQLException exp) {
 
-						}
-							
-							catch(SQLException exp){
-								stmt.executeUpdate("INSERT INTO Actor(idActor,actorName) VALUES("
-										+ a + ",'" + actors.get(j).getName() + "')");
+				System.out.println("Director's already in table");
+			}
+			try {
+				pstmt.setInt(3, hashValue);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				pstmt.setNull(3, 2);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
-								stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-										+ a + ",'" + hashValue + "')");
-							}
-							
-						}
-						
-						
-						else{
-							
-							try{
-							stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-									+ x.getInt(1) + ",\"" + hashValue + "\")");
-							}
-							
-							catch (SQLException sql){
-								
-								stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-										+ x.getInt(1) + ",'" + hashValue + "')");
-								
-						}
+	}
 
-					}
+	private void addActors(Movie movie, Statement stmt,
+			HashSet<Integer> actorsSet) {
+		List<Person> actors = new ArrayList<Person>();
 
-											j++;
-					
+		actors = movie.getActorsLst();
+		int j = 0;
+
+		while (j < actors.size()) {
+
+			int hashValue = actors.get(j).getId().hashCode();
+			try {
+				if (!actorsSet.contains(hashValue)) {
+					insertidName("Actor", actors.get(j).getName(), hashValue,
+							stmt);
+					actorsSet.add(hashValue);
 				}
 
 			}
 
-			conn.commit();
+			catch (SQLException exp) {
+				System.out.println("Actor already in tables");
+			}
 
-			safelyClose(pstmt);
-			safelyClose(stmt);
+			try {
+				stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
+						+ hashValue + ",'" + movie.getId().hashCode() + "')");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			j++;
 		}
 
-		// Updating the tables
+	}
+
+	private void addGenres(Movie movie, Statement stmt, HashSet<Integer> genres) {
+
+		Set<String> genreList = new LinkedHashSet<String>();
+		genreList = movie.getGenre();
+
+		Iterator<String> itr = genreList.iterator();
+		while (itr.hasNext()) {
+
+			String currentGenre = itr.next();
+			int hashValue = currentGenre.hashCode();
+			try {
+				if (!genres.contains(hashValue)) {
+					insertidName("Genre", currentGenre, hashValue, stmt);
+					genres.add(hashValue);
+				}
+
+			} catch (SQLException exp) {
+				System.out.println("Genre already in tables");
+
+			}
+
+			try {
+				stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
+						+ hashValue + ",'" + movie.getId().hashCode() + "')");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 	}
 
