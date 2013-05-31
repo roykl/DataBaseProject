@@ -1,1 +1,7 @@
 /Config.xml
+/.gitignore
+/db
+/parsing
+/thread_logic
+/utils
+/youTube
