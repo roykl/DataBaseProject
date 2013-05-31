@@ -22,7 +22,7 @@ public class ThreadAddUser extends Thread {
 	//return false
 	private boolean addUser(){
 		
-		ResultSet result = oparations.select("idUser", "Users", "idUser = " + userName); 
+		ResultSet result = oparations.select("idUser", "Users", "userName = " + userName); 
 		
 		try {
 			//if no such a name than add it
