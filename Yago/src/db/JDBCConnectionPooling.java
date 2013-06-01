@@ -29,6 +29,17 @@ public class JDBCConnectionPooling implements Runnable {
                 return DriverManager.getConnection(connectionUrl, userName,
                                 userPassword);
         }
+        
+        public synchronized void close(Connection conn){
+        	
+        	Connection connToRemove = null;
+        	int indexToRemove;
+        	
+        	indexToRemove = connectionsUsed.indexOf(conn);
+        	connToRemove = (Connection) connectionsUsed.remove(indexToRemove);
+        	connectionsAvailable.add(connToRemove);
+        }
+        
         public synchronized Connection connectionCheck() throws SQLException {
                 Connection newConnection = null;
                 if (connectionsAvailable.size() == 0) {
@@ -53,7 +64,7 @@ public class JDBCConnectionPooling implements Runnable {
                 try {
                         while (true) {
                                 synchronized (this) {
-                                        while (connectionsAvailable.size() > initialConnections) {
+                                        while ((connectionsAvailable.size() > 0) &&(connectionsAvailable.size() + connectionsUsed.size() > initialConnections)) {
                                                 Connection connection = (Connection) connectionsAvailable
                                                                 .lastElement();
                                                 connectionsAvailable.removeElement(connection);

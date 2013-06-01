@@ -2,7 +2,6 @@ package db;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,12 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.sql.Connection;
-
-import com.mysql.jdbc.exceptions.jdbc4.MySQLDataException;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import parsing.*;
 
@@ -122,8 +116,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	@Override
-	public synchronized int insert(String table, String... values)
-			throws MySQLIntegrityConstraintViolationException {
+	public synchronized int insert(String table, String... values) {
 
 		int i;
 		String state = "INSERT INTO " + table + " VALUES (";
