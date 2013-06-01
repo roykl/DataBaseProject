@@ -34,6 +34,8 @@ public class JDBCConnectionPooling implements Runnable {
         	
         	Connection connToRemove = null;
         	int indexToRemove;
+        	if(!connectionsUsed.contains(conn)) 
+    			return;
         	
         	indexToRemove = connectionsUsed.indexOf(conn);
         	connToRemove = (Connection) connectionsUsed.remove(indexToRemove);

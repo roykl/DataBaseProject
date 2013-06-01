@@ -34,9 +34,9 @@ private void yagoUpdate(){
 		oparations.update(table, column + " = '" + newVal + "'"  , "idMovie" + "= '" + firstKey + "'");
 	}
 	else if(table == "Actor-Movie"){
-		oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idActor" + " = '" + secondKey );
+		oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idActor" + " = '" + secondKey + "'" );
 	}else{//Genre-Movie
-		oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idGenre" + " = '" + secondKey );
+		oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idGenre" + " = '" + secondKey+ "'" );
 	}
 	
 	
