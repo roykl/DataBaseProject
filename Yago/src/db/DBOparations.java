@@ -27,32 +27,32 @@ public class DBOparations implements IdbOparations {
 		connPull = connParam;
 	}
 
-	@Override
-	public synchronized int update(String tableNamr, String columnSet,
-			String predicatesSet, String columnWhere, String predicateWhere) {
-
-		Connection conn = null;
-		try {
-			conn = connPull.connectionCheck();
-
-			Statement stmt = null;
-
-			stmt = conn.createStatement();
-
-			stmt.executeUpdate("UPDATE " + tableNamr + " SET " + columnSet
-					+ "=" + "'" + predicatesSet + "'" + " WHERE " + columnWhere
-					+ "=" + "'" + predicateWhere + "'");
-		}
-
-		catch (SQLException e) {
-
-			e.printStackTrace();
-			return 0;
-		}
-
-		return 1;
-	}
-
+//	@Override
+//	public  int update(String tableNamr, String columnSet,
+//			String predicatesSet, String columnWhere, String predicateWhere) {
+//
+//		Connection conn = null;
+//		try {
+//			conn = connPull.connectionCheck();
+//
+//			Statement stmt = null;
+//
+//			stmt = conn.createStatement();
+//
+//			stmt.executeUpdate("UPDATE " + tableNamr + " SET " + columnSet
+//					+ "=" + "'" + predicatesSet + "'" + " WHERE " + columnWhere
+//					+ "=" + "'" + predicateWhere + "'");
+//		}
+//
+//		catch (SQLException e) {
+//
+//			e.printStackTrace();
+//			return 0;
+//		}
+//
+//		return 1;
+//	}
+//
 	private void addSingleFacts(Movie movie, PreparedStatement pstmt) {
 		try {
 			pstmt.setString(4, movie.getName());
@@ -92,7 +92,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	@Override
-	public synchronized int delete(String tableNamr, String whereCol)
+	public  int delete(String tableNamr, String whereCol)
 			 {
 		Connection conn = null;
 		try {
@@ -116,7 +116,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	@Override
-	public synchronized int insert(String table, String... values) {
+	public  int insert(String table, String... values) {
 
 		int i;
 		String state = "INSERT INTO " + table + " VALUES (";
@@ -153,7 +153,7 @@ public class DBOparations implements IdbOparations {
 
 	}
 
-	public synchronized void insertidName(String table, String name,
+	public  void insertidName(String table, String name,
 			int HashId, Statement sta) throws SQLException {
 
 		try {
@@ -172,11 +172,31 @@ public class DBOparations implements IdbOparations {
 		}
 	}
 
+	
+	//if not working return null
 	@Override
-	public synchronized ResultSet select(String select, String from,
+	public  ResultSet select(String select, String from,
 			String where) {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+		try {
+			conn = connPull.connectionCheck();
+
+			Statement stmt = null;
+
+			stmt = conn.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT " + select + " FROM " + from
+					+" WHERE "+ where);
+			return result;
+		}
+
+		
+		catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
 		return null;
+		
 	}
 
 	public void safelyClose(AutoCloseable... resources) {
@@ -231,7 +251,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	@Override
-	public synchronized void importData() {
+	public  void importData() {
 		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
 		try {
 			moviesList = (HashMap<String, Movie>) TestConsole
