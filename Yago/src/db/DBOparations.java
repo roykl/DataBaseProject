@@ -92,8 +92,8 @@ public class DBOparations implements IdbOparations {
 	}
 
 	@Override
-	public synchronized int delete(String tableNamr, String whereCol,
-			String pred) {
+	public synchronized int delete(String tableNamr, String whereCol)
+			 {
 		Connection conn = null;
 		try {
 			conn = connPull.connectionCheck();
@@ -103,7 +103,7 @@ public class DBOparations implements IdbOparations {
 			stmt = conn.createStatement();
 
 			stmt.executeUpdate("DELETE FROM " + tableNamr + " WHERE "
-					+ whereCol + "=" + "'" + pred + "'");
+					+ whereCol );
 		}
 
 		catch (SQLException e) {

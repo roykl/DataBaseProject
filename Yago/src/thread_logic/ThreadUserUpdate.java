@@ -9,13 +9,13 @@ public class ThreadUserUpdate extends Thread {
 
 	IdbOparations oparations ;
 	String table;
-	int firstKey; //idMovie
-	int secondKey;//idActor|idGenre
+	String firstKey; //idMovie
+	String secondKey;//idActor|idGenre
 	String newVal;
 	String column;
 	
 	
-	public ThreadUserUpdate(IdbOparations inOpp, String table, int firstKey,int secondKey, String coulmn, String newVal){
+	public ThreadUserUpdate(IdbOparations inOpp, String table, String firstKey,String secondKey, String coulmn, String newVal){
 		
 		oparations = inOpp;
 		this.table = table;
@@ -28,20 +28,60 @@ public class ThreadUserUpdate extends Thread {
 	
 	
 
-//update Yago tables
-private void yagoUpdate(){
-	if(table == "Movie"){
-		oparations.update(table, column + " = '" + newVal + "'"  , "idMovie" + "= '" + firstKey + "'");
+	//return true if work false if not
+	private boolean yagoUpdate(){
+		
+		//UPDATE
+		if(!secondKey.equals("") && !newVal.equals("")){
+			UPDATE();
+			return true;
+		}
+		//INSERT
+		else if(secondKey.equals("") && !newVal.equals("")){
+			INSERT();
+			return true;
+		}
+		//DELETE
+		else if(!secondKey.equals("") && newVal.equals("")){
+			DELETE();
+			return true;
+		}
+		//ERROR
+		else{
+			return false;
+		}
 	}
-	else if(table == "Actor-Movie"){
-		oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idActor" + " = '" + secondKey + "'" );
-	}else{//Genre-Movie
-		oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idGenre" + " = '" + secondKey+ "'" );
+	
+	//user can only insert actor or genre to movie 
+	private void INSERT(){
+		 if(table == "Actor-Movie"){
+			oparations.insert("ActorMovie",firstKey, newVal);
+		}else{//Genre-Movie
+			oparations.insert("GenreMovie",firstKey, newVal);
+		}
 	}
 	
+	//user can only insert actor or genre to movie
+	private void DELETE(){
+		if(table == "Actor-Movie"){
+			oparations.delete("ActorMovie","idMovie = '" + firstKey+ "' idActor = '" + newVal + "'");
+		}else{//Genre-Movie
+			oparations.delete("GenreMovie","idMovie = '" + firstKey+ "' idGenre = '" + newVal + "'");
+		}
+	}
+
+	private void UPDATE(){
+		if(table == "Movie"){
+			oparations.update(table, column + " = '" + newVal + "'"  , "idMovie" + "= '" + firstKey + "'");
+		}
+		else if(table == "Actor-Movie"){
+			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idActor" + " = '" + secondKey + "'" );
+		}else{//Genre-Movie
+			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idGenre" + " = '" + secondKey+ "'" );
+		}
+	}
 	
-}
-	
+
 
 private void userTableUpdate() {
 	//if value already updated - UPDATE
@@ -51,12 +91,11 @@ private void userTableUpdate() {
 	}
 	else
 	{	//INSERT
-		oparations.insert("Updates", table ,column , newVal, Integer.toString(firstKey),Integer.toString(secondKey));
+		oparations.insert("Updates", table ,column , newVal, firstKey,secondKey);
 	}
-		
-	
 	
 }
+
 
 private void userUpdate() {
 	yagoUpdate();
