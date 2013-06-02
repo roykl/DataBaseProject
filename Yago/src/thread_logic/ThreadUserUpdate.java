@@ -45,9 +45,9 @@ private void yagoUpdate(){
 
 private void userTableUpdate() {
 	//if value already updated - UPDATE
-	if(checkExist("Updates", "tableName column firstKey secondKey", "tableName = " + table + " column = " + column + " firstKey = " + firstKey + " secondKey = " + secondKey))
+	if(checkExist("Updates", "tableName column firstKey secondKey", "tableName = '" + table + "' column = '" + column + "' firstKey = '" + firstKey + "' secondKey = '" + secondKey+"'"))
 	{	
-		oparations.update("Updates", "newVal = " + newVal + "'", "table = " + table + "'" + " column = " +  column + "'" + "firstKey = " + firstKey + "'" + "secondKey = " + secondKey+ "'");
+		oparations.update("Updates", "newVal = '" + newVal + "'", "table = '" + table + "'" + " column = '" +  column + "'" + "firstKey = '" + firstKey + "'" + "secondKey = '" + secondKey+ "'");
 	}
 	else
 	{	//INSERT
