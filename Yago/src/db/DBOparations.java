@@ -79,7 +79,7 @@ public class DBOparations implements IdbOparations {
 			stmt = conn.createStatement();
 
 			stmt.executeUpdate("UPDATE " + tableNamr + " SET " + columnSet
-					+ predicatesSet);
+				+ " WHERE "	+ predicatesSet);
 		}
 
 		catch (SQLException e) {
