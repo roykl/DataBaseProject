@@ -74,7 +74,8 @@ public static void main(String[] args) throws IOException {
 		
 		JDBCConnectionPooling pl = null;
 				try {
-					pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
+				//	pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
+					pl = new JDBCConnectionPooling();
 					
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
