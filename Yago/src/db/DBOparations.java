@@ -26,134 +26,74 @@ import parsing.*;
 public class DBOparations implements IdbOparations {
 
 	static JDBCConnectionPooling connPull;
+	private static final int IdMovie = 1;
+	private static final int IdLanguage = 2;
+	private static final int IdDirector = 3;
+	private static final int MovieName = 4;
+	private static final int Year = 5;
+	private static final int Youtube = 6;
+	private static final int Wiki = 7;
+	private static final int Duration = 8;
+	private static final int Plot = 9;
 
-	// One row operations
+	// constructor //
 
 	public DBOparations(JDBCConnectionPooling connParam) {
 		connPull = connParam;
 	}
 
-		private void addSingleFacts(Movie movie, PreparedStatement pstmt) {
+
+	//*** db operations- select, insert, update, delete ***//
+
+	/** insert tuple
+	 * @param table - the table name we want to insert to
+	 * @param values - the values to insert in the correct order
+	 */
+	@Override
+	public int insert(String table, String... values) {
+
+		int i;
+
+		String state = "INSERT INTO " + table + " VALUES (";
+
+		for (i = 0; i < Array.getLength(values); i++) {
+			state = state+values[i];
+
+			if (i != Array.getLength(values) - 1)
+				state = state + ",";
+		}
+
+		System.out.println(state);
+		Connection conn = null;
 		try {
-			pstmt.setString(4, movie.getName());
-			pstmt.setString(8, movie.getDuration());
-			pstmt.setString(5, movie.getDateCreated());
-			pstmt.setString(6, movie.getYouTubeURL());
-			pstmt.setString(7, movie.getWikiURL());
-			pstmt.setString(9, movie.getPlot());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			conn = connPull.connectionCheck();
+
+			Statement stmt = null;
+
+			stmt = conn.createStatement();
+
+			stmt.executeUpdate(state);
+		}
+
+		catch (SQLException e) {
+			System.out
+			.println("Check that the number of values matches the number of coulmns in the table+ "
+					+ table);
+
 			e.printStackTrace();
+			return 0;
 		}
+		connPull.close(conn);
+		return 1;
 
 	}
 
-		@Override
-		public int update(String tableNamr, String columnSet, String predicatesSet) {
-			Connection conn = null;
-			try {
-				conn = connPull.connectionCheck();
-
-				Statement stmt = null;
-
-				stmt = conn.createStatement();
-
-				stmt.executeUpdate("UPDATE " + tableNamr + " SET " + columnSet
-						+" WHERE "+ predicatesSet);
-			}
-
-			catch (SQLException e) {
-
-				e.printStackTrace();
-				return 0;
-			}
-			connPull.close(conn);
-			return 1;
-			
-		}
-
-		@Override
-		public  int delete(String tableNamr, String whereCol) {
-			Connection conn = null;
-			try {
-				conn = connPull.connectionCheck();
-
-				Statement stmt = null;
-
-				stmt = conn.createStatement();
-
-				stmt.executeUpdate("DELETE FROM " + tableNamr + " WHERE "
-						+ whereCol );
-			}
-
-			catch (SQLException e) {
-
-				e.printStackTrace();
-				return 0;
-			}
-
-			return 1;
-		}
-
-		@Override
-		
-		public  int insert(String table, String... values) {
-
-			int i;
-			
-			String state = "INSERT INTO " + table + " VALUES (";
-
-			for (i = 0; i < Array.getLength(values); i++) {
-				 state = state+values[i];
-
-				if (i != Array.getLength(values) - 1)
-					state = state + ",";
-			}
-
-			System.out.println(state);
-			Connection conn = null;
-			try {
-				conn = connPull.connectionCheck();
-
-				Statement stmt = null;
-
-				stmt = conn.createStatement();
-
-				stmt.executeUpdate(state);
-			}
-
-			catch (SQLException e) {
-				System.out
-						.println("Check that the number of values matches the number of coulmns in the table+ "
-								+ table);
-
-				e.printStackTrace();
-				return 0;
-			}
-			connPull.close(conn);
-			return 1;
-
-		}
-
-	private void insertidName(String table, String name,
-			int HashId, Statement sta) throws SQLException {
-
-		try {
-			String state = "INSERT INTO " + table + " VALUES (" + HashId + ",'"
-					+ name + "')";
-
-			sta.executeUpdate(state);
-
-		}
-
-		catch (SQLException exp) {
-
-			String state = "INSERT INTO " + table + " VALUES (" + HashId
-					+ ",\"" + name + "\")";
-			sta.executeUpdate(state);
-		}
-	}
-
+	/** select query 
+	 * @param select- the string that should come after "SELECT"
+	 * @param from- the string that should come after "FROM"
+	 * @param where- the string that should come after "WHER"
+	 * @return ResultSet with the result to that query
+	 */
 	@Override
 	public ResultSet select(String select, String from, String where) {
 
@@ -173,7 +113,7 @@ public class DBOparations implements IdbOparations {
 		try {
 			if (where == "")
 				result = stmt
-						.executeQuery("SELECT " + select + " FROM " + from);
+				.executeQuery("SELECT " + select + " FROM " + from);
 
 			else
 				result = stmt.executeQuery("SELECT " + select + " FROM " + from
@@ -186,110 +126,139 @@ public class DBOparations implements IdbOparations {
 		return result;
 	}
 
-	public void safelyClose(AutoCloseable... resources) {
-		for (AutoCloseable resource : resources) {
-			try {
-				resource.close();
-				System.out.println(resources + "was closed safely");
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	/** get a connection */
-	private Connection getConnection() {
+	/** update tuple
+	 * @param tablrNamr- the table name as appear in the db. Comes after "UODATE"
+	 * @param columnSet- string that should come after "SET"
+	 * @param predicatesSet - string that should come after "WHERE"
+	 */
+	@Override
+	public int update(String tableName, String columnSet, String predicatesSet) {
 		Connection conn = null;
 		try {
 			conn = connPull.connectionCheck();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return conn;
-	}
 
-	/** get statement from the conn */
-	private Statement getStatement(Connection conn) {
-		Statement stmt = null;
-		try {
+			Statement stmt = null;
+
 			stmt = conn.createStatement();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			stmt.executeUpdate("UPDATE " + tableName + " SET " + columnSet
+					+" WHERE "+ predicatesSet);
 		}
-		return stmt;
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+			return 0;
+		}
+		connPull.close(conn);
+		return 1;
+
 	}
 
-	private void deleteAllTablesContent(Statement stmt) {
-		// Delete all relevant tables
+	/** delete tuple
+	 * @param tableName- the name of the table we want to delete from
+	 * @param whereCol- string that comes after "WHERE"- tells which tuple to delete
+	 */
+	@Override
+	public int delete(String tableName, String whereCol) {
+		Connection conn = null;
 		try {
-			stmt.executeUpdate("DELETE FROM ActorMovie");
-			stmt.executeUpdate("DELETE FROM GenreMovie");
-			stmt.executeUpdate("DELETE FROM Movie");
-			stmt.executeUpdate("DELETE FROM Actor");
-			stmt.executeUpdate("DELETE FROM Director");
-			stmt.executeUpdate("DELETE FROM Language");
-			stmt.executeUpdate("DELETE FROM Genre");
+			conn = connPull.connectionCheck();
 
-		} catch (SQLException e) {
-			System.out.println("Deleting Error");
-			e.printStackTrace();
+			Statement stmt = null;
+
+			stmt = conn.createStatement();
+
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE "
+					+ whereCol );
 		}
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+			return 0;
+		}
+
+		return 1;
 	}
 
+
+
+	//*** import data from yago - when pressing "Update" ***//   
+
+	/**
+	 * Big update- parse yago files and Imdb files, Delete the content from the DB tables
+	 * (not tables that "belong" to users) and insert all the the new parsed information instead.
+	 * Check for updates made by users, in the tables that weren't deleted, and update
+	 * the "yago tables" if needed
+	 */
 	@Override
 	public void importData() {
+
+		// parse yago and imdb files 
+
+		// get the movies list (with all the information about the movies)
 		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
 		try {
 			moviesList = (HashMap<String, Movie>) TestConsole
 					.getObjFromFile("C:\\Users\\Nir\\Dropbox\\DB Project\\object");
-		} catch (ClassNotFoundException e2) {
-			// TODO Auto-generated catch block
+		} catch (ClassNotFoundException e2) {		
 			e2.printStackTrace();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
+		} catch (IOException e2) {		
 			e2.printStackTrace();
 		}
 
+		// get the connection and statement
 		Connection conn = getConnection();
 		Statement stmt = getStatement(conn);
 
-		try {
+		try {			
+			//auto commit = false
 			conn.setAutoCommit(false);
+
+			// delete all the content from the "yago" tables
 			deleteAllTablesContent(stmt);
+
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 
-		long start = 0;
+		long start = 0;// delete later
 		try {
+
+			//create prepared statment to inert to Movie table
 			PreparedStatement pstmt = null;
-			pstmt = conn
-					.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
+			pstmt = conn.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
 
-			int movieHashValue;
-			int count = 0;
-
+			// create HashSet to contains hashValues in order to verify if we already inserted this value to the db
 			HashSet<Integer> actorsSet = new HashSet<Integer>();
 			HashSet<Integer> directors = new HashSet<Integer>();
 			HashSet<Integer> genres = new HashSet<Integer>();
 			HashSet<Integer> languages = new HashSet<Integer>();
 
 			start = System.currentTimeMillis();
+			int movieHashValue;		
 
+			//update the tables 
 			for (Movie movie : moviesList.values()) {
-
+				// calculate movieHashValue to be the idMovie and insert it to the table
 				movieHashValue = movie.getId().hashCode();
-				pstmt.setInt(1, movieHashValue);
+				pstmt.setInt(IdMovie, movieHashValue);
+				// add language to Movie and Language tables
 				addLanguage(movie, stmt, pstmt, languages);
+				// add director to Movie and Director tables
 				addDirector(movie, stmt, directors, pstmt);
+				// add facts that appear only in the Movie table and nowhere else
 				addSingleFacts(movie, pstmt);
+				//add and execute batch
 				pstmt.addBatch();
 				pstmt.executeBatch();
+				//add many to many facts- genres and actors
 				addGenres(movie, stmt, genres);
 				addActors(movie, stmt, actorsSet);
 			}
-
+			
+			// check for updates made by users and update the tables accordingly
 			commitUpdates(stmt);
 
 			try {
@@ -299,6 +268,7 @@ public class DBOparations implements IdbOparations {
 			}
 
 			try {
+				// close
 				safelyClose(pstmt);
 				safelyClose(stmt);
 			} catch (Exception e) {
@@ -309,120 +279,96 @@ public class DBOparations implements IdbOparations {
 			connPull.close(conn);
 			e.printStackTrace();
 		}
-		
+
 		connPull.close(conn);
 
 		System.out.println("Time in sec= "
 				+ (System.currentTimeMillis() - start) / 1000F);
 	}
 
-	private void commitUpdates(Statement stmt) {
 
-		ResultSet updateSet = null;
-		updateSet = select("*", "Updates", "");
-		
-			String tableName=null;
-			String columnValue=null;
-			String newVal=null;
-			String key1=null;
-			String key2=null;
-		
-		
-		String str = null, str2=null;
-		
+	//*** helper function - used by importData() ***//
+
+	/** get a connection */
+	private Connection getConnection() {
+		Connection conn = null;
 		try {
-			 tableName=updateSet.getString(1);
-			 columnValue=updateSet.getString(2);
-			 newVal=updateSet.getString(3);
-			 key1=updateSet.getString(4);
-			 key2=updateSet.getString(5);
-			while (updateSet.next()) {
-
-				if (newVal.equals("")){ // Delete operation- Table
-													// name, key1, key2 - only
-													// for ActorMovie,
-													// GenreMovie
-					if (tableName.equals("ActorMovie"))
-						str= "idActor="+key2+" AND idMovie="+key1;
-					else str= "idGenre="+key2+" AND idMovie="+key1;
-					delete(tableName,str);
-					
-					
-				}
-				else if (key2.equals("-1")) // Insert operation -
-															// Table name, key1,
-															// key2- only for
-															// ActorMovie,GenreMovie
-					insert(tableName, columnValue,
-							key1);
-
-				else{
-					
-					str=columnValue+"="+newVal;
-					
-					if (tableName.equals("Movie"))
-					str2="idMovie="+key1;
-					
-					
-					else if (tableName.equals("ActorMovie"))
-						str2="idMovie="+key1+" AND "+ "idActor="+key2;
-						else
-							str2="idMovie="+key1+" AND "+ "idGenre="+key2;
-					update(tableName, str,
-							str2);
-					
-				}
-			}
-			
-
+			conn = connPull.connectionCheck();
+		} catch (SQLException e1) {			
+			e1.printStackTrace();
 		}
-
-		catch (SQLException e) {
-			System.out.println("Updates Failed");
-			e.printStackTrace();
-		}
-		
-		
-
+		return conn;
 	}
 
+	/** get statement from the conn */
+	private Statement getStatement(Connection conn) {
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}
+		return stmt;
+	}
+
+	/** delete content from the tables */
+	private void deleteAllTablesContent(Statement stmt) {
+		// Delete all relevant tables
+		try {
+			stmt.executeUpdate("DELETE FROM ActorMovie");
+			stmt.executeUpdate("DELETE FROM GenreMovie");
+			stmt.executeUpdate("DELETE FROM Movie");
+			stmt.executeUpdate("DELETE FROM Actor");
+			stmt.executeUpdate("DELETE FROM Director");
+			stmt.executeUpdate("DELETE FROM Language");
+			stmt.executeUpdate("DELETE FROM Genre");
+		} catch (SQLException e) {
+			System.out.println("Deleting Error");
+			e.printStackTrace();
+		}
+	}
+
+	/** add the language to the db- to Movie and Language tables */
 	private void addLanguage(Movie movie, Statement stmt,
 			PreparedStatement pstmt, HashSet<Integer> languages) {
 		if (movie.getLanguage() != null) {
+			// calc hashValue to be the language key
 			int hashValue = movie.getLanguage().hashCode();
 			try {
+				//check if we didn't already inserted that language to the table
 				if (!languages.contains(hashValue)) {
-					insertidName("Language", movie.getLanguage(), hashValue,
-							stmt);
+					//insert the language to the "Language" table
+					insertidName("Language", movie.getLanguage(), hashValue, stmt);
+					// add the hashValue to languages to know that we insert it
 					languages.add(hashValue);
 				}
 			} catch (SQLException exp) {
 				System.out.println("Language already in the table");
 			}
 
+			// insert to Movie table
 			try {
-				pstmt.setInt(2, hashValue);
+				pstmt.setInt(IdLanguage, hashValue);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				pstmt.setNull(2, 2);
+				pstmt.setNull(IdLanguage, 2);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
 	}
 
+	/** add the director to the db- to the Movie and Director table */
 	private void addDirector(Movie movie, Statement stmt,
 			HashSet<Integer> directors, PreparedStatement pstmt) {
 
 		if ((movie.getDirector() != null)
 				&& (movie.getDirector().getName() != null)) {
-
+			// calc hashValue to be the director key
 			int hashValue = movie.getDirector().getId().hashCode();
 			try {
 				if (!directors.contains(hashValue)) {
@@ -435,14 +381,14 @@ public class DBOparations implements IdbOparations {
 				System.out.println("Director's already in table");
 			}
 			try {
-				pstmt.setInt(3, hashValue);
+				pstmt.setInt(IdDirector, hashValue);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				pstmt.setNull(3, 2);
+				pstmt.setNull(IdDirector, 2);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -451,6 +397,24 @@ public class DBOparations implements IdbOparations {
 
 	}
 
+	/** add facts that appear only in the Movie table */
+
+	/** add facts that appear only in the Movie table */
+	private void addSingleFacts(Movie movie, PreparedStatement pstmt) {
+		try {
+			pstmt.setString(MovieName, movie.getName());
+			pstmt.setString(Duration, movie.getDuration());
+			pstmt.setString(Year, movie.getDateCreated());
+			pstmt.setString(Youtube, movie.getYouTubeURL());
+			pstmt.setString(Wiki, movie.getWikiURL());
+			pstmt.setString(Plot, movie.getPlot());
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
+
+	}
+
+	/** add actors to the Actor and ActorMovie tables */
 	private void addActors(Movie movie, Statement stmt,
 			HashSet<Integer> actorsSet) {
 		List<Person> actors = new ArrayList<Person>();
@@ -459,7 +423,6 @@ public class DBOparations implements IdbOparations {
 		int j = 0;
 
 		while (j < actors.size()) {
-
 			int hashValue = actors.get(j).getId().hashCode();
 			try {
 				if (!actorsSet.contains(hashValue)) {
@@ -467,13 +430,10 @@ public class DBOparations implements IdbOparations {
 							stmt);
 					actorsSet.add(hashValue);
 				}
-
 			}
-
 			catch (SQLException exp) {
 				System.out.println("Actor already in tables");
 			}
-
 			try {
 				stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
 						+ hashValue + ",'" + movie.getId().hashCode() + "')");
@@ -481,12 +441,12 @@ public class DBOparations implements IdbOparations {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			j++;
 		}
 
 	}
 
+	/** add genres to the Genre and GenreMovie tables */
 	private void addGenres(Movie movie, Statement stmt, HashSet<Integer> genres) {
 
 		Set<String> genreList = new LinkedHashSet<String>();
@@ -518,5 +478,105 @@ public class DBOparations implements IdbOparations {
 		}
 
 	}
+
+	/** insert to table <table> the tuple <hashId> , <name> */
+	private void insertidName(String table, String name,
+			int HashId, Statement sta) throws SQLException {
+
+		try {
+			String state = "INSERT INTO " + table + " VALUES (" + HashId + ",'"
+					+ name + "')";
+
+			sta.executeUpdate(state);
+		}
+
+		catch (SQLException exp) {
+
+			String state = "INSERT INTO " + table + " VALUES (" + HashId
+					+ ",\"" + name + "\")";
+			sta.executeUpdate(state);
+		}
+	}
+
+	/** close safely the resources */
+	private void safelyClose(AutoCloseable... resources) {
+		for (AutoCloseable resource : resources) {
+			try {
+				resource.close();
+				System.out.println(resources + "was closed safely");
+			}
+			catch (Exception e) {
+			}
+		}
+	}
+
+	/** check for updates made by users and update the tables accordingly */
+	private void commitUpdates(Statement stmt) {
+
+		ResultSet updateSet = null;
+		// get All the tuples from the Update table
+		updateSet = select("*", "Updates", "");
+		String tableName=null;
+		String columnValue=null;
+		String newVal=null;
+		String key1=null;
+		String key2=null;
+		String str = null, str2=null;
+
+		try {
+			tableName=updateSet.getString(1);
+			columnValue=updateSet.getString(2);
+			newVal=updateSet.getString(3);
+			key1=updateSet.getString(4);
+			key2=updateSet.getString(5);
+			while (updateSet.next()) {
+
+				if (newVal.equals("")){ // Delete operation- Table
+					// name, key1, key2 - only
+					// for ActorMovie,
+					// GenreMovie
+					if (tableName.equals("ActorMovie"))
+						str= "idActor="+key2+" AND idMovie="+key1;
+					else str= "idGenre="+key2+" AND idMovie="+key1;
+					delete(tableName,str);
+
+
+				}
+				else if (key2.equals("-1")) // Insert operation -
+					// Table name, key1,
+					// key2- only for
+					// ActorMovie,GenreMovie
+					insert(tableName, columnValue,
+							key1);
+
+				else{
+					str=columnValue+"="+newVal;
+
+					if (tableName.equals("Movie"))
+						str2="idMovie="+key1;
+
+
+					else if (tableName.equals("ActorMovie"))
+						str2="idMovie="+key1+" AND "+ "idActor="+key2;
+					else
+						str2="idMovie="+key1+" AND "+ "idGenre="+key2;
+					update(tableName, str,
+							str2);
+				}
+			}
+		}
+
+		catch (SQLException e) {
+			System.out.println("Updates Failed");
+			e.printStackTrace();
+		}
+
+
+
+	}
+
+
+
+
 
 }
