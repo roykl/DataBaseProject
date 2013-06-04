@@ -2,6 +2,8 @@ package db;
 import java.util.*;
 import java.sql.*;
 
+import utils.Configuration;
+
 public class JDBCConnectionPooling implements Runnable {
         int initialConnections = 5;
         Vector connectionsAvailable = new Vector();
@@ -12,11 +14,15 @@ public class JDBCConnectionPooling implements Runnable {
         String userPassword ;
         
         
-        public JDBCConnectionPooling(String url,String userName, String userPass) throws SQLException {
+        public JDBCConnectionPooling() throws SQLException {
                 try {
-                        this.connectionUrl = url;
-                        this.userName = userName;
-                        this.userPassword = userPass;
+                		Configuration settings = new Configuration();                		
+                		String hostAdd = settings.getHostAddress();
+                		String port = settings.getPort();
+                        this.connectionUrl = "jdbc:mysql://"+ hostAdd+ ":" + port+ "/"+ settings.getDbName();
+                        this.userName = settings.getUserName();
+                        this.userPassword = settings.getPassword();
+                        
                         Class.forName("com.mysql.jdbc.Driver");
                         for (int count = 0; count < initialConnections; count++) {
                                 connectionsAvailable.addElement(getConnection());
@@ -25,6 +31,7 @@ public class JDBCConnectionPooling implements Runnable {
                         System.out.println(e.toString());
                 }
         }
+                
         private Connection getConnection() throws SQLException {
                 return DriverManager.getConnection(connectionUrl, userName,
                                 userPassword);
