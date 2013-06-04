@@ -21,7 +21,7 @@ public class ThreadUserAuthentication extends Thread {
 	
 private boolean UserAuthentication(){
 	
-	ResultSet result = oparations.select("idUser", "Users", "userName = " + userName + " userPassword = " + password );
+	ResultSet result = oparations.select("idUser", "Users", "userName = '" + userName + "'" + " userPassword = '" + password +"'");
 	
 	try {
 		return result.next();
