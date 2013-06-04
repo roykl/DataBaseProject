@@ -1,33 +1,33 @@
 CREATE SCHEMA DByago;
 
-CREATE TABLE `Actor` (
+CREATE TABLE DByago.`Actor` (
   `idActor` int(11) NOT NULL,
   `actorName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idActor`)
 ) ENGINE=InnoDB ;
 
-CREATE TABLE `Director` (
+CREATE TABLE DByago.`Director` (
   `idDirector` int(11) NOT NULL,
   `directorName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idDirector`)
 ) ENGINE=InnoDB ;
 
 
-CREATE TABLE `Genre` (
+CREATE TABLE DByago.`Genre` (
   `idGenre` int(11) NOT NULL,
   `genreName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idGenre`)
 ) ENGINE=InnoDB ;
 
 
-CREATE TABLE `Language` (
+CREATE TABLE DByago.`Language` (
   `idLanguage` int(11) NOT NULL,
   `LanguageName` text,
   PRIMARY KEY (`idLanguage`)
 ) ENGINE=InnoDB ;
 
 
-CREATE TABLE `Movie` (
+CREATE TABLE DByago.`Movie` (
   `idMovie` int(11) NOT NULL,
   `idLanguage` int(11) DEFAULT NULL,
   `idDirector` int(11) DEFAULT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `Movie` (
   CONSTRAINT `idLanguage` FOREIGN KEY (`idLanguage`) REFERENCES `Language` (`idLanguage`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB ;
 
-CREATE TABLE `ActorMovie` (
+CREATE TABLE DByago.`ActorMovie` (
   `idActor` int(11) NOT NULL,
   `idMovie` int(11) NOT NULL,
   PRIMARY KEY (`idActor`,`idMovie`),
@@ -59,7 +59,7 @@ CREATE TABLE `ActorMovie` (
 
 
 
-CREATE TABLE `GenreMovie` (
+CREATE TABLE DByago.`GenreMovie` (
   `idGenre` int(11) NOT NULL,
   `idMovie` int(11) NOT NULL,
   KEY `idGenre_idx` (`idGenre`),
@@ -71,7 +71,7 @@ CREATE TABLE `GenreMovie` (
 
 
 
-CREATE TABLE `MoviesGrades` (
+CREATE TABLE DByago.`MoviesGrades` (
   `idMovie` int(11) NOT NULL,
   `grade` double DEFAULT NULL,
   `numberOfRankers` int(11) DEFAULT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE `MoviesGrades` (
 
 
 
-CREATE TABLE `Updates` (
+CREATE TABLE DByago.`Updates` (
   `idMovie` int(11) NOT NULL,
   `column` varchar(45) DEFAULT NULL,
   `newVaue` varchar(45) DEFAULT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE `Updates` (
 
 
 
-CREATE TABLE `Users` (
+CREATE TABLE DByago.`Users` (
   `idUsers` int(11) NOT NULL,
   `userName` varchar(45) DEFAULT NULL,
   `userPassword` varchar(45) DEFAULT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE `Users` (
 
 
 
-CREATE TABLE `UsersMovies` (
+CREATE TABLE DByago.`UsersMovies` (
   `idUser` int(11) NOT NULL,
   `idMovie` int(11) NOT NULL,
   `rank` int(11) DEFAULT NULL,
