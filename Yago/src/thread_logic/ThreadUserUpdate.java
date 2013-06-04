@@ -64,25 +64,25 @@ public class ThreadUserUpdate extends Thread {
 	//user can only insert actor or genre to movie
 	private void DELETE(){
 		if(table == "Actor-Movie"){
-			oparations.delete("ActorMovie","idMovie = '" + firstKey+ "' idActor = '" + newVal + "'");
+			oparations.delete("ActorMovie","idMovie = " + firstKey+ " idActor = " + newVal);
 		}else{//Genre-Movie
-			oparations.delete("GenreMovie","idMovie = '" + firstKey+ "' idGenre = '" + newVal + "'");
+			oparations.delete("GenreMovie","idMovie = " + firstKey+ " idGenre = " + newVal);
 		}
 	}
 
 	private void UPDATE(){
 		if(table == "Movie"){
-			oparations.update(table, column + " = '" + newVal + "'"  , "idMovie" + "= '" + firstKey + "'");
+			oparations.update(table, column + " = '" + newVal + "'"  , "idMovie" + "= " + firstKey);
 		}
 		else if(table == "Actor-Movie"){
-			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idActor" + " = '" + secondKey + "'" );
+			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie = " + firstKey + " idActor = " + secondKey);
 		}else{//Genre-Movie
-			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie" + " = '" + firstKey + "' "+ "idGenre" + " = '" + secondKey+ "'" );
+			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie = " + firstKey + " idGenre = " + secondKey);
 		}
 	}
 	
 
-
+//Update the 'Updates' table
 private void userTableUpdate() {
 	//if value already updated - UPDATE
 	if(checkExist("Updates", "tableName column firstKey secondKey", "tableName = '" + table + "' column = '" + column + "' firstKey = '" + firstKey + "' secondKey = '" + secondKey+"'"))
@@ -91,7 +91,10 @@ private void userTableUpdate() {
 	}
 	else
 	{	//INSERT
-		oparations.insert("Updates", table ,column , newVal, firstKey,secondKey);
+		if(secondKey.equals(""))
+			secondKey = "-1";
+		
+		oparations.insert("Updates", "'"+table+"'" ,"'"+column+"'" , "'"+newVal+"'","'"+ firstKey+"'","'"+secondKey+"'");
 	}
 	
 }
