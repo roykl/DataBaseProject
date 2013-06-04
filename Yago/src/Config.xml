@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Parsing>
-		<YagoSimpleTypesFilePath>F:\Users\Roy's Room\Dropbox\DB Project\Yago Tables\yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
-		<YagoFactsFilePath>F:\Users\Roy's Room\Dropbox\DB Project\Yago Tables\yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
-		<YagoLiteralFactsFilePath>F:\Users\Roy's Room\Dropbox\DB Project\Yago Tables\yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
-		<YagoWikipediaInfoFilePath>F:\Users\Roy's Room\Dropbox\DB Project\Yago Tables\yagoWikipediaInfo.ttl</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->
+		<YagoSimpleTypesFilePath>C:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
+		<YagoFactsFilePath>C:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
+		<YagoLiteralFactsFilePath>C:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
+		<YagoWikipediaInfoFilePath>C:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoWikipediaInfo.ttl</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->
 		<IMDBgenreListFilePath> </IMDBgenreListFilePath> <!-- genres.list file path. if empty, use the file attached with the application  -->
 		<IMDBplotListFilePath> </IMDBplotListFilePath> <!-- plot.list file path. if empty, use the file attached with the application  -->
 		<IMDBlanguageFilePat> </IMDBlanguageFilePat> <!-- language.list file path. if empty, use the file attached with the application  -->	 
