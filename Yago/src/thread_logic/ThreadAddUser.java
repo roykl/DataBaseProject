@@ -22,13 +22,13 @@ public class ThreadAddUser extends Thread {
 	//return false
 	private boolean addUser(){
 		
-		ResultSet result = oparations.select("idUser", "Users", "userName = " + userName); 
+		ResultSet result = oparations.select("idUser", "Users", "userName = '" + userName + "'"); 
 		
 		try {
 			//if no such a name than add it
 			if(!result.next()){
 			
-			oparations.insert("Users", Integer.toString(userName.hashCode()) ,userName , pass);
+			oparations.insert("Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'");
 			return true;
 			}
 			
