@@ -3,6 +3,8 @@ package thread_logic;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import utils.Configuration;
+
 import db.IdbOparations;
 
 public class ThreadGrade extends Thread {
@@ -11,7 +13,7 @@ public class ThreadGrade extends Thread {
 	int IDuser;
 	int IDmovie;
 	int grade;
-	
+	String dbName;
 	
 	public ThreadGrade(IdbOparations inOpp, int inUser, int inMovie, int inGrade){
 		
@@ -19,15 +21,19 @@ public class ThreadGrade extends Thread {
 		IDuser = inUser;
 		IDmovie = inMovie;
 		grade = inGrade;
+		//set table name
+		utils.Configuration settings = new Configuration();
+		dbName = settings.getDbName();
 	}
 	
 	//check if user already ranked the movie
-	private boolean checkRank(){
+	private synchronized boolean checkRank(){
 		
-		ResultSet result = oparations.select("idUser" ,"UsersMovies", "idUser = " + IDuser + " idMovie = " + IDmovie);
+		ResultSet result = oparations.select("idUser" ,dbName+".UsersMovies", "idUser = " + IDuser + " AND idMovie = " + IDmovie);
 		
 		try {
-			return result.next();
+			boolean tmp =  result.next();
+			return tmp;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,61 +43,94 @@ public class ThreadGrade extends Thread {
 	}
 	
 	//assumption: In MoviesGrades table movie is unique 
-	private void updateAvarage(int IDuser,int IDmovie, int userGrade){
+	private synchronized void updateAvarage(int IDuser,int IDmovie, int userGrade){
 		
 		
 		int newGrade, newCount;
 		int oldGrade = 0;
 		int  oldCount =0;
 		int oldUserGrade = 0;
-		
+		boolean movieRanked = false;
+		boolean userRanked = false;
 		//get old number of rankers
-		ResultSet result1 = oparations.select("numberOfRankers", "MoviesGrades", "idMovie = "+ IDmovie);
+		ResultSet result1 = oparations.select("numberOfRankers", dbName+".MoviesGrades", "idMovie = "+ IDmovie);
 		//get old grade
-		ResultSet result2 = oparations.select("grade", "MoviesGrades", "idmovie = "+ IDmovie);
-		//get old user grade 
-		ResultSet result3 = oparations.select("rank", "UserMovies", "idUser = "+ IDuser + " idMovie = "+ IDmovie);
+		ResultSet result2 = oparations.select("grade", dbName+".MoviesGrades", "idmovie = "+ IDmovie);
 		
-		try {
-			oldCount = result1.getInt(1);
-			oldGrade = result2.getInt(1);
-			oldUserGrade = result3.getInt(1);
+		//check if movie already ranked by some user
+				try {
+					//movie already ranked by some user
+					if (result1.next() && result2.next()){ 
+						oldCount = result1.getInt(1);
+						oldGrade = result2.getInt(1);
+						movieRanked = true;
+					}
+					//movie haven't ranked before
+					else{ 
+						oldCount = 0;
+						oldGrade = 0;
+						movieRanked = false;
+					}
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+		 //check if user ranked the movie before
+		
+		if(!checkRank()){//user haven't ranked that movie before
+			newCount = oldCount + 1;
+			newGrade = ((oldCount*oldGrade) + userGrade)/newCount;
+			userRanked = false;
+			}
+		
+		
+		else{ //user already ranked the movie
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(!checkRank()){//not ranked yet
-		newCount = oldCount++;
-		newGrade = ((oldCount*oldGrade) + userGrade)/newCount;
-		}
-		
-		else{//if ranked
+			//get old user grade 
+			ResultSet result3 = oparations.select("rank", dbName+".UsersMovies", "idUser = "+ IDuser + " AND idMovie = "+ IDmovie);
+			userRanked = true;
+			try {
+				if (result3.next())
+					oldUserGrade = result3.getInt(1);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			newCount = oldCount;
 			newGrade = ((oldCount*oldGrade) - oldUserGrade +userGrade)  /newCount;
+			
 		}
 		
-		oparations.insert("MoviesGrades", Integer.toString(IDmovie), Integer.toString(newGrade), Integer.toString(newCount) );
-		
-		
+		if(!userRanked && !movieRanked){
+			//insert to MoviesGrades
+			oparations.insert(dbName+".MoviesGrades", Integer.toString(IDmovie), Integer.toString(newGrade), Integer.toString(newCount) );
+			//insert to UsersMovies
+			oparations.insert(dbName+".UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
+		} else if(!userRanked && movieRanked){
+			//insert to UsersMovies
+			oparations.insert(dbName+".UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
+			//update MoviesGrades
+			oparations.update(dbName+".MoviesGrades", "grade = " + newGrade + " , numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
+		} else if(userRanked && movieRanked){
+			oparations.update(dbName+".MoviesGrades", "grade = " + newGrade + " ,numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
+			//update UsersMovies
+			oparations.update(dbName+".UsersMovies", "rank = " + newGrade, "idUser = " + IDuser + " AND idMovie" + IDmovie);
+		}
 	}
 	
 	
-	private void grade(){
-		//if not ranked yet
-		if(!checkRank()){
-			//update user-movie table
-			oparations.insert("UsersMovies", Integer.toString(IDuser), Integer.toString(IDmovie), Integer.toString(grade));
-		}
-		
-		//update movie-grade
+	private synchronized void grade(){
+	
 		updateAvarage(IDuser, IDmovie, grade);		
 		
 		
 		
 	}
 	
-	public void run(){
+	public synchronized void run(){
 		
 		this.grade();
 		
