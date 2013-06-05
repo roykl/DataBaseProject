@@ -3,6 +3,8 @@ package thread_logic;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import utils.Configuration;
+
 import db.IdbOparations;
 
 public class ThreadCheckExist extends Thread {
@@ -11,6 +13,7 @@ public class ThreadCheckExist extends Thread {
 	String select;
 	String from;
 	String where;
+	boolean value;
 	
 	public ThreadCheckExist(IdbOparations oparations,String select, String from, String where){
 		this.oparations = oparations;
@@ -19,12 +22,20 @@ public class ThreadCheckExist extends Thread {
 		this.where = where;
 	}
 	
+	//  from - don't need to give full table name
+	
+	/** check if exists in the db */
 	private boolean checkExist(){
-		
-		ResultSet result = oparations.select(select ,from, where);
+		//set table name
+		utils.Configuration settings = new Configuration();
+		String dbName = settings.getDbName();
+		ResultSet result = oparations.select(select ,dbName + "." + from, where);
 		
 		try {
+			 
+			
 			return result.next();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,10 +44,16 @@ public class ThreadCheckExist extends Thread {
 		return false;
 	}
 	
+	public boolean getValue() {
+        return value;
+    }
+	
+	//public setV
 
 public void run(){
-		
-		this.checkExist();
+		 value = this.checkExist(); 
+		 System.out.println( "print from thread - " +value);
+		 
 		
 		
 	}
