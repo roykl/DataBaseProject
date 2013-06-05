@@ -58,24 +58,24 @@ public class ThreadGrade extends Thread {
 		ResultSet result2 = oparations.select("grade", dbName+".MoviesGrades", "idmovie = "+ IDmovie);
 		
 		//check if movie already ranked by some user
-				try {
-					//movie already ranked by some user
-					if (result1.next() && result2.next()){ 
-						oldCount = result1.getInt(1);
-						oldGrade = result2.getInt(1);
-						movieRanked = true;
-					}
-					//movie haven't ranked before
-					else{ 
-						oldCount = 0;
-						oldGrade = 0;
-						movieRanked = false;
-					}
-					
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		try {
+			//movie already ranked by some user
+			if (result1.next() && result2.next()){ 
+				oldCount = result1.getInt(1);
+				oldGrade = result2.getInt(1);
+				movieRanked = true;
 				}
+			//movie haven't ranked before
+			else{ 
+				oldCount = 0;
+				oldGrade = 0;
+				movieRanked = false;
+			}
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		 //check if user ranked the movie before
 		
