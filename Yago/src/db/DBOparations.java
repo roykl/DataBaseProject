@@ -113,9 +113,7 @@ public class DBOparations implements IdbOparations {
 
 		try {
 			if (where == "")
-				result = stmt
-				.executeQuery("SELECT " + select + " FROM " + from);
-
+				result = stmt.executeQuery("SELECT " + select + " FROM " + from);
 			else
 				result = stmt.executeQuery("SELECT " + select + " FROM " + from
 						+ " WHERE " + where);

@@ -45,9 +45,15 @@ public static void main(String[] args) throws IOException, SQLException {
 
 	DBOparations db= new DBOparations(pl);
 	
-	db.insert("DbMysql05.Movies", "3" ,"16");
-	//db.update("DbMysql05.Movies", "language = 256", "idMovies = 1");
-	ResultSet rs = db.select("*", "DbMysql05.Movies", "idMovies = 1");
+	db.delete("DbMysql05.Movies", "idMovies =1");
+	
+	//db.insert("DbMysql05.Movies", "3" ,"16");
+	//db.update("DbMysql05.Movies", "language = 1", "idMovies = 1");
+	ResultSet rs = db.select("*", "DbMysql05.Movies", "");
+	rs.next();
+	System.out.println(rs.getString(1));
+	System.out.println(rs.getString(2));
+	rs.next();
 	System.out.println(rs.getString(1));
 	System.out.println(rs.getString(2));
 	
