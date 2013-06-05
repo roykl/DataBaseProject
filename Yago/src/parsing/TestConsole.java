@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,26 @@ import youTube.YouTubeManager;
 public class TestConsole {
 
 
-public static void main(String[] args) throws IOException {
+public static void main(String[] args) throws IOException, SQLException {
+	
+	
+	JDBCConnectionPooling pl = null;
+	try {
+	//	pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
+		pl = new JDBCConnectionPooling();
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	DBOparations db= new DBOparations(pl);
+	
+	db.insert("DbMysql05.Movies", "3" ,"16");
+	//db.update("DbMysql05.Movies", "language = 256", "idMovies = 1");
+	ResultSet rs = db.select("*", "DbMysql05.Movies", "idMovies = 1");
+	System.out.println(rs.getString(1));
+	System.out.println(rs.getString(2));
 	
 	YouTubeManager yt = new YouTubeManager();
 	try {
@@ -72,17 +92,17 @@ public static void main(String[] args) throws IOException {
 //			e.printStackTrace();
 //		}
 		
-		JDBCConnectionPooling pl = null;
-				try {
-				//	pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
-					pl = new JDBCConnectionPooling();
-					
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
-				DBOparations db= new DBOparations(pl);
+//		JDBCConnectionPooling pl = null;
+//				try {
+//				//	pl= new JDBCConnectionPooling("jdbc:mysql://localhost:3306/dbyago","root", "61088");
+//					pl = new JDBCConnectionPooling();
+//					
+//				} catch (SQLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			
+//				DBOparations db= new DBOparations(pl);
 //				db.importData();
 			
 		

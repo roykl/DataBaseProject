@@ -62,6 +62,7 @@ public class DBOparations implements IdbOparations {
 			if (i != Array.getLength(values) - 1)
 				state = state + ",";
 		}
+		state += ")";
 
 		System.out.println(state);
 		Connection conn = null;
@@ -396,8 +397,6 @@ public class DBOparations implements IdbOparations {
 		}
 
 	}
-
-	/** add facts that appear only in the Movie table */
 
 	/** add facts that appear only in the Movie table */
 	private void addSingleFacts(Movie movie, PreparedStatement pstmt) {
