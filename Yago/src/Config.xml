@@ -11,9 +11,9 @@
 	</Parsing>
 	<DB>
 		<Host>localhost</Host>
-		<Port>3306</Port>
+		<Port>3305</Port>
 		<DbName>DbMysql05</DbName>
-		<UserName>root</UserName>
-		<Password>61088</Password>		
+		<UserName>DbMysql05</UserName>
+		<Password>DbMysql05</Password>		
 	</DB>
 </Configuration>

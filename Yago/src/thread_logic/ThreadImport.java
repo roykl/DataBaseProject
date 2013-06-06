@@ -8,10 +8,8 @@ public class ThreadImport extends Thread {
 	IdbOparations oparations ;
 	
 	
-	public ThreadImport(IdbOparations inOpp){
-		
-		oparations = inOpp;
-		
+	public ThreadImport(IdbOparations inOpp){		
+		oparations = inOpp;		
 	}
 	
 	
