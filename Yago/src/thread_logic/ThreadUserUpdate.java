@@ -13,10 +13,10 @@ public class ThreadUserUpdate extends Thread {
 	String secondKey;//idActor|idGenre
 	String newVal;
 	String column;
-	
-	
+
+
 	public ThreadUserUpdate(IdbOparations inOpp, String table, String firstKey,String secondKey, String coulmn, String newVal){
-		
+
 		oparations = inOpp;
 		this.table = table;
 		this.column = coulmn;
@@ -24,13 +24,13 @@ public class ThreadUserUpdate extends Thread {
 		this.firstKey = firstKey;
 		this.secondKey = secondKey;
 	}
-	
-	
-	
+
+
+
 
 	//return true if work false if not
 	private boolean yagoUpdate(){
-		
+
 		//UPDATE
 		if(!secondKey.equals("") && !newVal.equals("")){
 			UPDATE();
@@ -51,16 +51,16 @@ public class ThreadUserUpdate extends Thread {
 			return false;
 		}
 	}
-	
+
 	//user can only insert actor or genre to movie 
 	private void INSERT(){
-		 if(table == "Actor-Movie"){
+		if(table == "Actor-Movie"){
 			oparations.insert("ActorMovie",firstKey, newVal);
 		}else{//Genre-Movie
 			oparations.insert("GenreMovie",firstKey, newVal);
 		}
 	}
-	
+
 	//user can only insert actor or genre to movie
 	private void DELETE(){
 		if(table == "Actor-Movie"){
@@ -80,62 +80,60 @@ public class ThreadUserUpdate extends Thread {
 			oparations.update(table, column +  " = '"  + newVal + "'"  , "idMovie = " + firstKey + " idGenre = " + secondKey);
 		}
 	}
-	
 
-//Update the 'Updates' table
-private void userTableUpdate() {
-	//if value already updated - UPDATE
-	if(checkExist("Updates", "tableName column firstKey secondKey", "tableName = '" + table + "' column = '" + column + "' firstKey = '" + firstKey + "' secondKey = '" + secondKey+"'"))
-	{	
-		oparations.update("Updates", "newVal = '" + newVal + "'", "table = '" + table + "'" + " column = '" +  column + "'" + "firstKey = '" + firstKey + "'" + "secondKey = '" + secondKey+ "'");
+
+	//Update the 'Updates' table
+	private void userTableUpdate() {
+		//if value already updated - UPDATE
+		if(checkExist("Updates", "tableName column firstKey secondKey", "tableName = '" + table + "' column = '" + column + "' firstKey = '" + firstKey + "' secondKey = '" + secondKey+"'"))
+		{	
+			oparations.update("Updates", "newVal = '" + newVal + "'", "table = '" + table + "'" + " column = '" +  column + "'" + "firstKey = '" + firstKey + "'" + "secondKey = '" + secondKey+ "'");
+		}
+		else
+		{	//INSERT
+			if(secondKey.equals(""))
+				secondKey = "-1";
+
+			oparations.insert("Updates", "'"+table+"'" ,"'"+column+"'" , "'"+newVal+"'","'"+ firstKey+"'","'"+secondKey+"'");
+		}
+
 	}
-	else
-	{	//INSERT
-		if(secondKey.equals(""))
-			secondKey = "-1";
-		
-		oparations.insert("Updates", "'"+table+"'" ,"'"+column+"'" , "'"+newVal+"'","'"+ firstKey+"'","'"+secondKey+"'");
+
+
+	private void userUpdate() {
+		yagoUpdate();
+		userTableUpdate();
 	}
-	
-}
 
 
-private void userUpdate() {
-	yagoUpdate();
-	userTableUpdate();
-	
-	
-}
 
+	private boolean checkExist(String select, String from, String where ){
 
-	
-private boolean checkExist(String select, String from, String where ){
-	
-	ResultSet result = oparations.select(select ,from, where);
-	
-	try {
-		return result.next();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		ResultSet result = oparations.select(select ,from, where);
+
+		try {
+			return result.next();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
 	}
-	
-	return false;
-}
 
 
 
 
-public void run(){
-		
+	public void run(){
+
 		this.userUpdate( );
-		
-		
+
+
 	}
 
 
 
 
 
-	
+
 }

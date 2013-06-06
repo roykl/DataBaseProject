@@ -28,13 +28,13 @@ public class ThreadAddUser extends Thread {
 		//set table name
 		utils.Configuration settings = new Configuration();
 		String dbName = settings.getDbName();
-		ResultSet result = oparations.select("idUsers", dbName+ ".Users", "userName = '" + userName + "'"); 
+		ResultSet result = oparations.select("idUsers", dbName+ ".Users", "idUsers = '" + Integer.toString(userName.hashCode()) + "'"); 
 		
 		try {
 			//if no such a name than add it
 			if(!result.next()){
 			
-			oparations.insert(dbName+ ".Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'");
+			oparations.insert(dbName+ ".Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'", Integer.toString(pass.hashCode()));
 			return true;
 			}
 			
