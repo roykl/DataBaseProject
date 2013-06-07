@@ -23,9 +23,7 @@ public class ThreadUserAuthentication extends Thread {
 
 
 	private boolean UserAuthentication(){
-		Configuration settings = new Configuration();
-		String dbName = settings.getDbName();
-		ResultSet result = oparations.select("idUsers", dbName+".Users", "idUsers = " +Integer.toString(userName.hashCode()) + " AND hashPassword = "+ Integer.toString(password.hashCode()));
+		ResultSet result = oparations.select("idUsers", "Users", "idUsers = " +Integer.toString(userName.hashCode()) + " AND hashPassword = "+ Integer.toString(password.hashCode()));
 
 		try {
 			return result.next();

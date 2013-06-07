@@ -26,10 +26,7 @@ public class ThreadCheckExist extends Thread {
 
 	/** check if exists in the db */
 	private boolean checkExist(){
-		//set table name
-		utils.Configuration settings = new Configuration();
-		String dbName = settings.getDbName();
-		ResultSet result = oparations.select(select ,dbName + "." + from, where);		
+		ResultSet result = oparations.select(select , from, where);		
 		try {	
 			return result.next();	
 		} catch (SQLException e) {

@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gdata.util.ServiceException;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
 
 import db.DBOparations;
 import db.JDBCConnectionPooling;
@@ -44,26 +46,29 @@ public static void main(String[] args) throws IOException, SQLException {
 	}
 
 	DBOparations db= new DBOparations(pl);
+	java.sql.Connection conn  = pl.connectionCheck();
+	java.sql.Statement stmt= conn.createStatement();
+	db.commitUpdates(stmt);
 	
-	db.delete("DbMysql05.Movies", "idMovies =1");
-	
-	//db.insert("DbMysql05.Movies", "3" ,"16");
-	//db.update("DbMysql05.Movies", "language = 1", "idMovies = 1");
-	ResultSet rs = db.select("*", "DbMysql05.Movies", "");
-	rs.next();
-	System.out.println(rs.getString(1));
-	System.out.println(rs.getString(2));
-	rs.next();
-	System.out.println(rs.getString(1));
-	System.out.println(rs.getString(2));
-	
-	YouTubeManager yt = new YouTubeManager();
-	try {
-		yt.getTrailer("reservoir dogs");
-	} catch (ServiceException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
+//	db.delete("DbMysql05.Movies", "idMovies =1");
+//	
+//	//db.insert("DbMysql05.Movies", "3" ,"16");
+//	//db.update("DbMysql05.Movies", "language = 1", "idMovies = 1");
+//	ResultSet rs = db.select("*", "DbMysql05.Movies", "");
+//	rs.next();
+//	System.out.println(rs.getString(1));
+//	System.out.println(rs.getString(2));
+//	rs.next();
+//	System.out.println(rs.getString(1));
+//	System.out.println(rs.getString(2));
+//	
+//	YouTubeManager yt = new YouTubeManager();
+//	try {
+//		yt.getTrailer("reservoir dogs");
+//	} catch (ServiceException e1) {
+//		// TODO Auto-generated catch block
+//		e1.printStackTrace();
+//	}
 		  
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
 //
@@ -74,16 +79,16 @@ public static void main(String[] args) throws IOException, SQLException {
 		
 //		
 //		HashMap<String,Movie> p = new HashMap<String, Movie>();
-		Parser yp = new Parser();
-		yp.parse();
-		System.out.println(yp.getDirectorsTable().size());
-		Set<Integer> s = new HashSet<Integer>();
-		for(Movie l : yp.getMoviesTable().values()){
-			if(l.getDirector() != null)
-		    	s.add(l.getDirector().getId().hashCode());
-		}
-		System.out.println(s.size());
-		
+//		Parser yp = new Parser();
+//		yp.parse();
+//		System.out.println(yp.getDirectorsTable().size());
+//		Set<Integer> s = new HashSet<Integer>();
+//		for(Movie l : yp.getMoviesTable().values()){
+//			if(l.getDirector() != null)
+//		    	s.add(l.getDirector().getId().hashCode());
+//		}
+//		System.out.println(s.size());
+//		
 
 //		long start = System.currentTimeMillis();
 //		yp.parse();
@@ -118,15 +123,15 @@ public static void main(String[] args) throws IOException, SQLException {
    //     writeObjectToFile(yp.getMoviesTable());
 		
 		
-		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
-		Set<Integer> keys = new HashSet<Integer>();
-		for( String id : yp.getMoviesTable().keySet())
-		{
-			System.out.println(id.hashCode() +"\n");
-			keys.add(id.hashCode());
-		}
-		
-		System.out.println("Num Of keys is: " + keys.size());
+//		System.out.println("Num Of Movies is: " + yp.getMoviesTable().size());
+//		Set<Integer> keys = new HashSet<Integer>();
+//		for( String id : yp.getMoviesTable().keySet())
+//		{
+//			System.out.println(id.hashCode() +"\n");
+//			keys.add(id.hashCode());
+//		}
+//		
+//		System.out.println("Num Of keys is: " + keys.size());
 
 		
 //		yp.parseYagoTypes("C:\\Users\\Roy\\Desktop\\test\\yagoSimpleTypes.ttl");		
@@ -134,30 +139,30 @@ public static void main(String[] args) throws IOException, SQLException {
 //		yp.parseYagoLiteralFacts("C:\\Users\\Roy\\Desktop\\test\\yagoLiteralFacts.ttl");	
 //		yp.parseYagoWikiInfo("C:\\Users\\Roy\\Dropbox\\DB Project\\Yago Tables\\yagoWikipediaInfo.ttl");
 	    
-		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
-		try {
-			FileWriter fw = new FileWriter(file);
-			for(Movie m : yp.getMoviesTable().values())
-			{
-				fw.write(m.toString());
-				fw.write(System.getProperty("line.separator"));
-			//	fw.write("Actors: " + m.getActorsLst().toString());				
-			//	fw.write(System.getProperty("line.separator"));
-			//	if(m.getDirector() != null){
-			//		fw.write("Director: " + m.getDirector().getName());
-			//	    fw.write(System.getProperty("line.separator"));
-			//	}
-			//	fw.write("Created On: " + m.getDateCreated() + ", Duration: " + m.getDuration());
-			//	fw.write(System.getProperty("line.separator"));
-			//	fw.write("WikiURL: "+ m.getWikiURL());
-			//	fw.write(System.getProperty("line.separator"));
-			//	fw.write(System.getProperty("line.separator"));
-			}
-			fw.close();
-		}
-		catch(Exception ex){
-			//
-		}
+//		File file = new File("C:\\Users\\Roy\\Desktop\\test\\try.txt");
+//		try {
+//			FileWriter fw = new FileWriter(file);
+//			for(Movie m : yp.getMoviesTable().values())
+//			{
+//				fw.write(m.toString());
+//				fw.write(System.getProperty("line.separator"));
+//			//	fw.write("Actors: " + m.getActorsLst().toString());				
+//			//	fw.write(System.getProperty("line.separator"));
+//			//	if(m.getDirector() != null){
+//			//		fw.write("Director: " + m.getDirector().getName());
+//			//	    fw.write(System.getProperty("line.separator"));
+//			//	}
+//			//	fw.write("Created On: " + m.getDateCreated() + ", Duration: " + m.getDuration());
+//			//	fw.write(System.getProperty("line.separator"));
+//			//	fw.write("WikiURL: "+ m.getWikiURL());
+//			//	fw.write(System.getProperty("line.separator"));
+//			//	fw.write(System.getProperty("line.separator"));
+//			}
+//			fw.close();
+//		}
+//		catch(Exception ex){
+//			//
+//		}
 			
 	}
 

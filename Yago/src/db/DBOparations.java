@@ -200,7 +200,7 @@ public class DBOparations implements IdbOparations {
 		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
 		try {
 			moviesList = (HashMap<String, Movie>) TestConsole
-					.getObjFromFile("C:\\Users\\Nir\\Dropbox\\DB Project\\object");
+					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
 		} catch (ClassNotFoundException e2) {		
 			e2.printStackTrace();
 		} catch (IOException e2) {		
@@ -237,9 +237,13 @@ public class DBOparations implements IdbOparations {
 
 			start = System.currentTimeMillis();
 			int movieHashValue;		
-
+			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
+				if(count>500)
+					break;
+				count++;
+				System.out.println(count);
 				// calculate movieHashValue to be the idMovie and insert it to the table
 				movieHashValue = movie.getId().hashCode();
 				pstmt.setInt(IdMovie, movieHashValue);
@@ -258,7 +262,7 @@ public class DBOparations implements IdbOparations {
 			}
 			
 			// check for updates made by users and update the tables accordingly
-			commitUpdates(stmt);
+			//commitUpdates(stmt);
 
 			try {
 				conn.commit();
@@ -508,7 +512,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** check for updates made by users and update the tables accordingly */
-	private void commitUpdates(Statement stmt) {
+	public void commitUpdates(Statement stmt) {
 
 		ResultSet updateSet = null;
 		// get All the tuples from the Update table
@@ -522,8 +526,7 @@ public class DBOparations implements IdbOparations {
 
 		try{
 		while (updateSet.next()) {
-			
-		
+
 			tableName=updateSet.getString(1);
 			columnValue=updateSet.getString(2);
 			newVal=updateSet.getInt(3);
@@ -546,7 +549,7 @@ public class DBOparations implements IdbOparations {
 					// Table name, key1,
 					// key2- only for
 					// ActorMovie,GenreMovie
-					insert(tableName, Integer.toString(key1), Integer.toString(key2));
+					insert(tableName, Integer.toString(key1), Integer.toString(newVal));
 
 				else{
 					str=columnValue+"="+newVal;

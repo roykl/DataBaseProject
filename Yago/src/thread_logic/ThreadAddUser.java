@@ -25,16 +25,13 @@ public class ThreadAddUser extends Thread {
 	//if user not already exist (add user name, pass, and user ID to Users table) return true
 	//return false
 	private boolean addUser(){
-		//set table name
-		utils.Configuration settings = new Configuration();
-		String dbName = settings.getDbName();
-		ResultSet result = oparations.select("idUsers", dbName+ ".Users", "idUsers = '" + Integer.toString(userName.hashCode()) + "'"); 
+		ResultSet result = oparations.select("idUsers", "Users", "idUsers = '" + Integer.toString(userName.hashCode()) + "'"); 
 		
 		try {
 			//if no such a name than add it
 			if(!result.next()){
 			
-			oparations.insert(dbName+ ".Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'", Integer.toString(pass.hashCode()));
+			oparations.insert("Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'", Integer.toString(pass.hashCode()));
 			return true;
 			}
 			
