@@ -515,20 +515,23 @@ public class DBOparations implements IdbOparations {
 		updateSet = select("*", "Updates", "");
 		String tableName=null;
 		String columnValue=null;
-		String newVal=null;
-		String key1=null;
-		String key2=null;
+		int newVal=0;
+		int key1=0;
+		int key2=0;
 		String str = null, str2=null;
 
-		try {
+		try{
+		while (updateSet.next()) {
+			
+		
 			tableName=updateSet.getString(1);
 			columnValue=updateSet.getString(2);
-			newVal=updateSet.getString(3);
-			key1=updateSet.getString(4);
-			key2=updateSet.getString(5);
-			while (updateSet.next()) {
+			newVal=updateSet.getInt(3);
+			key1=updateSet.getInt(4);
+			key2=updateSet.getInt(5);
+			
 
-				if (newVal.equals("")){ // Delete operation- Table
+				if ((newVal==0) && !(tableName.equals("Movie")) ){ // Delete operation- Table
 					// name, key1, key2 - only
 					// for ActorMovie,
 					// GenreMovie
@@ -539,12 +542,11 @@ public class DBOparations implements IdbOparations {
 
 
 				}
-				else if (key2.equals("-1")) // Insert operation -
+				else if ((key2==0) && !(tableName.equals("Movie")))  // Insert operation -
 					// Table name, key1,
 					// key2- only for
 					// ActorMovie,GenreMovie
-					insert(tableName, columnValue,
-							key1);
+					insert(tableName, Integer.toString(key1), Integer.toString(key2));
 
 				else{
 					str=columnValue+"="+newVal;
@@ -561,15 +563,12 @@ public class DBOparations implements IdbOparations {
 							str2);
 				}
 			}
+		
 		}
-
 		catch (SQLException e) {
 			System.out.println("Updates Failed");
 			e.printStackTrace();
 		}
-
-
-
 	}
 
 
@@ -577,3 +576,4 @@ public class DBOparations implements IdbOparations {
 
 
 }
+
