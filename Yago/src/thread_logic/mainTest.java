@@ -75,6 +75,11 @@ public class mainTest {
 //		}	
 //		System.out.println(t1.getValue());
 		
+//		ThreadUserUpdate t1 = new ThreadUserUpdate(oparations, "Movie", -2143842341, 0, "year", 3000);
+//		t1.start();
+		
+		ThreadUserUpdate t2 = new ThreadUserUpdate(oparations, "GenreMovie", -2143842341, 0, "idGenre", -2120419507);
+		t2.start();
 		
 	}
 		

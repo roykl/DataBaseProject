@@ -21,16 +21,11 @@ public class ThreadUserUpdate extends Thread {
 	int secondKey;//idActor|idGenre
 	int newVal;
 	String columnName;
-	String dbName;
 	
 	public ThreadUserUpdate(IdbOparations inOpp, String table, int firstKey,int secondKey, String coulmn, int newVal){
 		
-		//set table name
-		utils.Configuration settings = new Configuration();
-		dbName = settings.getDbName();
-		
 		oparations = inOpp;
-		this.table = dbName + "." + table;
+		this.table = table;
 		this.columnName = coulmn;
 		this.newVal = newVal;
 		this.firstKey = firstKey;
@@ -38,21 +33,17 @@ public class ThreadUserUpdate extends Thread {
 		
 	}
 	
-	
-	
-
 	//return true if work false if not
 	private boolean yagoUpdate(){
 		
 		//UPDATE
-		if(secondKey != 0 && newVal != 0){
+		if(secondKey != 0 && newVal != 0 || table.equals("Movie")){
 			UPDATE();
 			return true;
 		}
 		//INSERT
 		else if(secondKey == 0 && newVal!=0){
-			INSERT();
-			return true;
+			return INSERT();
 		}
 		//DELETE
 		else if(secondKey !=0 && newVal == 0){
@@ -66,17 +57,20 @@ public class ThreadUserUpdate extends Thread {
 	}
 	
 	//user can only insert actor or genre to movie 
-	private void INSERT(){
-		 if(table.equals(dbName+".Actor-Movie")){
+	private boolean INSERT(){
+		 if(table.equals("ActorMovie") && !checkExist("*", table , "idMovie = " + firstKey + " AND idActor = " + newVal)){
 			oparations.insert(table,Integer.toString(firstKey), Integer.toString(newVal));
-		}else{//Genre-Movie
+			return true;
+		}else if(table.equals("GenreMovie") && !checkExist("*", table , "idMovie = " + firstKey + " AND idGenre = " + newVal)){//Genre-Movie
 			oparations.insert(table,Integer.toString(firstKey), Integer.toString(newVal));
+			return true;
 		}
+		 return false;
 	}
 	
 	//user can only insert actor or genre to movie
 	private void DELETE(){
-		if(table.equals(dbName + ".Actor-Movie")){
+		if(table.equals("ActorMovie")){
 			oparations.delete(table,"idMovie = " + firstKey+ " idActor = " + newVal);
 		}else{//Genre-Movie
 			oparations.delete(table,"idMovie = " + firstKey+ " idGenre = " + newVal);
@@ -84,10 +78,10 @@ public class ThreadUserUpdate extends Thread {
 	}
 
 	private void UPDATE(){
-		if(table.equals(dbName+ ".Movie")){
+		if(table.equals("Movie")){
 			oparations.update(table, columnName + " = " + newVal   , "idMovie" + "= " + firstKey);
 		}
-		else if(table.equals(dbName+".ActorMovie")){
+		else if(table.equals("ActorMovie")){
 			oparations.update(table, columnName +  " = "  + newVal   , "idMovie = " + firstKey + " AND " +" idActor = " + secondKey);
 		}else{//Genre-Movie
 			oparations.update(table, columnName +  " = " + newVal   , "idMovie = " + firstKey+ " AND " + " idGenre = " + secondKey);
@@ -98,16 +92,17 @@ public class ThreadUserUpdate extends Thread {
 //Update the 'Updates' table
 private void userTableUpdate() {
 	//if value already updated - UPDATE the updates table
-	if(checkExist("tableName, columnName, firstKey, secondKey", dbName+".Updates" , "tableName = '" + table + "' AND  columnName = '" + columnName + "' AND  firstKey = " + firstKey + " AND secondKey = " + secondKey))
+	if(table.equals("Movie") || secondKey !=0) // if we want to do update- put newVal instead of secondKey
+	if(checkExist("tableName, columnName, firstKey, secondKey", "Updates" , "tableName = '" + table + "' AND  columnName = '" + columnName + "' AND  firstKey = " + firstKey + " AND secondKey = " + secondKey))
 	{	
-		oparations.update(dbName + ".Updates", "newVal = " + newVal , "tableName = '" + table + "' AND " + " columnName = '" +  columnName + "' AND " + "firstKey = " + firstKey + " AND secondKey = " + secondKey);
+		oparations.update("Updates", "newVal = " + newVal , "tableName = '" + table + "' AND " + " columnName = '" +  columnName + "' AND " + "firstKey = " + firstKey + " AND secondKey = " + secondKey);
 	}
 	else
 	{	//INSERT to updates table
 //		if(table.equals(dbName + ".Movie") && secondKey.equals(""))
 //			secondKey = "-1";
 		
-		oparations.insert("Updates", "'"+table+"'" ,"'"+columnName+"'" , Integer.toString(newVal),Integer.toString(firstKey), Integer.toString(newVal));
+		oparations.insert("Updates", "'"+table+"'" ,"'"+columnName+"'" , Integer.toString(newVal),Integer.toString(firstKey), Integer.toString(secondKey));
 	}
 	
 }
@@ -117,7 +112,6 @@ private void userUpdate() {
 	
 	yagoUpdate();
 	userTableUpdate();
-	
 	
 }
 
@@ -132,24 +126,16 @@ private boolean checkExist(String select, String from, String where ){
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}
-	
+	}	
 	return false;
 }
-
 
 
 
 public void run(){
 		
 		this.userUpdate( );
-		
-		
+				
 	}
-
-
-
-
-
 	
 }
