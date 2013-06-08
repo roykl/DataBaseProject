@@ -1,6 +1,5 @@
-
-
 package thread_logic;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,6 +17,7 @@ public class ThreadUserUpdate extends Thread {
 	int secondKey;//idActor|idGenre
 	int newVal;
 	String columnName;
+	int value;
 	
 	public static final int OK = 1;
 	public static final int NOT_EXIST = 2;
@@ -157,11 +157,15 @@ private int checkExist(String select, String from, String where ){
 }
 
 
+public int getValue() {
+	return value;
+}
 
+//public setV
 
 public void run(){
-		this.userUpdate( );
-	}
+	value = userUpdate();
+}
 
 
 
