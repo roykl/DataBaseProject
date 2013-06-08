@@ -98,8 +98,8 @@ public class ThreadUserUpdate extends Thread {
 private int userTableUpdate() {
 	int retVal = 0;
 	
-	retVal =+ oparations.delete("Updates", "tableName = '" + table + "' AND  columnName = '" + columnName + "' AND  firstKey = " + firstKey + " AND secondKey = " + secondKey);
-	retVal =+ oparations.insert("Updates", "'"+table+"'" ,"'"+columnName+"'" , Integer.toString(newVal),Integer.toString(firstKey), Integer.toString(secondKey));
+	retVal += oparations.delete("Updates", "tableName = '" + table + "' AND  columnName = '" + columnName + "' AND  firstKey = " + firstKey + " AND secondKey = " + secondKey);
+	retVal += oparations.insert("Updates", "'"+table+"'" ,"'"+columnName+"'" , Integer.toString(newVal),Integer.toString(firstKey), Integer.toString(secondKey));
 	return (retVal == 2) ? OK : ERR ; 
 }
 
@@ -110,8 +110,8 @@ private int userUpdate() {
 	
 	
 	if (tmpValidUpdate == OK){
-		retVal =+ yagoUpdate();
-		retVal =+ userTableUpdate();
+		retVal += yagoUpdate();
+		retVal += userTableUpdate();
 	return (retVal == 2) ? OK : ERR;
 	}
 	else{
@@ -126,19 +126,14 @@ private int validUpdate(){
 		
 	case "idLanguage" :
 		return checkExist("idLanguage", "Language" ,"idLanguage = " + newVal);
-
 	case "idDirector" :
 		return checkExist("idDirector", "Director" ,"idDirector = " + newVal);
-	
 	case "idActor" :
 		return checkExist("idActor", "Actor" ,"idActor = " + newVal);
-		
 	case "idGenre" :
 		return checkExist("idGenre", "Genre" ,"idGenre = " + newVal);
-	
 	default :
 		return OK;
-		
 	}
 	
 }

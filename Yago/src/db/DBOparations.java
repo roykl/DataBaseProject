@@ -241,10 +241,11 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-				if(count>500)
+				if(count>70000)
 					break;
 				count++;
-				System.out.println(count);
+				if(count%1000 ==0)
+					System.out.println(count +"- " +System.currentTimeMillis()/1000F);
 				// calculate movieHashValue to be the idMovie and insert it to the table
 				movieHashValue = movie.getId().hashCode();
 				pstmt.setInt(IdMovie, movieHashValue);
