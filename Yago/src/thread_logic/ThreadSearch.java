@@ -7,7 +7,8 @@ public class ThreadSearch extends Thread {
 	IdbOparations oparations ;
 	String select, from, where;
 	private ResultSet result;
-	
+
+
 	public ThreadSearch(IdbOparations inOpp,String select, String from, String where){		
 		oparations = inOpp;
 		this.select = select;

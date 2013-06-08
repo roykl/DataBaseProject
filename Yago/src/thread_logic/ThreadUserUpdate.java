@@ -1,11 +1,8 @@
 
-//TODO: add DbMysql05
-package thread_logic;
 
+package thread_logic;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import utils.Configuration;
 
 import db.IdbOparations;
 // UPDATE - all fields are full 
@@ -22,10 +19,14 @@ public class ThreadUserUpdate extends Thread {
 	int newVal;
 	String columnName;
 	
+	public static final int OK = 1;
+	public static final int NOT_EXIST = 2;
+	public static final int ERR = 0;		
+	
+	// Constructor
 	public ThreadUserUpdate(IdbOparations inOpp, String table, int firstKey,int secondKey, String coulmn, int newVal){
-		
 		oparations = inOpp;
-		this.table = table;
+		this.table =  table;
 		this.columnName = coulmn;
 		this.newVal = newVal;
 		this.firstKey = firstKey;
@@ -33,13 +34,15 @@ public class ThreadUserUpdate extends Thread {
 		
 	}
 	
+	
+	///////////////////////////////////  Yago update  ////////////////////////////////////////
+
 	//return true if work false if not
-	private boolean yagoUpdate(){
+	private int yagoUpdate(){
 		
 		//UPDATE
-		if(secondKey != 0 && newVal != 0 || table.equals("Movie")){
-			UPDATE();
-			return true;
+		if(secondKey != 0 && newVal != 0){
+			return UPDATE();
 		}
 		//INSERT
 		else if(secondKey == 0 && newVal!=0){
@@ -47,95 +50,122 @@ public class ThreadUserUpdate extends Thread {
 		}
 		//DELETE
 		else if(secondKey !=0 && newVal == 0){
-			DELETE();
-			return true;
+			return DELETE();
 		}
 		//ERROR
 		else{
-			return false;
+			return ERR;
 		}
 	}
 	
+	
 	//user can only insert actor or genre to movie 
-	private boolean INSERT(){
-		 if(table.equals("ActorMovie") && !checkExist("*", table , "idMovie = " + firstKey + " AND idActor = " + newVal)){
-			oparations.insert(table,Integer.toString(firstKey), Integer.toString(newVal));
-			return true;
-		}else if(table.equals("GenreMovie") && !checkExist("*", table , "idMovie = " + firstKey + " AND idGenre = " + newVal)){//Genre-Movie
-			oparations.insert(table,Integer.toString(firstKey), Integer.toString(newVal));
-			return true;
+	private int INSERT(){
+		 if(table.equals("Actor-Movie")){
+			return oparations.insert(table,Integer.toString(firstKey), Integer.toString(newVal));
+		}else{//Genre-Movie
+			return oparations.insert(table,Integer.toString(firstKey), Integer.toString(newVal));
 		}
-		 return false;
 	}
 	
 	//user can only insert actor or genre to movie
-	private void DELETE(){
-		if(table.equals("ActorMovie")){
-			oparations.delete(table,"idMovie = " + firstKey+ " idActor = " + newVal);
+	private int DELETE(){
+		if(table.equals("Actor-Movie")){
+			return oparations.delete(table,"idMovie = " + firstKey+ " idActor = " + newVal);
 		}else{//Genre-Movie
-			oparations.delete(table,"idMovie = " + firstKey+ " idGenre = " + newVal);
+			return oparations.delete(table,"idMovie = " + firstKey+ " idGenre = " + newVal);
 		}
 	}
 
-	private void UPDATE(){
+	private int UPDATE(){
 		if(table.equals("Movie")){
-			oparations.update(table, columnName + " = " + newVal   , "idMovie" + "= " + firstKey);
+			return oparations.update(table, columnName + " = " + newVal   , "idMovie" + "= " + firstKey);
 		}
 		else if(table.equals("ActorMovie")){
-			oparations.update(table, columnName +  " = "  + newVal   , "idMovie = " + firstKey + " AND " +" idActor = " + secondKey);
+			return oparations.update(table, columnName +  " = "  + newVal   , "idMovie = " + firstKey + " AND " +" idActor = " + secondKey);
 		}else{//Genre-Movie
-			oparations.update(table, columnName +  " = " + newVal   , "idMovie = " + firstKey+ " AND " + " idGenre = " + secondKey);
+			return oparations.update(table, columnName +  " = " + newVal   , "idMovie = " + firstKey+ " AND " + " idGenre = " + secondKey);
 		}
 	}
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+
+
 
 //Update the 'Updates' table
-private void userTableUpdate() {
-	//if value already updated - UPDATE the updates table
-	if(table.equals("Movie") || secondKey !=0) // if we want to do update- put newVal instead of secondKey
-	if(checkExist("tableName, columnName, firstKey, secondKey", "Updates" , "tableName = '" + table + "' AND  columnName = '" + columnName + "' AND  firstKey = " + firstKey + " AND secondKey = " + secondKey))
-	{	
-		oparations.update("Updates", "newVal = " + newVal , "tableName = '" + table + "' AND " + " columnName = '" +  columnName + "' AND " + "firstKey = " + firstKey + " AND secondKey = " + secondKey);
+private int userTableUpdate() {
+	int retVal = 0;
+	
+	retVal =+ oparations.delete("Updates", "tableName = '" + table + "' AND  columnName = '" + columnName + "' AND  firstKey = " + firstKey + " AND secondKey = " + secondKey);
+	retVal =+ oparations.insert("Updates", "'"+table+"'" ,"'"+columnName+"'" , Integer.toString(newVal),Integer.toString(firstKey), Integer.toString(secondKey));
+	return (retVal == 2) ? OK : ERR ; 
+}
+
+
+private int userUpdate() {
+	int retVal = 0;
+	int tmpValidUpdate = validUpdate(); ///check valid update
+	
+	
+	if (tmpValidUpdate == OK){
+		retVal =+ yagoUpdate();
+		retVal =+ userTableUpdate();
+	return (retVal == 2) ? OK : ERR;
 	}
-	else
-	{	//INSERT to updates table
-//		if(table.equals(dbName + ".Movie") && secondKey.equals(""))
-//			secondKey = "-1";
+	else{
+		return tmpValidUpdate;
+	}
+}
+
+//check if update is valid - the newVal has to be exist in the system
+private int validUpdate(){
+	
+	switch (columnName) {
 		
-		oparations.insert("Updates", "'"+table+"'" ,"'"+columnName+"'" , Integer.toString(newVal),Integer.toString(firstKey), Integer.toString(secondKey));
+	case "idLanguage" :
+		return checkExist("idLanguage", "Language" ,"idLanguage = " + newVal);
+
+	case "idDirector" :
+		return checkExist("idDirector", "Director" ,"idDirector = " + newVal);
+	
+	case "idActor" :
+		return checkExist("idActor", "Actor" ,"idActor = " + newVal);
+		
+	case "idGenre" :
+		return checkExist("idGenre", "Genre" ,"idGenre = " + newVal);
+	
+	default :
+		return OK;
+		
 	}
 	
 }
 
 
-private void userUpdate() {
-	
-	yagoUpdate();
-	userTableUpdate();
-	
-}
-
-
-	
-private boolean checkExist(String select, String from, String where ){
+private int checkExist(String select, String from, String where ){
 	
 	ResultSet result = oparations.select(select ,from, where);
 	
 	try {
-		return result.next();
+		return result.next() ? OK : NOT_EXIST ;
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}	
-	return false;
+		return ERR;
+	}
 }
 
 
 
+
 public void run(){
-		
 		this.userUpdate( );
-				
 	}
+
+
+
+
+
 	
 }

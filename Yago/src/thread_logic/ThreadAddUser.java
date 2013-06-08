@@ -10,10 +10,12 @@ import db.IdbOparations;
 
 public class ThreadAddUser extends Thread {
 	
-	IdbOparations oparations ;
-	String userName;
-	String pass;
-	
+	private IdbOparations oparations ;
+	private String userName;
+	private String pass;
+	private int value; // returned value
+	private static final int OK = 1;
+	private static final int ERR = 0;
 	
 	public ThreadAddUser(IdbOparations inOpp, String inUserName, String inPass){
 		oparations = inOpp;
@@ -24,7 +26,7 @@ public class ThreadAddUser extends Thread {
 	
 	//if user not already exist (add user name, pass, and user ID to Users table) return true
 	//return false
-	private boolean addUser(){
+	private int addUser(){
 		ResultSet result = oparations.select("idUsers", "Users", "idUsers = '" + Integer.toString(userName.hashCode()) + "'"); 
 		
 		try {
@@ -32,22 +34,27 @@ public class ThreadAddUser extends Thread {
 			if(!result.next()){
 			
 			oparations.insert("Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'", Integer.toString(pass.hashCode()));
-			return true;
+			return OK;
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return ERR;
 		}
 		
-		return false;
+		return ERR;
 		
 	}
 	
+	public int getValue() {
+		return value;
+	}
+
+	//public setV
+
 	public void run(){
-		
-		this.addUser();
+		value = this.addUser(); 		
 	}
 	
 }

@@ -10,10 +10,13 @@ import db.IdbOparations;
 public class ThreadGrade extends Thread {
 
 	IdbOparations oparations ;
-	int IDuser;
-	int IDmovie;
-	int grade;
-
+	private int IDuser;
+	private int IDmovie;
+	private int grade;
+	private int value; // returned value
+	private static final int OK = 1;
+	private static final int ERR = 0;
+	
 	public ThreadGrade(IdbOparations inOpp, int inUser, int inMovie, int inGrade){	
 		oparations = inOpp;
 		IDuser = inUser;
@@ -22,21 +25,23 @@ public class ThreadGrade extends Thread {
 	}
 
 	//check if user already ranked the movie
-	private synchronized boolean checkRank(){
+	private  boolean checkRank(){
 
 		ResultSet result = oparations.select("idUser" , "UsersMovies", "idUser = " + IDuser + " AND idMovie = " + IDmovie);		
 		try {
-			boolean tmp =  result.next();
-			return tmp;
+			
+			return result.next();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		return false;
+			return false;
+		}
 	}
 
 	//assumption: In MoviesGrades table movie is unique 
-	private synchronized void updateAvarage(int IDuser,int IDmovie, int userGrade){
+	private  int updateAvarage(){
+		
+		int retVal = 0;
 		double newGrade;
 		int newCount;
 		double oldGrade = 0;
@@ -68,13 +73,14 @@ public class ThreadGrade extends Thread {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ERR;
 		}
 
 		//check if user ranked the movie before
 
-		if(!checkRank()){//user hasn't ranked that movie before
+		if(!checkRank()){ //user hasn't ranked that movie before
 			newCount = oldCount + 1;
-			newGrade = ((oldCount*oldGrade) + userGrade)/newCount;
+			newGrade = ((oldCount*oldGrade) + grade())/newCount;
 			userRanked = false;
 		}
 		else{ //user already ranked the movie			
@@ -87,44 +93,53 @@ public class ThreadGrade extends Thread {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return ERR;
 			}
 
 			newCount = oldCount;
-			newGrade = ((oldCount*oldGrade) - oldUserGrade +userGrade)  /newCount;
+			newGrade = ((oldCount*oldGrade) - oldUserGrade +grade())  /newCount;
 
 		}
-
+		
+		//if (retVal == 2) -> (function succeed) else (error)
 		if(!userRanked && !movieRanked){
 			//insert to MoviesGrades
-			oparations.insert("MoviesGrades", Integer.toString(IDmovie), Double.toString(newGrade), Integer.toString(newCount) );
+			retVal =+ oparations.insert("MoviesGrades", Integer.toString(IDmovie), Double.toString(newGrade), Integer.toString(newCount) );
 			//insert to UsersMovies
-			oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
+			retVal =+ oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
 		} else if(!userRanked && movieRanked){
 			//insert to UsersMovies
-			oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
+			retVal =+ oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
 			//update MoviesGrades
-			oparations.update("MoviesGrades", "grade = " + newGrade + " , numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
+			retVal =+ oparations.update("MoviesGrades", "grade = " + newGrade + " , numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
 		} else if(userRanked && movieRanked){
-			oparations.update("MoviesGrades", "grade = " + newGrade + " ,numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
+			retVal =+ oparations.update("MoviesGrades", "grade = " + newGrade + " ,numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
 			//update UsersMovies
-			oparations.update("UsersMovies", "rank = " + userGrade, "idUser = " + IDuser + " AND idMovie" + IDmovie);
+			retVal =+ oparations.update("UsersMovies", "rank = " + grade, "idUser = " + IDuser + " AND idMovie" + IDmovie);
 		}
+		if(retVal == 2)
+			return OK;
+		
+		return ERR;
 	}
 
 
-	private synchronized void grade(){
+	private  int grade(){
 
-		updateAvarage(IDuser, IDmovie, grade);		
+		return updateAvarage();		
 
 
-
-	}
-
-	public synchronized void run(){
-
-		this.grade();
 
 	}
 
+	public int getValue() {
+		return value;
+	}
+
+	//public setV
+
+	public void run(){
+		value = this.grade(); 		
+	}
 
 }

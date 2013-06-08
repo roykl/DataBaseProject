@@ -9,11 +9,11 @@ import db.IdbOparations;
 
 public class ThreadCheckExist extends Thread {
 
-	IdbOparations oparations ;
-	String select;
-	String from;
-	String where;
-	boolean value;
+	private IdbOparations oparations ;
+	private String select;
+	private String from;
+	private String where;
+	private boolean value;
 
 	public ThreadCheckExist(IdbOparations oparations,String select, String from, String where){
 		this.oparations = oparations;

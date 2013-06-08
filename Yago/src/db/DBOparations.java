@@ -2,7 +2,6 @@ package db;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,17 +13,12 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.sql.Connection;
-
-import com.mysql.jdbc.exceptions.jdbc4.MySQLDataException;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import parsing.*;
 
 public class DBOparations implements IdbOparations {
-
+	
 	static JDBCConnectionPooling connPull;
 	private static final int IdMovie = 1;
 	private static final int IdLanguage = 2;
@@ -35,7 +29,8 @@ public class DBOparations implements IdbOparations {
 	private static final int Wiki = 7;
 	private static final int Duration = 8;
 	private static final int Plot = 9;
-
+	private static final int OK = 1;
+	private static final int ERR = 0;
 	// constructor //
 
 	public DBOparations(JDBCConnectionPooling connParam) {
@@ -82,10 +77,10 @@ public class DBOparations implements IdbOparations {
 					+ table);
 
 			e.printStackTrace();
-			return 0;
+			return ERR;
 		}
 		connPull.close(conn);
-		return 1;
+		return OK;
 
 	}
 
@@ -109,6 +104,7 @@ public class DBOparations implements IdbOparations {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		}
 
 		try {
@@ -147,10 +143,10 @@ public class DBOparations implements IdbOparations {
 		catch (SQLException e) {
 
 			e.printStackTrace();
-			return 0;
+			return ERR;
 		}
 		connPull.close(conn);
-		return 1;
+		return OK;
 
 	}
 
@@ -175,10 +171,10 @@ public class DBOparations implements IdbOparations {
 		catch (SQLException e) {
 
 			e.printStackTrace();
-			return 0;
+			return ERR;
 		}
 
-		return 1;
+		return OK;
 	}
 
 
@@ -192,12 +188,16 @@ public class DBOparations implements IdbOparations {
 	 * the "yago tables" if needed
 	 */
 	@Override
-	public void importData() {
-
-		// parse yago and imdb files 
+	public int importData() {
 
 		// get the movies list (with all the information about the movies)
 		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
+		
+		// parse yago and imdb files 
+//		Iparser parser = new Parser();
+//		parser.parse();
+//		moviesList = parser.getMoviesTable();
+		
 		try {
 			moviesList = (HashMap<String, Movie>) TestConsole
 					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
@@ -220,6 +220,7 @@ public class DBOparations implements IdbOparations {
 
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			return ERR;
 		}
 
 		long start = 0;// delete later
@@ -267,7 +268,7 @@ public class DBOparations implements IdbOparations {
 			try {
 				conn.commit();
 			} catch (SQLException exp) {
-				System.out.println("I failed to commit");
+				return ERR;				
 			}
 
 			try {
@@ -276,17 +277,20 @@ public class DBOparations implements IdbOparations {
 				safelyClose(stmt);
 			} catch (Exception e) {
 				System.out.println("Failed - problem closing statements");
+				return ERR;
 			}
 
 		} catch (SQLException e) {
 			connPull.close(conn);
 			e.printStackTrace();
+			return ERR;
 		}
 
 		connPull.close(conn);
 
 		System.out.println("Time in sec= "
 				+ (System.currentTimeMillis() - start) / 1000F);
+		return OK;
 	}
 
 
@@ -573,9 +577,6 @@ public class DBOparations implements IdbOparations {
 			e.printStackTrace();
 		}
 	}
-
-
-
 
 
 }

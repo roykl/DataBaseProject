@@ -5,7 +5,8 @@ import db.IdbOparations;
 
 public class ThreadImport extends Thread {
 
-	IdbOparations oparations ;
+	private IdbOparations oparations ;
+	private int value; // returned value
 	
 	
 	public ThreadImport(IdbOparations inOpp){		
@@ -13,7 +14,15 @@ public class ThreadImport extends Thread {
 	}
 	
 	
+	
+	
+	public int getValue() {
+		return value;
+	}
+
+	//public setV
+
 	public void run(){
-		oparations.importData();
+		value = oparations.importData();
 	}
 }

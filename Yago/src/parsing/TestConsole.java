@@ -46,9 +46,10 @@ public static void main(String[] args) throws IOException, SQLException {
 	}
 
 	DBOparations db= new DBOparations(pl);
-	java.sql.Connection conn  = pl.connectionCheck();
-	java.sql.Statement stmt= conn.createStatement();
-	db.commitUpdates(stmt);
+	db.importData();
+//	java.sql.Connection conn  = pl.connectionCheck();
+//	java.sql.Statement stmt= conn.createStatement();
+//	db.commitUpdates(stmt);
 	
 //	db.delete("DbMysql05.Movies", "idMovies =1");
 //	
