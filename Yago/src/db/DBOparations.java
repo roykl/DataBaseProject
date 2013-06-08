@@ -18,7 +18,7 @@ import java.sql.Connection;
 import parsing.*;
 
 public class DBOparations implements IdbOparations {
-	
+
 	static JDBCConnectionPooling connPull;
 	private static final int IdMovie = 1;
 	private static final int IdLanguage = 2;
@@ -104,7 +104,7 @@ public class DBOparations implements IdbOparations {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			
+
 		}
 
 		try {
@@ -192,15 +192,15 @@ public class DBOparations implements IdbOparations {
 
 		// get the movies list (with all the information about the movies)
 		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
-		
+
 		// parse yago and imdb files 
-//		Iparser parser = new Parser();
-//		parser.parse();
-//		moviesList = parser.getMoviesTable();
-		
+		//		Iparser parser = new Parser();
+		//		parser.parse();
+		//		moviesList = parser.getMoviesTable();
+
 		try {
 			moviesList = (HashMap<String, Movie>) TestConsole
-					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
+					.getObjFromFile("F:\\Users\\Roy's room\\Dropbox\\DB Project\\object");
 		} catch (ClassNotFoundException e2) {		
 			e2.printStackTrace();
 		} catch (IOException e2) {		
@@ -229,6 +229,20 @@ public class DBOparations implements IdbOparations {
 			//create prepared statment to inert to Movie table
 			PreparedStatement pstmt = null;
 			pstmt = conn.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
+			///try
+			PreparedStatement genreMovieStmt = null;
+			PreparedStatement actorMovieStmt = null;
+			PreparedStatement directorStmt = null;
+			PreparedStatement actorStmt = null;
+
+			genreMovieStmt = conn.prepareStatement("INSERT INTO GenreMovie(idMovie, idGenre) VALUES(?,?)");
+			actorMovieStmt = conn.prepareStatement("INSERT INTO ActorMovie(idMovie, idActor) VALUES(?,?)");
+			directorStmt = conn.prepareStatement("Insert INTO Director(idDirector, directorName) VALUES (?,?)");
+			actorStmt = conn.prepareStatement("Insert INTO Actor(idActor, actorName) VALUES (?,?)");
+
+
+			///end try
+
 
 			// create HashSet to contains hashValues in order to verify if we already inserted this value to the db
 			HashSet<Integer> actorsSet = new HashSet<Integer>();
@@ -241,27 +255,40 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-				if(count>500)
+				if(count>2000)
 					break;
 				count++;
-				System.out.println(count);
 				// calculate movieHashValue to be the idMovie and insert it to the table
 				movieHashValue = movie.getId().hashCode();
 				pstmt.setInt(IdMovie, movieHashValue);
 				// add language to Movie and Language tables
 				addLanguage(movie, stmt, pstmt, languages);
 				// add director to Movie and Director tables
-				addDirector(movie, stmt, directors, pstmt);
+				addDirector(movie, stmt, directors, pstmt, directorStmt);
 				// add facts that appear only in the Movie table and nowhere else
 				addSingleFacts(movie, pstmt);
 				//add and execute batch
 				pstmt.addBatch();
-				pstmt.executeBatch();
+
 				//add many to many facts- genres and actors
-				addGenres(movie, stmt, genres);
-				addActors(movie, stmt, actorsSet);
+				addGenres(movie, stmt, genreMovieStmt, genres);
+				addActors(movie, stmt, actorMovieStmt, actorStmt, actorsSet);
+
+				if (count % 1000 ==0){
+					directorStmt.executeBatch();
+					actorStmt.executeBatch();
+					pstmt.executeBatch();
+					genreMovieStmt.executeBatch();
+					actorMovieStmt.executeBatch();
+					System.out.println(count);
+				}
 			}
-			
+			directorStmt.executeBatch();
+			actorStmt.executeBatch();
+			pstmt.executeBatch();
+			genreMovieStmt.executeBatch();
+			actorMovieStmt.executeBatch();
+
 			// check for updates made by users and update the tables accordingly
 			//commitUpdates(stmt);
 
@@ -273,8 +300,8 @@ public class DBOparations implements IdbOparations {
 
 			try {
 				// close
-				safelyClose(pstmt);
-				safelyClose(stmt);
+				safelyClose(pstmt, stmt, directorStmt, actorStmt, genreMovieStmt, actorMovieStmt);
+				//safelyClose(stmt);
 			} catch (Exception e) {
 				System.out.println("Failed - problem closing statements");
 				return ERR;
@@ -371,7 +398,7 @@ public class DBOparations implements IdbOparations {
 
 	/** add the director to the db- to the Movie and Director table */
 	private void addDirector(Movie movie, Statement stmt,
-			HashSet<Integer> directors, PreparedStatement pstmt) {
+			HashSet<Integer> directors, PreparedStatement pstmt, PreparedStatement directorStmt) {
 
 		if ((movie.getDirector() != null)
 				&& (movie.getDirector().getName() != null)) {
@@ -379,8 +406,10 @@ public class DBOparations implements IdbOparations {
 			int hashValue = movie.getDirector().getId().hashCode();
 			try {
 				if (!directors.contains(hashValue)) {
-					insertidName("Director", movie.getDirector().getName(),
-							hashValue, stmt);
+					//insertidName("Director", movie.getDirector().getName(),hashValue, stmt);
+					directorStmt.setInt(1, hashValue);
+					directorStmt.setString(2, movie.getDirector().getName());
+					directorStmt.addBatch();
 					directors.add(hashValue);
 				}
 			} catch (SQLException exp) {
@@ -420,7 +449,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** add actors to the Actor and ActorMovie tables */
-	private void addActors(Movie movie, Statement stmt,
+	private void addActors(Movie movie, Statement stmt, PreparedStatement actorMovieStmt, PreparedStatement actorStmt,
 			HashSet<Integer> actorsSet) {
 		List<Person> actors = new ArrayList<Person>();
 
@@ -431,8 +460,11 @@ public class DBOparations implements IdbOparations {
 			int hashValue = actors.get(j).getId().hashCode();
 			try {
 				if (!actorsSet.contains(hashValue)) {
-					insertidName("Actor", actors.get(j).getName(), hashValue,
-							stmt);
+					//insertidName("Actor", actors.get(j).getName(), hashValue,stmt);
+					actorStmt.setInt(1, hashValue);
+					actorStmt.setString(2, actors.get(j).getName());
+					actorStmt.addBatch();
+
 					actorsSet.add(hashValue);
 				}
 			}
@@ -440,8 +472,12 @@ public class DBOparations implements IdbOparations {
 				System.out.println("Actor already in tables");
 			}
 			try {
-				stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-						+ hashValue + ",'" + movie.getId().hashCode() + "')");
+				actorMovieStmt.setInt(1, movie.getId().hashCode());
+				actorMovieStmt.setInt(2, hashValue);
+				actorMovieStmt.addBatch();
+
+				//				stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
+				//						+ hashValue + ",'" + movie.getId().hashCode() + "')");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -452,7 +488,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** add genres to the Genre and GenreMovie tables */
-	private void addGenres(Movie movie, Statement stmt, HashSet<Integer> genres) {
+	private void addGenres(Movie movie, Statement stmt, PreparedStatement genreStmt, HashSet<Integer> genres) {
 
 		Set<String> genreList = new LinkedHashSet<String>();
 		genreList = movie.getGenre();
@@ -474,8 +510,12 @@ public class DBOparations implements IdbOparations {
 			}
 
 			try {
-				stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
-						+ hashValue + ",'" + movie.getId().hashCode() + "')");
+				genreStmt.setInt(1, movie.getId().hashCode());
+				genreStmt.setInt(2, hashValue);
+				genreStmt.addBatch();
+
+				//				stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
+				//						+ hashValue + ",'" + movie.getId().hashCode() + "')");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -529,14 +569,14 @@ public class DBOparations implements IdbOparations {
 		String str = null, str2=null;
 
 		try{
-		while (updateSet.next()) {
+			while (updateSet.next()) {
 
-			tableName=updateSet.getString(1);
-			columnValue=updateSet.getString(2);
-			newVal=updateSet.getInt(3);
-			key1=updateSet.getInt(4);
-			key2=updateSet.getInt(5);
-			
+				tableName=updateSet.getString(1);
+				columnValue=updateSet.getString(2);
+				newVal=updateSet.getInt(3);
+				key1=updateSet.getInt(4);
+				key2=updateSet.getInt(5);
+
 
 				if ((newVal==0) && !(tableName.equals("Movie")) ){ // Delete operation- Table
 					// name, key1, key2 - only
@@ -570,7 +610,7 @@ public class DBOparations implements IdbOparations {
 							str2);
 				}
 			}
-		
+
 		}
 		catch (SQLException e) {
 			System.out.println("Updates Failed");
