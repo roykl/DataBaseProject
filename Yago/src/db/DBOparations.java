@@ -200,7 +200,7 @@ public class DBOparations implements IdbOparations {
 
 		try {
 			moviesList = (HashMap<String, Movie>) TestConsole
-					.getObjFromFile("F:\\Users\\Roy's room\\Dropbox\\DB Project\\object");
+					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
 		} catch (ClassNotFoundException e2) {		
 			e2.printStackTrace();
 		} catch (IOException e2) {		
@@ -255,8 +255,8 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-				if(count>2000)
-					break;
+//				if(count>20000)
+//					break;
 				count++;
 				// calculate movieHashValue to be the idMovie and insert it to the table
 				movieHashValue = movie.getId().hashCode();
