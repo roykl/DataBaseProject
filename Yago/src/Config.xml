@@ -14,6 +14,7 @@
 		<Port>3305</Port>
 		<DbName>DbMysql05</DbName>
 		<UserName>DbMysql05</UserName>
-		<Password>DbMysql05</Password>		
+		<Password>DbMysql05</Password>
+		<NumOfConnections>5</NumOfConnections>
 	</DB>
 </Configuration>

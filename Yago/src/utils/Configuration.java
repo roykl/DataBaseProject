@@ -122,6 +122,10 @@ public class Configuration {
 	public String getPassword(){
 		return getConfig(DB, "Password");
 	}
+	
+	public int getNumOfConnections(){
+		return Integer.parseInt(getConfig(DB,"NumOfConnections"));
+	}
 
 
 }
