@@ -220,27 +220,28 @@ public class DBOparations implements IdbOparations {
 		PreparedStatement actorMovieStmt = null;
 		PreparedStatement directorStmt = null;
 		PreparedStatement actorStmt = null;
-
-		try {		
-			//auto commit = false
-			conn.setAutoCommit(false);
-			// delete all the content from the "yago" tables
-			deleteAllTablesContent(stmt);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			return ERR;
-		}
+		PreparedStatement genreStmt = null;
+		PreparedStatement languagStmt = null;
 
 		long start = 0;// delete later
 
 		try {
+			//auto commit = false
+			conn.setAutoCommit(false);
+			// delete all the content from the "yago" tables
+			deleteAllTablesContent(stmt);
+			
+			safelyClose(stmt);
+			
 			// create the prepared statements
 			pstmt = conn.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
 			genreMovieStmt = conn.prepareStatement("INSERT INTO GenreMovie(idMovie, idGenre) VALUES(?,?)");
 			actorMovieStmt = conn.prepareStatement("INSERT INTO ActorMovie(idMovie, idActor) VALUES(?,?)");
 			directorStmt = conn.prepareStatement("Insert INTO Director(idDirector, directorName) VALUES (?,?)");
 			actorStmt = conn.prepareStatement("Insert INTO Actor(idActor, actorName) VALUES (?,?)");
-
+			languagStmt = conn.prepareStatement("INSERT INTO Language(idLanguage, LanguageName) VALUES (?,?)");
+			genreStmt = conn.prepareStatement("INSERT INTO Genre(idGenre, genreName) VALUES (?,?)");
+			
 			// create HashSet to contains hashValues in order to verify if we already inserted this value to the db
 			HashSet<Integer> actorsSet = new HashSet<Integer>();
 			HashSet<Integer> directors = new HashSet<Integer>();
@@ -252,7 +253,7 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-								if(count>2000)
+								if(count>1000)
 									break;
 				count++;
 
@@ -261,7 +262,7 @@ public class DBOparations implements IdbOparations {
 
 				pstmt.setInt(IdMovie, movieHashValue);
 				// add language to Movie and Language tables
-				addLanguage(movie, stmt, pstmt, languages);
+				addLanguage(movie, languagStmt, pstmt, languages);
 				// add director to Movie and Director tables
 				addDirector(movie, directors, pstmt, directorStmt);
 				// add facts that appear only in the Movie table and nowhere else
@@ -270,12 +271,14 @@ public class DBOparations implements IdbOparations {
 				pstmt.addBatch();
 
 				//add many to many facts- genres and actors
-				addGenres(movie, stmt, genreMovieStmt, genres);
+				addGenres(movie, genreStmt, genreMovieStmt, genres);
 				addActors(movie, actorMovieStmt, actorStmt, actorsSet);
 
 				if (count % 1000 ==0){
 					directorStmt.executeBatch();
 					actorStmt.executeBatch();
+					genreStmt.executeBatch();
+					languagStmt.executeBatch();
 					pstmt.executeBatch();
 					genreMovieStmt.executeBatch();
 					actorMovieStmt.executeBatch();
@@ -284,6 +287,8 @@ public class DBOparations implements IdbOparations {
 			}
 			directorStmt.executeBatch();
 			actorStmt.executeBatch();
+			genreStmt.executeBatch();
+			languagStmt.executeBatch();
 			pstmt.executeBatch();
 			genreMovieStmt.executeBatch();
 			actorMovieStmt.executeBatch();
@@ -296,28 +301,16 @@ public class DBOparations implements IdbOparations {
 			} catch (SQLException exp) {
 				return ERR;				
 			}
-
-			try {
-				// close
-				safelyClose(pstmt, stmt, directorStmt, actorStmt, genreMovieStmt, actorMovieStmt);
-				//safelyClose(stmt);
-			} catch (Exception e) {
-				System.out.println("Failed - problem closing statements");
-				return ERR;
-			}
-
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 			return ERR;
 		}
 		finally {
-			safelyClose(pstmt, stmt, directorStmt, actorStmt, genreMovieStmt, actorMovieStmt);
+			safelyClose(pstmt, stmt, genreStmt, languagStmt, directorStmt, actorStmt, genreMovieStmt, actorMovieStmt);
 			connPull.close(conn);			
 		}
-
-		connPull.close(conn);
-
+		
 		System.out.println("Time in sec= "
 				+ (System.currentTimeMillis() - start) / 1000F);
 		return OK;
@@ -366,7 +359,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** add the language to the db- to Movie and Language tables */
-	private void addLanguage(Movie movie, Statement stmt, PreparedStatement pstmt, HashSet<Integer> languages) {
+	private void addLanguage(Movie movie, PreparedStatement languageStmt, PreparedStatement pstmt, HashSet<Integer> languages) {
 		if (movie.getLanguage() != null) {
 			// calc hashValue to be the language key
 			int hashValue = movie.getLanguage().hashCode();
@@ -374,7 +367,10 @@ public class DBOparations implements IdbOparations {
 				//check if we didn't already inserted that language to the table
 				if (!languages.contains(hashValue)) {
 					//insert the language to the "Language" table
-					insertidName("Language", movie.getLanguage(), hashValue, stmt);
+					//insertidName("Language", movie.getLanguage(), hashValue, stmt);
+					languageStmt.setInt(1, hashValue);
+					languageStmt.setString(2, movie.getLanguage());
+					languageStmt.addBatch();
 					// add the hashValue to languages to know that we insert it
 					languages.add(hashValue);
 				}
@@ -492,7 +488,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** add genres to the Genre and GenreMovie tables */
-	private void addGenres(Movie movie, Statement stmt, PreparedStatement genreMovieStmt, HashSet<Integer> genres) {
+	private void addGenres(Movie movie, PreparedStatement genreStmt, PreparedStatement genreMovieStmt, HashSet<Integer> genres) {
 
 		Set<String> genreList = new LinkedHashSet<String>();
 		genreList = movie.getGenre();
@@ -504,7 +500,10 @@ public class DBOparations implements IdbOparations {
 			int hashValue = currentGenre.hashCode();
 			try {
 				if (!genres.contains(hashValue)) {
-					insertidName("Genre", currentGenre, hashValue, stmt);
+					//insertidName("Genre", currentGenre, hashValue, stmt);
+					genreStmt.setInt(1, hashValue);
+					genreStmt.setString(2, currentGenre);
+					genreStmt.addBatch();
 					genres.add(hashValue);
 				}
 
