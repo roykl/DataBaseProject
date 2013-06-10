@@ -10,7 +10,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
+/** handle the Config.xml file
+ * and get all the information we need from it
+ */
 public class Configuration {
 
 	private Element docEle;	// the document element of the Config.xml file
