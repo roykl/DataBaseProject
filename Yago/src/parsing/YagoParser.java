@@ -8,13 +8,17 @@ import java.util.HashMap;
 import utils.Configuration;
 
 
-
+/**
+ * Parse, after calling the parse() method the following yago files:
+ * yagoSimpleTypes.ttl, yagoFacts.ttl, yagoLiteralFacts.ttl, yagoWikipediaInfo.ttl
+ * and populates the moviesTable, actorTable and directorsTable
+ * with the parsed information.
+ */
 public class YagoParser extends Parser{
 
 	final static String YAGO_TYPES_FILE = "yagoSimpleTypes.ttl";
 	final static String YAGO_FACTS_FILE = "yagoFacts.ttl";
 	final static String YAGO_LITERAL_FACTS_FILE = "yagoLiteralFacts.ttl";
-	final static String YAGO_LABELS_FILE = "yagoLabels.ttl";
 	final static String YAGO_WIKIPEDIA_FILE = "yagoWikipediaInfo.ttl";
 	final static String ACTED_IN = "actedIn";
 	final static String DIRECTED = "directed";

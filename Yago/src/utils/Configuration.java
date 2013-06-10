@@ -123,6 +123,7 @@ public class Configuration {
 		return getConfig(DB, "Password");
 	}
 	
+	/** get number of connections to create **/
 	public int getNumOfConnections(){
 		return Integer.parseInt(getConfig(DB,"NumOfConnections"));
 	}

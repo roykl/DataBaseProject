@@ -3,14 +3,17 @@ package parsing;
 import java.io.Serializable;
 import java.util.HashMap;
 
+/** Parse both Yago files and IMDB files
+ * The path to the files is described in the Config.xml file 
+ */
 public class Parser implements Iparser, Serializable {
 
 	private HashMap<String, Movie> moviesTable; // key = the movie id (String), value = movie object
 	private HashMap<String, Person> actorsTable; // key = actor id (String), value = person object
 	private HashMap<String, Person> directorsTable; // key = director id (String), value = person object
 
-	
-	// constructor
+
+	/** constructor */
 	public Parser(){
 		this.moviesTable = new HashMap<String,Movie>();
 		this.actorsTable = new HashMap<String,Person>();
@@ -19,22 +22,23 @@ public class Parser implements Iparser, Serializable {
 
 	@Override
 	public void parse(){
+		
 		// parse yago file - get all the information from yago
 		YagoParser yp = new YagoParser();
 		yp.parse();
-System.out.print("Finished Yago Parsing");		
+	
 		// parse IMDB files - get missing information from imdb (genre, plot, language)
-    	IMDBParser imdbPars = new IMDBParser(yp.getMoviesTable()); 
-    	
-    	// update the movies/actors/directors tables
-    	moviesTable = yp.getMoviesTable();
-    	actorsTable = yp.getActorsTable();
-    	directorsTable = yp.getDirectorsTable();
+		IMDBParser imdbPars = new IMDBParser(yp.getMoviesTable()); 
+
+		// update the movies/actors/directors tables
+		moviesTable = yp.getMoviesTable();
+		actorsTable = yp.getActorsTable();
+		directorsTable = yp.getDirectorsTable();
 	}
 
-	
+
 	// getters and setters
-	
+
 	@Override
 	public HashMap<String, Movie> getMoviesTable() {
 		return moviesTable;

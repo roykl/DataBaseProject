@@ -2,12 +2,14 @@ package parsing;
 
 import java.io.Serializable;
 
+/**
+ * Person class to describe Actor or Director.
+ * We need only the name of the person and the it's id as appear in yago 
+ */
 public class Person implements Serializable{
 	
 	private String name;
 	private String id;
-	private String firstName;
-	private String lastName;
 	
 	public Person(String id){
 		this.id = id;
@@ -24,22 +26,6 @@ public class Person implements Serializable{
 	public String toString(){
 		return this.name;
 		
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
 	}
 
 	public String getId() {

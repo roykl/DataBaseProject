@@ -8,8 +8,11 @@ import utils.Configuration;
 
 
 /**
- * TODO - add description 
+ * Parse the imdb files:
+ * genres.list, plot.list, language.list
+ * and populate the moviesTable, actorsTable and directorsTable.
  * 
+ * Is called after parsing yago files.
  **/
 public class IMDBParser {
 	/*Class constants*/
@@ -28,7 +31,7 @@ public class IMDBParser {
 
 
 	/**
-	 * Default Constructor.
+	 * Default Constructor. get moviesTable and add genre, language and plot
 	 **/
 	public IMDBParser(HashMap<String,Movie> moviesTable){
 		currentDir = System.getProperty("user.dir");

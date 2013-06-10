@@ -6,6 +6,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represent a movie Object with all 
+ * the information we need about the movie
+ */
 public class Movie implements Serializable{
 
 
