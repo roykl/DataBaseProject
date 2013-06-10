@@ -253,8 +253,8 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-								if(count>1000)
-									break;
+//								if(count>1000)
+//									break;
 				count++;
 
 				// calculate movieHashValue to be the idMovie and insert it to the table
@@ -274,7 +274,7 @@ public class DBOparations implements IdbOparations {
 				addGenres(movie, genreStmt, genreMovieStmt, genres);
 				addActors(movie, actorMovieStmt, actorStmt, actorsSet);
 
-				if (count % 1000 ==0){
+				if (count % 500 ==0){
 					directorStmt.executeBatch();
 					actorStmt.executeBatch();
 					genreStmt.executeBatch();
@@ -299,6 +299,7 @@ public class DBOparations implements IdbOparations {
 			try {
 				conn.commit();
 			} catch (SQLException exp) {
+				System.out.println("Failed to commit");
 				return ERR;				
 			}
 		}
@@ -524,25 +525,8 @@ public class DBOparations implements IdbOparations {
 
 	}
 
-	/** insert to table <table> the tuple <hashId> , <name> */
-	private void insertidName(String table, String name,
-			int HashId, Statement sta) throws SQLException {
-
-		try {
-			String state = "INSERT INTO " + table + " VALUES (" + HashId + ",'"
-					+ name + "')";
-
-			sta.executeUpdate(state);
-		}
-
-		catch (SQLException exp) {
-
-			String state = "INSERT INTO " + table + " VALUES (" + HashId
-					+ ",\"" + name + "\")";
-			sta.executeUpdate(state);
-		}
-	}
-
+   
+	
 	/** close safely the resources */
 	private void safelyClose(AutoCloseable... resources) {
 		for (AutoCloseable resource : resources) {
