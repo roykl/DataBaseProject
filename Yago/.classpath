@@ -10,6 +10,10 @@
 	<classpathentry exported="true" kind="lib" path="lib/gdata-client-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gdata-core-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gdata-media-1.0.jar"/>
+	<classpathentry kind="lib" path="swing2swt.jar"/>
+	<classpathentry kind="lib" path="lib/Images.jar"/>
+	<classpathentry kind="lib" path="lib/swt.jar"/>
+	<classpathentry kind="lib" path="lib/swt-debug.jar"/>
 	<classpathentry kind="output" path="bin"/>
 	<referencedentry exported="true" kind="lib" path="lib/gdata-core-1.0.jar" sourcepath="lib/gdata-core-1.0.jar"/>
 </classpath>
