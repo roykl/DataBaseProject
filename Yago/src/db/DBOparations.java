@@ -17,6 +17,10 @@ import java.sql.Connection;
 
 import parsing.*;
 
+/**
+ * The communication with the db is being made
+ * With this class methods. All the operation against the DB:
+ */
 public class DBOparations implements IdbOparations {
 
 	static JDBCConnectionPooling connPull;
@@ -210,39 +214,32 @@ public class DBOparations implements IdbOparations {
 		// get the connection and statement
 		Connection conn = getConnection();
 		Statement stmt = getStatement(conn);
+		//create prepared statements to populate the db
+		PreparedStatement pstmt = null;
+		PreparedStatement genreMovieStmt = null;
+		PreparedStatement actorMovieStmt = null;
+		PreparedStatement directorStmt = null;
+		PreparedStatement actorStmt = null;
 
-		try {			
+		try {		
 			//auto commit = false
 			conn.setAutoCommit(false);
-
 			// delete all the content from the "yago" tables
 			deleteAllTablesContent(stmt);
-
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			return ERR;
 		}
 
 		long start = 0;// delete later
+
 		try {
-
-			//create prepared statment to inert to Movie table
-			PreparedStatement pstmt = null;
+			// create the prepared statements
 			pstmt = conn.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
-			///try
-			PreparedStatement genreMovieStmt = null;
-			PreparedStatement actorMovieStmt = null;
-			PreparedStatement directorStmt = null;
-			PreparedStatement actorStmt = null;
-
 			genreMovieStmt = conn.prepareStatement("INSERT INTO GenreMovie(idMovie, idGenre) VALUES(?,?)");
 			actorMovieStmt = conn.prepareStatement("INSERT INTO ActorMovie(idMovie, idActor) VALUES(?,?)");
 			directorStmt = conn.prepareStatement("Insert INTO Director(idDirector, directorName) VALUES (?,?)");
 			actorStmt = conn.prepareStatement("Insert INTO Actor(idActor, actorName) VALUES (?,?)");
-
-
-			///end try
-
 
 			// create HashSet to contains hashValues in order to verify if we already inserted this value to the db
 			HashSet<Integer> actorsSet = new HashSet<Integer>();
@@ -255,16 +252,18 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-//				if(count>20000)
-//					break;
+								if(count>2000)
+									break;
 				count++;
+
 				// calculate movieHashValue to be the idMovie and insert it to the table
 				movieHashValue = movie.getId().hashCode();
+
 				pstmt.setInt(IdMovie, movieHashValue);
 				// add language to Movie and Language tables
 				addLanguage(movie, stmt, pstmt, languages);
 				// add director to Movie and Director tables
-				addDirector(movie, stmt, directors, pstmt, directorStmt);
+				addDirector(movie, directors, pstmt, directorStmt);
 				// add facts that appear only in the Movie table and nowhere else
 				addSingleFacts(movie, pstmt);
 				//add and execute batch
@@ -272,7 +271,7 @@ public class DBOparations implements IdbOparations {
 
 				//add many to many facts- genres and actors
 				addGenres(movie, stmt, genreMovieStmt, genres);
-				addActors(movie, stmt, actorMovieStmt, actorStmt, actorsSet);
+				addActors(movie, actorMovieStmt, actorStmt, actorsSet);
 
 				if (count % 1000 ==0){
 					directorStmt.executeBatch();
@@ -307,10 +306,14 @@ public class DBOparations implements IdbOparations {
 				return ERR;
 			}
 
-		} catch (SQLException e) {
-			connPull.close(conn);
+		}
+		catch (SQLException e) {
 			e.printStackTrace();
 			return ERR;
+		}
+		finally {
+			safelyClose(pstmt, stmt, directorStmt, actorStmt, genreMovieStmt, actorMovieStmt);
+			connPull.close(conn);			
 		}
 
 		connPull.close(conn);
@@ -363,8 +366,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** add the language to the db- to Movie and Language tables */
-	private void addLanguage(Movie movie, Statement stmt,
-			PreparedStatement pstmt, HashSet<Integer> languages) {
+	private void addLanguage(Movie movie, Statement stmt, PreparedStatement pstmt, HashSet<Integer> languages) {
 		if (movie.getLanguage() != null) {
 			// calc hashValue to be the language key
 			int hashValue = movie.getLanguage().hashCode();
@@ -384,22 +386,22 @@ public class DBOparations implements IdbOparations {
 			try {
 				pstmt.setInt(IdLanguage, hashValue);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Problem adding Idlanguage to Movie table");
 				e.printStackTrace();
 			}
-		} else {
+		}
+		else {
 			try {
 				pstmt.setNull(IdLanguage, 2);
 			} catch (SQLException e) {
+				System.out.println("Problem with null language");
 				e.printStackTrace();
 			}
 		}
 	}
 
 	/** add the director to the db- to the Movie and Director table */
-	private void addDirector(Movie movie, Statement stmt,
-			HashSet<Integer> directors, PreparedStatement pstmt, PreparedStatement directorStmt) {
-
+	private void addDirector(Movie movie, HashSet<Integer> directors, PreparedStatement pstmt, PreparedStatement directorStmt) {
 		if ((movie.getDirector() != null)
 				&& (movie.getDirector().getName() != null)) {
 			// calc hashValue to be the director key
@@ -412,21 +414,25 @@ public class DBOparations implements IdbOparations {
 					directorStmt.addBatch();
 					directors.add(hashValue);
 				}
-			} catch (SQLException exp) {
-
+			}
+			catch (SQLException exp) {
 				System.out.println("Director's already in table");
 			}
+			
+			// adding to information the Movie table
 			try {
 				pstmt.setInt(IdDirector, hashValue);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			}
+			catch (SQLException e) {
+				System.out.println("Problem adding IdDirector");
 				e.printStackTrace();
 			}
-		} else {
+		} 
+		else {
 			try {
 				pstmt.setNull(IdDirector, 2);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Problem with null director");
 				e.printStackTrace();
 			}
 		}
@@ -442,15 +448,15 @@ public class DBOparations implements IdbOparations {
 			pstmt.setString(Youtube, movie.getYouTubeURL());
 			pstmt.setString(Wiki, movie.getWikiURL());
 			pstmt.setString(Plot, movie.getPlot());
-		} catch (SQLException e) {		
+		} catch (SQLException e) {
+			System.out.println("Problem adding single fact");
 			e.printStackTrace();
 		}
 
 	}
 
 	/** add actors to the Actor and ActorMovie tables */
-	private void addActors(Movie movie, Statement stmt, PreparedStatement actorMovieStmt, PreparedStatement actorStmt,
-			HashSet<Integer> actorsSet) {
+	private void addActors(Movie movie, PreparedStatement actorMovieStmt, PreparedStatement actorStmt, HashSet<Integer> actorsSet) {
 		List<Person> actors = new ArrayList<Person>();
 
 		actors = movie.getActorsLst();
@@ -476,10 +482,8 @@ public class DBOparations implements IdbOparations {
 				actorMovieStmt.setInt(2, hashValue);
 				actorMovieStmt.addBatch();
 
-				//				stmt.executeUpdate("INSERT INTO ActorMovie(idActor,idMovie) VALUES("
-				//						+ hashValue + ",'" + movie.getId().hashCode() + "')");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				System.out.println("problem inseting to actorMovie");
 				e.printStackTrace();
 			}
 			j++;
@@ -488,7 +492,7 @@ public class DBOparations implements IdbOparations {
 	}
 
 	/** add genres to the Genre and GenreMovie tables */
-	private void addGenres(Movie movie, Statement stmt, PreparedStatement genreStmt, HashSet<Integer> genres) {
+	private void addGenres(Movie movie, Statement stmt, PreparedStatement genreMovieStmt, HashSet<Integer> genres) {
 
 		Set<String> genreList = new LinkedHashSet<String>();
 		genreList = movie.getGenre();
@@ -506,18 +510,15 @@ public class DBOparations implements IdbOparations {
 
 			} catch (SQLException exp) {
 				System.out.println("Genre already in tables");
-
 			}
-
+			// insert t
 			try {
-				genreStmt.setInt(1, movie.getId().hashCode());
-				genreStmt.setInt(2, hashValue);
-				genreStmt.addBatch();
-
-				//				stmt.executeUpdate("INSERT INTO GenreMovie(idGenre,idMovie) VALUES("
-				//						+ hashValue + ",'" + movie.getId().hashCode() + "')");
+				genreMovieStmt.setInt(1, movie.getId().hashCode());
+				genreMovieStmt.setInt(2, hashValue);
+				genreMovieStmt.addBatch();
+				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Problem with insert to genreMovie");
 				e.printStackTrace();
 			}
 		}
