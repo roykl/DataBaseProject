@@ -122,19 +122,16 @@ private int userUpdate() {
 //check if update is valid - the newVal has to be exist in the system
 private int validUpdate(){
 	
-	switch (columnName) {
-		
-	case "idLanguage" :
+	if(columnName.equals("idLanguage")) 
 		return checkExist("idLanguage", "Language" ,"idLanguage = " + newVal);
-	case "idDirector" :
+	else if(columnName.equals("idDirector"))
 		return checkExist("idDirector", "Director" ,"idDirector = " + newVal);
-	case "idActor" :
+	else if(columnName.equals("idActor"))
 		return checkExist("idActor", "Actor" ,"idActor = " + newVal);
-	case "idGenre" :
+	else if(columnName.equals("idGenre"))	
 		return checkExist("idGenre", "Genre" ,"idGenre = " + newVal);
-	default :
+	else
 		return OK;
-	}
 	
 }
 

@@ -292,9 +292,10 @@ public class DBOparations implements IdbOparations {
 			pstmt.executeBatch();
 			genreMovieStmt.executeBatch();
 			actorMovieStmt.executeBatch();
+			stmt = getStatement(conn);
 
-			// check for updates made by users and update the tables accordingly
-			//commitUpdates(stmt);
+			//check for updates made by users and update the tables accordingly
+			commitUpdates(stmt);
 
 			try {
 				conn.commit();

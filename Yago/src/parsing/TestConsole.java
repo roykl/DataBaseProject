@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
+import gui.InputVerifier;
 import com.google.gdata.util.ServiceException;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
@@ -34,6 +34,12 @@ public class TestConsole {
 
 public static void main(String[] args) throws IOException, SQLException {
 	
+//	System.out.println(InputVerifier.verifiUsername("Shakom"));
+//	System.out.println(InputVerifier.verifiUsername("Sh"));
+//	System.out.println(InputVerifier.verifiUsername("fds df"));
+//	System.out.println(InputVerifier.verifiUsername("Sha$#@0-dkom"));
+//	System.out.println(InputVerifier.verifiUsername("Shakomfdsafdslkdslkfsd"));
+//	System.out.println(InputVerifier.verifiUsername("Helao324"));
 	
 	
 	JDBCConnectionPooling pl = null;
