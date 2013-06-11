@@ -1,5 +1,7 @@
 package parsing;
 
+import gui.InputVerifier;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,7 +18,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import gui.InputVerifier;
 import com.google.gdata.util.ServiceException;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;

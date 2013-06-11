@@ -70,6 +70,10 @@ public class JDBCConnectionPooling implements Runnable {
 	public int availableCount() {
 		return connectionsAvailable.size();
 	}
+	
+	public void stop(){
+		return;
+	}
 
 	public void run() {
 		try {

@@ -8,22 +8,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.RowLayout;
-import swing2swt.layout.BorderLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+
+import db.IdbOparations;
 
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
@@ -33,31 +28,12 @@ public class MainMenu extends Shell {
 	private Text text_2;
 	private Text text_3;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		try {
-			Display display = Display.getDefault();
-			MainMenu shell = new MainMenu(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * Create the shell.
 	 * @param display
-	 */
-	public MainMenu(Display display) {
+	 */ //
+	public MainMenu(Display display, IdbOparations operations) {
 		super(display, SWT.SHELL_TRIM);
 		setSize(1353, 678);
 		setBackground(SWTResourceManager.getColor(128, 0, 0));
