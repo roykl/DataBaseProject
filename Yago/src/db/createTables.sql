@@ -4,40 +4,39 @@ USE DbMysql05;
 
 CREATE TABLE `Actor` (
   `idActor` int(11) NOT NULL,
-  `actorName` varchar(45) DEFAULT NULL,
+  `actorName` varchar(45) NOT NULL,
   PRIMARY KEY (`idActor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Director` (
   `idDirector` int(11) NOT NULL,
-  `directorName` varchar(45) DEFAULT NULL,
+  `directorName` varchar(45) NOT NULL,
   PRIMARY KEY (`idDirector`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `Genre` (
   `idGenre` int(11) NOT NULL,
-  `genreName` varchar(45) DEFAULT NULL,
+  `genreName` varchar(45) NOT NULL,
   PRIMARY KEY (`idGenre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `Language` (
   `idLanguage` int(11) NOT NULL,
-  `LanguageName` text,
+  `LanguageName` text NOT NULL,
   PRIMARY KEY (`idLanguage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `Movie` (
   `idMovie` int(11) NOT NULL,
-  `idLanguage` int(11) DEFAULT NULL,
-  `idDirector` int(11) DEFAULT NULL,
-  `movieName` text,
-  `year` varchar(45) DEFAULT NULL,
-  `youtube` varchar(45) DEFAULT NULL,
+  `idLanguage` int(11),
+  `idDirector` int(11),
+  `movieName` text NOT NULL,
+  `year` varchar(45),
   `wiki` text,
-  `duration` varchar(45) DEFAULT NULL,
+  `duration` varchar(45) ,
   `plot` text,
   PRIMARY KEY (`idMovie`),
   KEY `idLanguage_idx` (`idLanguage`),
@@ -57,7 +56,6 @@ CREATE TABLE `ActorMovie` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
 CREATE TABLE `GenreMovie` (
   `idMovie` int(11) NOT NULL,
   `idGenre` int(11) NOT NULL,
@@ -68,32 +66,29 @@ CREATE TABLE `GenreMovie` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-
-
 CREATE TABLE `MoviesGrades` (
   `idMovie` int(11) NOT NULL,
-  `grade` double DEFAULT NULL,
-  `numberOfRankers` int(11) DEFAULT NULL,
+  `grade` double ,
+  `numberOfRankers` int(11) ,
   PRIMARY KEY (`idMovie`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `Updates` (
-  `tableName` varchar(45) DEFAULT NULL,
-  `columnName` varchar(45) DEFAULT NULL,
-  `newVal` int(11) DEFAULT NULL,
-  `firstKey` int(11) DEFAULT NULL,
-  `secondKey` int(11) DEFAULT NULL
+  `tableName` varchar(45) ,
+  `columnName` varchar(45) ,
+  `newVal` int(11) ,
+  `firstKey` int(11) ,
+  `secondKey` int(11) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 CREATE TABLE `Users` (
   `idUsers` int(11) NOT NULL,
-  `userName` varchar(45) DEFAULT NULL,
-  `userPassword` varchar(45) DEFAULT NULL,
-  `hashPassword` int(11) DEFAULT NULL,
+  `userName` varchar(45)NOT NULL,
+  `userPassword` varchar(45)NOT NULL ,
+  `hashPassword` int(11) NOT NULL,
   PRIMARY KEY (`idUsers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -101,7 +96,7 @@ CREATE TABLE `Users` (
 CREATE TABLE `UsersMovies` (
   `idUser` int(11) NOT NULL,
   `idMovie` int(11) NOT NULL,
-  `rank` int(11) DEFAULT NULL,
+  `rank` int(11) NOT NULL,
   PRIMARY KEY (`idUser`,`idMovie`),
   KEY `idMovie_idx` (`idMovie`),
   KEY `idUser_idx` (`idUser`),

@@ -27,10 +27,13 @@ public class ThreadUserAuthentication extends Thread {
 
 
 	private int UserAuthentication(){
+		int retVal;
 		ResultSet result = oparations.select("idUsers", "Users", "idUsers = " +Integer.toString(userName.hashCode()) + " AND hashPassword = "+ Integer.toString(password.hashCode()));
 
 		try {
-			return result.next() ? OK: USER_NOT_EXIST;
+					retVal = result.next() ? OK: USER_NOT_EXIST;
+					result.close();
+					return retVal;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

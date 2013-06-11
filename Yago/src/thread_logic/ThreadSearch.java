@@ -26,6 +26,7 @@ public class ThreadSearch extends Thread {
 	
 	public void run(){		
 		this.search(select, from, where);
+		
 	}
 
 

@@ -29,10 +29,9 @@ public class DBOparations implements IdbOparations {
 	private static final int IdDirector = 3;
 	private static final int MovieName = 4;
 	private static final int Year = 5;
-	private static final int Youtube = 6;
-	private static final int Wiki = 7;
-	private static final int Duration = 8;
-	private static final int Plot = 9;
+	private static final int Wiki = 6;
+	private static final int Duration = 7;
+	private static final int Plot = 8;
 	private static final int OK = 1;
 	private static final int ERR = 0;
 	// constructor //
@@ -234,7 +233,7 @@ public class DBOparations implements IdbOparations {
 			safelyClose(stmt);
 			
 			// create the prepared statements
-			pstmt = conn.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,youtube,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?,?)");
+			pstmt = conn.prepareStatement("INSERT INTO Movie(idMovie,idLanguage,idDirector,movieName,year,wiki,duration,plot) VALUES(?,?,?,?,?,?,?,?)");
 			genreMovieStmt = conn.prepareStatement("INSERT INTO GenreMovie(idMovie, idGenre) VALUES(?,?)");
 			actorMovieStmt = conn.prepareStatement("INSERT INTO ActorMovie(idMovie, idActor) VALUES(?,?)");
 			directorStmt = conn.prepareStatement("Insert INTO Director(idDirector, directorName) VALUES (?,?)");
@@ -443,7 +442,6 @@ public class DBOparations implements IdbOparations {
 			pstmt.setString(MovieName, movie.getName());
 			pstmt.setString(Duration, movie.getDuration());
 			pstmt.setString(Year, movie.getDateCreated());
-			pstmt.setString(Youtube, movie.getYouTubeURL());
 			pstmt.setString(Wiki, movie.getWikiURL());
 			pstmt.setString(Plot, movie.getPlot());
 		} catch (SQLException e) {

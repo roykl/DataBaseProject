@@ -25,21 +25,21 @@ public class ThreadGrade extends Thread {
 	}
 
 	//check if user already ranked the movie
-	private boolean checkRank(){
-
+	private  boolean checkRank(){
+		boolean retVal;
 		ResultSet result = oparations.select("idUser" , "UsersMovies", "idUser = " + IDuser + " AND idMovie = " + IDmovie);		
 		try {
-			
-			return result.next();
+			retVal = result.next();
+			result.close();
+			return retVal;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 	}
 
 	//assumption: In MoviesGrades table movie is unique 
-	private int updateAvarage(){
+	private  int updateAvarage(){
 		
 		int retVal = 0;
 		double newGrade;
@@ -69,7 +69,10 @@ public class ThreadGrade extends Thread {
 				oldGrade = 0;
 				movieRanked = false;
 			}
-
+			
+			result1.close();
+			result2.close();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,9 +127,12 @@ public class ThreadGrade extends Thread {
 	}
 
 
-	private int grade(){
+	private  int grade(){
 
 		return updateAvarage();		
+
+
+
 	}
 
 	public int getValue() {

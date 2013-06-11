@@ -34,12 +34,13 @@ public class ThreadAddUser extends Thread {
 			if(!result.next()){
 			
 			oparations.insert("Users", Integer.toString(userName.hashCode()) , "'" +userName + "'" , "'" +pass +  "'", Integer.toString(pass.hashCode()));
+			result.close();
 			return OK;
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			
 			return ERR;
 		}
 		

@@ -122,6 +122,8 @@ private int userUpdate() {
 //check if update is valid - the newVal has to be exist in the system
 private int validUpdate(){
 	
+	
+		
 	if(columnName.equals("idLanguage")) 
 		return checkExist("idLanguage", "Language" ,"idLanguage = " + newVal);
 	else if(columnName.equals("idDirector"))
@@ -133,15 +135,19 @@ private int validUpdate(){
 	else
 		return OK;
 	
+	
 }
 
 
 private int checkExist(String select, String from, String where ){
-	
+	int retVal;
 	ResultSet result = oparations.select(select ,from, where);
 	
 	try {
-		return result.next() ? OK : NOT_EXIST ;
+		
+				retVal = result.next() ? OK : NOT_EXIST ;
+				result.close();
+				return retVal;
 	} catch (SQLException e) {
 		e.printStackTrace();
 		return ERR;

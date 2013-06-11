@@ -26,9 +26,13 @@ public class ThreadCheckExist extends Thread {
 
 	/** check if exists in the db */
 	private boolean checkExist(){
+		boolean returnVal;
 		ResultSet result = oparations.select(select , from, where);		
 		try {	
-			return result.next();	
+			 
+			returnVal = result.next();
+			result.close();
+			return returnVal;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

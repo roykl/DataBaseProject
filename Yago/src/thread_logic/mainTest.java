@@ -45,14 +45,20 @@ public class mainTest {
 		//***  grade test  ***//
 		
 		ThreadGrade t1 = new ThreadGrade(oparations, "nir".hashCode(), -2143842341, 3);
-//		ThreadGrade t2 = new ThreadGrade(oparations, "roy".hashCode(), -2143842341, 7);
-//		ThreadGrade t3 = new ThreadGrade(oparations, "Omri".hashCode(), -2143842341, 8);
-//		ThreadGrade t4 = new ThreadGrade(oparations, "yoni".hashCode(), -2143842341, 5);
-//		ThreadGrade t5 = new ThreadGrade(oparations, "nir".hashCode(), -2143842341, 9);
+		ThreadGrade t2 = new ThreadGrade(oparations, "roy".hashCode(), -2143842341, 7);
+		ThreadGrade t3 = new ThreadGrade(oparations, "Omri".hashCode(), -2143842341, 8);
+		ThreadGrade t4 = new ThreadGrade(oparations, "yoni".hashCode(), -2143842341, 5);
+		ThreadGrade t5 = new ThreadGrade(oparations, "nir".hashCode(), -2143842341, 9);
+		ThreadGrade t6 = new ThreadGrade(oparations, "yoni".hashCode(), -2106016793, 5);
+		ThreadGrade t7 = new ThreadGrade(oparations, "nir".hashCode(), -2106016793, 9);
 
-		t1.start();
-
-
+//		t1.start();
+//		t2.start();
+//		t3.start();
+//		t4.start();
+//		t5.start();
+//		t6.start();
+		t7.start();
 		
 		//***  search test ***//
 		
