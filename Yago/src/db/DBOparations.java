@@ -19,7 +19,7 @@ import parsing.*;
 
 /**
  * The communication with the db is being made
- * With this class methods. All the operation against the DB:
+ * by this class methods. All the operation against the DB:
  */
 public class DBOparations implements IdbOparations {
 

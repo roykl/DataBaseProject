@@ -44,8 +44,14 @@ public class mainTest {
 	
 		//***  grade test  ***//
 		
-//		ThreadGrade t1 = new ThreadGrade(oparations, "nir".hashCode(), -2143842341, 3);
-//		t1.start();
+		ThreadGrade t1 = new ThreadGrade(oparations, "nir".hashCode(), -2143842341, 3);
+//		ThreadGrade t2 = new ThreadGrade(oparations, "roy".hashCode(), -2143842341, 7);
+//		ThreadGrade t3 = new ThreadGrade(oparations, "Omri".hashCode(), -2143842341, 8);
+//		ThreadGrade t4 = new ThreadGrade(oparations, "yoni".hashCode(), -2143842341, 5);
+//		ThreadGrade t5 = new ThreadGrade(oparations, "nir".hashCode(), -2143842341, 9);
+
+		t1.start();
+
 
 		
 		//***  search test ***//
@@ -78,9 +84,9 @@ public class mainTest {
 //		ThreadUserUpdate t1 = new ThreadUserUpdate(oparations, "Movie", -2143842341, 0, "year", 3000);
 //		t1.start();
 		
-		ThreadUserUpdate t2 = new ThreadUserUpdate(oparations, "GenreMovie", -2143842341, 0, "idGenre", -2120419507);
-		t2.start();
-		
+//		ThreadUserUpdate t2 = new ThreadUserUpdate(oparations, "GenreMovie", -2143842341, 0, "idGenre", -2120419507);
+//		t2.start();
+//		
 	}
 		
 	

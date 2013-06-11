@@ -25,7 +25,7 @@ public class ThreadGrade extends Thread {
 	}
 
 	//check if user already ranked the movie
-	private  boolean checkRank(){
+	private boolean checkRank(){
 
 		ResultSet result = oparations.select("idUser" , "UsersMovies", "idUser = " + IDuser + " AND idMovie = " + IDmovie);		
 		try {
@@ -39,7 +39,7 @@ public class ThreadGrade extends Thread {
 	}
 
 	//assumption: In MoviesGrades table movie is unique 
-	private  int updateAvarage(){
+	private int updateAvarage(){
 		
 		int retVal = 0;
 		double newGrade;
@@ -80,7 +80,7 @@ public class ThreadGrade extends Thread {
 
 		if(!checkRank()){ //user hasn't ranked that movie before
 			newCount = oldCount + 1;
-			newGrade = ((oldCount*oldGrade) + grade())/newCount;
+			newGrade = ((oldCount*oldGrade) + grade)/newCount;
 			userRanked = false;
 		}
 		else{ //user already ranked the movie			
@@ -97,7 +97,7 @@ public class ThreadGrade extends Thread {
 			}
 
 			newCount = oldCount;
-			newGrade = ((oldCount*oldGrade) - oldUserGrade +grade())  /newCount;
+			newGrade = ((oldCount*oldGrade) - oldUserGrade +grade)  /newCount;
 
 		}
 		
@@ -124,12 +124,9 @@ public class ThreadGrade extends Thread {
 	}
 
 
-	private  int grade(){
+	private int grade(){
 
 		return updateAvarage();		
-
-
-
 	}
 
 	public int getValue() {

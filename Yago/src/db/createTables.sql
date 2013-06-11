@@ -1,33 +1,35 @@
-CREATE SCHEMA DByago;
+DROP SCHEMA IF EXISTS DbMysql05;
+CREATE SCHEMA DbMysql05;
+USE DbMysql05;
 
-CREATE TABLE DByago.`Actor` (
+CREATE TABLE `Actor` (
   `idActor` int(11) NOT NULL,
   `actorName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idActor`)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE DByago.`Director` (
+CREATE TABLE `Director` (
   `idDirector` int(11) NOT NULL,
   `directorName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idDirector`)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE DByago.`Genre` (
+CREATE TABLE `Genre` (
   `idGenre` int(11) NOT NULL,
   `genreName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idGenre`)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE DByago.`Language` (
+CREATE TABLE `Language` (
   `idLanguage` int(11) NOT NULL,
   `LanguageName` text,
   PRIMARY KEY (`idLanguage`)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE DByago.`Movie` (
+CREATE TABLE `Movie` (
   `idMovie` int(11) NOT NULL,
   `idLanguage` int(11) DEFAULT NULL,
   `idDirector` int(11) DEFAULT NULL,
@@ -42,74 +44,70 @@ CREATE TABLE DByago.`Movie` (
   KEY `idDirector_idx` (`idDirector`),
   CONSTRAINT `idDirector` FOREIGN KEY (`idDirector`) REFERENCES `Director` (`idDirector`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `idLanguage` FOREIGN KEY (`idLanguage`) REFERENCES `Language` (`idLanguage`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE DByago.`ActorMovie` (
-  `idActor` int(11) NOT NULL,
+
+CREATE TABLE `ActorMovie` (
   `idMovie` int(11) NOT NULL,
-  PRIMARY KEY (`idActor`,`idMovie`),
+  `idActor` int(11) NOT NULL,
   KEY `idMovie_idx` (`idMovie`),
   KEY `idActor_idx` (`idActor`),
   CONSTRAINT `idActor` FOREIGN KEY (`idActor`) REFERENCES `Actor` (`idActor`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `idMovie` FOREIGN KEY (`idMovie`) REFERENCES `Movie` (`idMovie`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
-
-
-
-CREATE TABLE DByago.`GenreMovie` (
-  `idGenre` int(11) NOT NULL,
+CREATE TABLE `GenreMovie` (
   `idMovie` int(11) NOT NULL,
+  `idGenre` int(11) NOT NULL,
   KEY `idGenre_idx` (`idGenre`),
   KEY `idMovie_idx` (`idMovie`),
   CONSTRAINT `idGenre` FOREIGN KEY (`idGenre`) REFERENCES `Genre` (`idGenre`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `idMovie1` FOREIGN KEY (`idMovie`) REFERENCES `Movie` (`idMovie`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 
-CREATE TABLE DByago.`MoviesGrades` (
+
+CREATE TABLE `MoviesGrades` (
   `idMovie` int(11) NOT NULL,
   `grade` double DEFAULT NULL,
   `numberOfRankers` int(11) DEFAULT NULL,
   PRIMARY KEY (`idMovie`)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `Updates` (
+  `tableName` varchar(45) DEFAULT NULL,
+  `columnName` varchar(45) DEFAULT NULL,
+  `newVal` int(11) DEFAULT NULL,
+  `firstKey` int(11) DEFAULT NULL,
+  `secondKey` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
-
-CREATE TABLE DByago.`Updates` (
-  `idMovie` int(11) NOT NULL,
-  `column` varchar(45) DEFAULT NULL,
-  `newVaue` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idMovie`)
-) ENGINE=InnoDB ;
-
-
-
-
-CREATE TABLE DByago.`Users` (
+CREATE TABLE `Users` (
   `idUsers` int(11) NOT NULL,
   `userName` varchar(45) DEFAULT NULL,
   `userPassword` varchar(45) DEFAULT NULL,
+  `hashPassword` int(11) DEFAULT NULL,
   PRIMARY KEY (`idUsers`)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-
-CREATE TABLE DByago.`UsersMovies` (
+CREATE TABLE `UsersMovies` (
   `idUser` int(11) NOT NULL,
   `idMovie` int(11) NOT NULL,
   `rank` int(11) DEFAULT NULL,
   PRIMARY KEY (`idUser`,`idMovie`),
   KEY `idMovie_idx` (`idMovie`),
   KEY `idUser_idx` (`idUser`),
-  CONSTRAINT `idMovie3` FOREIGN KEY (`idMovie`) REFERENCES `Movie` (`idMovie`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `idUser` FOREIGN KEY (`idUser`) REFERENCES `Users` (`idUsers`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 
