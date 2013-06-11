@@ -8,7 +8,7 @@
  * Contributors:
  *    Google, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wb.swt;
+package gui;
 
 import java.io.FileInputStream;
 import java.io.IOException;
