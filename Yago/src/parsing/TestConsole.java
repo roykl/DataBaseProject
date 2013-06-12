@@ -1,6 +1,7 @@
 package parsing;
 
 import gui.InputVerifier;
+import gui.MoviesResults;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +36,17 @@ public class TestConsole {
 
 public static void main(String[] args) throws IOException, SQLException {
 	
+	gui.MovieInfo mi = new gui.MovieInfo(); 
+	mi.directorName ="fdsafas";
+	mi.movieName = "bulmfds 32718";
+	mi.duration= "123";
+	mi.grade =  6;
+	mi.language = "englis";
+	mi.plot = "FDSF FSDFSD FSDFSD";
+	mi.addYoutubeUrl(mi.movieName);
+	mi.addPosterUrl(mi.movieName);
+	
+	
 //	System.out.println(InputVerifier.verifiUsername("Shakom"));
 //	System.out.println(InputVerifier.verifiUsername("Sh"));
 //	System.out.println(InputVerifier.verifiUsername("fds df"));
@@ -52,8 +64,8 @@ public static void main(String[] args) throws IOException, SQLException {
 		e.printStackTrace();
 	}
 
-	DBOparations db= new DBOparations(pl);
-	db.importData();
+//	DBOparations db= new DBOparations(pl);
+//	db.importData();
 //	java.sql.Connection conn  = pl.connectionCheck();
 //	java.sql.Statement stmt= conn.createStatement();
 //	db.commitUpdates(stmt);
@@ -70,13 +82,13 @@ public static void main(String[] args) throws IOException, SQLException {
 //	System.out.println(rs.getString(1));
 //	System.out.println(rs.getString(2));
 //	
-//	YouTubeManager yt = new YouTubeManager();
-//	try {
-//		yt.getTrailer("reservoir dogs");
-//	} catch (ServiceException e1) {
-//		// TODO Auto-generated catch block
-//		e1.printStackTrace();
-//	}
+	YouTubeManager yt = new YouTubeManager();
+	try {
+		yt.getTrailer("django unchained");
+	} catch (ServiceException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 		  
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
 //

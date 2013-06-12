@@ -25,6 +25,7 @@ public class Movie implements Serializable{
 	private String plot; // plot of the movie
 	private String youTubeURL; // need to do
 	private String posterUrl;
+	private double grade;
 
 
 	/* constructor */	
@@ -157,6 +158,16 @@ public class Movie implements Serializable{
 
 	public void setPosterUrl(String posterUrl) {
 		this.posterUrl = posterUrl;
+	}
+
+
+	public double getGrade() {
+		return grade;
+	}
+
+
+	public void setGrade(double grade) {
+		this.grade = grade;
 	}
 
 }
