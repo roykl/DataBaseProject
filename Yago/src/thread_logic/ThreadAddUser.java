@@ -16,6 +16,7 @@ public class ThreadAddUser extends Thread {
 	private int value; // returned value
 	private static final int OK = 1;
 	private static final int ERR = 0;
+	private static final int NOT_EXIST = 2;
 	
 	public ThreadAddUser(IdbOparations inOpp, String inUserName, String inPass){
 		oparations = inOpp;
@@ -24,7 +25,7 @@ public class ThreadAddUser extends Thread {
 		
 	}
 	
-	//if user not already exist (add user name, pass, and user ID to Users table) return true
+	
 	//return false
 	private int addUser(){
 		ResultSet result = oparations.select("idUsers", "Users", "idUsers = '" + Integer.toString(userName.hashCode()) + "'"); 
@@ -44,7 +45,7 @@ public class ThreadAddUser extends Thread {
 			return ERR;
 		}
 		
-		return ERR;
+		return NOT_EXIST;
 		
 	}
 	
@@ -55,7 +56,8 @@ public class ThreadAddUser extends Thread {
 	//public setV
 
 	public void run(){
-		value = this.addUser(); 		
+		value = this.addUser(); 
+		
 	}
 	
 }

@@ -24,6 +24,7 @@ public class Movie implements Serializable{
 	private String wikiURL; // wikipedia url
 	private String plot; // plot of the movie
 	private String youTubeURL; // need to do
+	private String posterUrl;
 
 
 	/* constructor */	
@@ -146,6 +147,16 @@ public class Movie implements Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+
+	public String getPosterUrl() {
+		return posterUrl;
+	}
+
+
+	public void setPosterUrl(String posterUrl) {
+		this.posterUrl = posterUrl;
 	}
 
 }
