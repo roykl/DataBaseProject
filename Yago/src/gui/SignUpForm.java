@@ -36,6 +36,7 @@ import db.DBOparations;
 import db.IdbOparations;
 
 import thread_logic.ThreadAddUser;
+import viewModelLayer.InputVerifier;
 
 	public class SignUpForm extends Shell {
 		private Text userNameText;
@@ -101,7 +102,7 @@ import thread_logic.ThreadAddUser;
 					if(!InputVerifier.verifyUsername(userNameText.getText())){ // illegal user name
 						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 						messageBox.setText("Illegal Username");
-						messageBox.setMessage("Username must contain 3 - 12 letters or numbers.");
+						messageBox.setMessage("Username must contain 3 - 12 chars\n Only letters or numbers allowed.");
 						messageBox.open();
 					}else if(!InputVerifier.verifyPass(passwordText.getText())){ // invalid password
 						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
@@ -119,18 +120,33 @@ import thread_logic.ThreadAddUser;
 								MessageBox messageBox =  new MessageBox(display.getActiveShell(),SWT.ICON_INFORMATION);
 								if (result == 0){
 									
-								messageBox.setText("Connection Error");
-								messageBox.setMessage("Error");
+								messageBox.setText("Error");
+								messageBox.setMessage("Connection Error");
+								messageBox.open();
 								
 							}else if(result == 1){
 								messageBox.setText("Welcome");
-								messageBox.setMessage("New user: " + userNameText.getText());
+								messageBox.setMessage("New user was added: " + userNameText.getText());
+								messageBox.open();
+								
+								// open main menu
+								dispose();
+								MainMenu MainMenuShell = new MainMenu(display,oparations,false);
+								MainMenuShell.open();
+								MainMenuShell.layout();
+								while (!MainMenuShell.isDisposed()) {
+									if (!display.readAndDispatch()) {
+										display.sleep();
+									}
+								}
+								
 							}
 							else {
 								messageBox.setText("Warning");
 								messageBox.setMessage("User already exist : " + userNameText.getText());
-							}
 								messageBox.open();
+							}
+								
 							}
 							
 							
@@ -139,8 +155,8 @@ import thread_logic.ThreadAddUser;
 					else //passwords not identical
 					{
 						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
-						messageBox.setText("Passwords not identical");
-						messageBox.setMessage("Warning");
+						messageBox.setText("Warning");
+						messageBox.setMessage("Passwords are not identical");
 						messageBox.open();
 					}
 				}

@@ -1,4 +1,4 @@
-package gui;
+package viewModelLayer;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -21,8 +21,8 @@ import com.google.gdata.data.youtube.YouTubeMediaGroup;
 import com.google.gdata.util.ServiceException;
 
 import parsing.Person;
-import youTube.YouTubeMedia;
-import youTube.YouTubeVideo;
+//import youTube.YouTubeMedia;
+//import youTube.YouTubeVideo;
 
 public class MovieInfo {
 
@@ -68,49 +68,31 @@ public class MovieInfo {
 		try {
 			videoFeed = service.query(query, VideoFeed.class);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
+		} catch (ServiceException e) {		
 			e.printStackTrace();
 		}
-		List<VideoEntry> videos = videoFeed.getEntries();
+
 		try {
-		this.youtubeUrl = convertVideos(videos);
-		} catch( Exception ex){
-			this. youtubeUrl = null;
-		}
-		
-	}
-
-	private String convertVideos(List<VideoEntry> videos) {
-
-		List<YouTubeVideo> youtubeVideosList = new LinkedList<YouTubeVideo>();
-		List<YouTubeMedia> medias = new LinkedList<YouTubeMedia>();
-
-		for (VideoEntry videoEntry : videos) {
-
-			YouTubeVideo ytv = new YouTubeVideo();
-			YouTubeMediaGroup mediaGroup = videoEntry.getMediaGroup();
+			List<VideoEntry> videos = videoFeed.getEntries();
+			
+			YouTubeMediaGroup mediaGroup = videos.get(0).getMediaGroup();
 
 			// set webPlayerUrl
 			String webPlayerUrl = mediaGroup.getPlayer().getUrl();
-			ytv.setWebPlayerUrl(webPlayerUrl);
 
 			// set embeddedWebPlayerUrl
-			String query = "?v=";
-			int index = webPlayerUrl.indexOf(query);
-			String embeddedWebPlayerUrl = webPlayerUrl.substring(index+query.length());
+			String query1 = "?v=";
+			int index = webPlayerUrl.indexOf(query1);
+			String embeddedWebPlayerUrl = webPlayerUrl.substring(index+query1.length());
 			embeddedWebPlayerUrl = "http://www.youtube.com/v/" + embeddedWebPlayerUrl;
-			ytv.setEmbeddedWebPlayerUrl(embeddedWebPlayerUrl);
-
-			//set medias				
-			for (YouTubeMediaContent mediaContent : mediaGroup.getYouTubeContents()) {
-				medias.add(new YouTubeMedia(mediaContent.getUrl(), mediaContent.getType()));
-			}
-		}
-		return medias.get(0).getLocation();
+			
+			this.youtubeUrl = embeddedWebPlayerUrl;
+		} catch( Exception ex){
+			this. youtubeUrl = null;
+		}		
 	}
+
 
 	public void addPosterUrl(String movieName) {
 		int i;

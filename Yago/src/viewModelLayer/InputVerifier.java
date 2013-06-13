@@ -1,4 +1,4 @@
-package gui;
+package viewModelLayer;
 
 public class InputVerifier {
 

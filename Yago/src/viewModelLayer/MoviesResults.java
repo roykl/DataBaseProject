@@ -1,4 +1,4 @@
-package gui;
+package viewModelLayer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

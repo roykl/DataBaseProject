@@ -1,7 +1,5 @@
 package parsing;
 
-import gui.InputVerifier;
-import gui.MoviesResults;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,7 +25,9 @@ import db.DBOparations;
 import db.JDBCConnectionPooling;
 
 import utils.Configuration;
-import youTube.YouTubeManager;
+import viewModelLayer.InputVerifier;
+import viewModelLayer.MoviesResults;
+
 
 
 //new branch
@@ -36,9 +36,9 @@ public class TestConsole {
 
 public static void main(String[] args) throws IOException, SQLException {
 	
-	gui.MovieInfo mi = new gui.MovieInfo(); 
+	viewModelLayer.MovieInfo mi = new viewModelLayer.MovieInfo(); 
 	mi.directorName ="fdsafas";
-	mi.movieName = "bulmfds 32718";
+	mi.movieName = "walk on water movie";
 	mi.duration= "123";
 	mi.grade =  6;
 	mi.language = "englis";
@@ -82,13 +82,13 @@ public static void main(String[] args) throws IOException, SQLException {
 //	System.out.println(rs.getString(1));
 //	System.out.println(rs.getString(2));
 //	
-	YouTubeManager yt = new YouTubeManager();
-	try {
-		yt.getTrailer("django unchained");
-	} catch (ServiceException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
+//	YouTubeManager yt = new YouTubeManager();
+//	try {
+//		yt.getTrailer("django unchained");
+//	} catch (ServiceException e1) {
+//		// TODO Auto-generated catch block
+//		e1.printStackTrace();
+//	}
 		  
 //		readBigYagoFile("C:\\Users\\Roy\\YAGO\\Yago\\plot.list","C:\\Users\\Roy\\Desktop\\test\\plot.list",1550000);
 //
