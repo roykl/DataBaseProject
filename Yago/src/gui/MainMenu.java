@@ -2,6 +2,7 @@ package gui;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -32,7 +33,7 @@ import viewModelLayer.SearchQueries;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.wb.swt.SWTResourceManager;
+
 
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
@@ -82,6 +83,8 @@ public class MainMenu extends Shell {
 		lblNewLabel.setBounds(10, 10, 1024, 628);
 
 		txtMovieTitle = new Text(this, SWT.BORDER);
+		txtMovieTitle.setToolTipText("Enter a movie title");
+		txtMovieTitle.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
 		FormData fd_txtMovieTitle = new FormData();
 		fd_txtMovieTitle.right = new FormAttachment(composite, -24);
 		fd_txtMovieTitle.left = new FormAttachment(0, 10);
@@ -249,7 +252,7 @@ public class MainMenu extends Shell {
 		lblNewLabel_1.setBounds(47, 13, 48, 20);
 		lblNewLabel_1.setText("From:");
 		
-		Spinner spinner = new Spinner(composite_5, SWT.BORDER);
+		final Spinner spinner = new Spinner(composite_5, SWT.BORDER);
 		spinner.setTextLimit(4);
 		spinner.setMaximum(2013);
 		spinner.setMinimum(1900);
@@ -259,15 +262,16 @@ public class MainMenu extends Shell {
 		lblTo.setText("To:");
 		lblTo.setBounds(47, 60, 48, 20);
 		
-		Spinner spinner_1 = new Spinner(composite_5, SWT.BORDER);
+		final Spinner spinner_1 = new Spinner(composite_5, SWT.BORDER);
 		spinner_1.setTextLimit(4);
-		spinner_1.setMaximum(2013);
+		spinner_1.setMaximum(2100);
 		spinner_1.setMinimum(1900);
 		spinner_1.setSelection(2103);
 		spinner_1.setBounds(106, 57, 62, 22);
 		xpndtmYear.setHeight(115);
 
 		ExpandItem xpndtmNewExpanditem_1 = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmNewExpanditem_1.setExpanded(true);
 		xpndtmNewExpanditem_1.setText("Language");
 		
 		ScrolledComposite scrolledComposite_1 = new ScrolledComposite(expandBar, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -275,7 +279,7 @@ public class MainMenu extends Shell {
 		scrolledComposite_1.setExpandHorizontal(true);
 		scrolledComposite_1.setExpandVertical(true);
 		
-		Composite composite_2 = new Composite(scrolledComposite_1, SWT.NONE);
+		final Composite composite_2 = new Composite(scrolledComposite_1, SWT.NONE);
 		composite_2.setLayout(new GridLayout(1, false));
 		
 		Button btnRadioButton_1 = new Button(composite_2, SWT.RADIO);
@@ -378,8 +382,31 @@ public class MainMenu extends Shell {
 				boolean eneredMoive = txtMovieTitle.getText().trim().isEmpty()? false : true;				
 				if (eneredMoive) // if entered a movie, find that movie
 					where = "movie.movieName = '" + txtMovieTitle.getText() +"'";
-				else // user didn't enter movieName so we use the advanced properties
-				    where ="";
+				else {// user didn't enter movieName so we use the advanced properties
+					//genres
+					SearchQueries.createGenreWhere(table.getItems());
+					//director
+					String directorName = text.getText();
+					//actors
+					String actor1 = text_4.getText();
+					String actor2 = text_6.getText();
+					String actor3 = text_5.getText();
+					//year
+					String fromYear = spinner.getText();
+					String toYear = spinner_1.getText();
+					//language
+//					SearchQueries.createLangaugeWhere((Button[]) composite_2.getChildren())
+//					String language = composite_2.get
+					System.out.println(fromYear);
+					System.out.println(toYear);
+					System.out.println(actor3);
+//				    TableItem[] genres = table.getItems();
+//				    ArrayList<String> genreList = new ArrayList<String>();
+//				    for (TableItem ti: genres){
+//				    	if(ti.getChecked())
+//				    		genreList.add(ti.getText());
+//				    }
+				}
 				display.syncExec(new thread_logic.ThreadSearch(operations,select,from,where){
 					@Override
 					public void run(){
