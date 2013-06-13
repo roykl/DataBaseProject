@@ -22,14 +22,16 @@ import db.IdbOparations;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Spinner;
 
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
 	private Text text;
-	private Text txtPleaseEnterEach;
-	private Text text_1;
-	private Text text_2;
 	private Text text_3;
+	private Text text_4;
+	private Text text_5;
+	private Text text_6;
 
 
 	/**
@@ -193,6 +195,7 @@ public class MainMenu extends Shell {
 		btnSearch.setText("Search");
 
 		Label lblMovieTitle = new Label(this, SWT.NONE);
+		lblMovieTitle.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		fd_txtMovieTitle.top = new FormAttachment(0, 51);
 		lblMovieTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
 		FormData fd_lblMovieTitle = new FormData();
@@ -202,7 +205,8 @@ public class MainMenu extends Shell {
 		lblMovieTitle.setText("Movie title");
 
 		Label lblAdvancedSearch = new Label(this, SWT.NONE);
-		fd_txtMovieTitle.bottom = new FormAttachment(lblAdvancedSearch, -33);
+		lblAdvancedSearch.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		fd_txtMovieTitle.bottom = new FormAttachment(lblAdvancedSearch, -43);
 		fd_expandBar.top = new FormAttachment(0, 135);
 
 		ExpandItem xpndtmDirectorName = new ExpandItem(expandBar, 0);
@@ -214,10 +218,10 @@ public class MainMenu extends Shell {
 
 		text = new Text(composite_3, SWT.BORDER);
 		FormData fd_text = new FormData();
-		fd_text.top = new FormAttachment(0);
+		fd_text.top = new FormAttachment(0, 10);
 		fd_text.left = new FormAttachment(0, 10);
-		fd_text.bottom = new FormAttachment(0, 41);
-		fd_text.right = new FormAttachment(0, 247);
+		fd_text.bottom = new FormAttachment(0, 36);
+		fd_text.right = new FormAttachment(0, 181);
 		text.setLayoutData(fd_text);
 		xpndtmDirectorName.setHeight(54);
 
@@ -227,51 +231,57 @@ public class MainMenu extends Shell {
 		Composite composite_4 = new Composite(expandBar, SWT.NONE);
 		xpndtmActors.setControl(composite_4);
 		composite_4.setLayout(new FormLayout());
-
-		txtPleaseEnterEach = new Text(composite_4, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		FormData fd_txtPleaseEnterEach = new FormData();
-		fd_txtPleaseEnterEach.bottom = new FormAttachment(0, 78);
-		fd_txtPleaseEnterEach.right = new FormAttachment(0, 247);
-		fd_txtPleaseEnterEach.top = new FormAttachment(0);
-		fd_txtPleaseEnterEach.left = new FormAttachment(0, 10);
-		txtPleaseEnterEach.setLayoutData(fd_txtPleaseEnterEach);
-		txtPleaseEnterEach.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent arg0) {
-				txtPleaseEnterEach.setText("");
-			}
-		});
-		txtPleaseEnterEach.setText("Please enter each name in a separate line.");
+		
+		text_6 = new Text(composite_4, SWT.BORDER);
+		FormData fd_text_6 = new FormData();
+		fd_text_6.right = new FormAttachment(100, -94);
+		fd_text_6.left = new FormAttachment(0, 10);
+		text_6.setLayoutData(fd_text_6);
+		
+		text_5 = new Text(composite_4, SWT.BORDER);
+		fd_text_6.bottom = new FormAttachment(text_5, -6);
+		FormData fd_text_5 = new FormData();
+		fd_text_5.right = new FormAttachment(text_6, 0, SWT.RIGHT);
+		fd_text_5.top = new FormAttachment(0, 57);
+		fd_text_5.left = new FormAttachment(0, 10);
+		text_5.setLayoutData(fd_text_5);
+		
+		text_4 = new Text(composite_4, SWT.BORDER);
+		FormData fd_text_4 = new FormData();
+		fd_text_4.top = new FormAttachment(0, 3);
+		fd_text_4.right = new FormAttachment(100, -94);
+		fd_text_4.left = new FormAttachment(0, 10);
+		text_4.setLayoutData(fd_text_4);
 		xpndtmActors.setHeight(89);
 
 		ExpandItem xpndtmYear = new ExpandItem(expandBar, 0);
+		xpndtmYear.setExpanded(true);
 		xpndtmYear.setText("Years");
 
 		Composite composite_5 = new Composite(expandBar, SWT.NONE);
 		xpndtmYear.setControl(composite_5);
 		composite_5.setLayout(null);
 
-		text_1 = new Text(composite_5, SWT.BORDER);
-		text_1.setBounds(48, 30, 99, 26);
-
 		Label lblNewLabel_1 = new Label(composite_5, SWT.NONE);
 		lblNewLabel_1.setBounds(47, 4, 86, 20);
 		lblNewLabel_1.setText("From:");
-
-		Label lblyyyy = new Label(composite_5, SWT.NONE);
-		lblyyyy.setBounds(153, 33, 70, 20);
-		lblyyyy.setText("(YYYY)");
+		
+		Spinner spinner = new Spinner(composite_5, SWT.BORDER);
+		spinner.setTextLimit(4);
+		spinner.setMaximum(2013);
+		spinner.setMinimum(1900);
+		spinner.setBounds(47, 30, 62, 22);
 
 		Label lblTo = new Label(composite_5, SWT.NONE);
 		lblTo.setText("To:");
 		lblTo.setBounds(48, 62, 86, 20);
-
-		text_2 = new Text(composite_5, SWT.BORDER);
-		text_2.setBounds(48, 88, 99, 26);
-
-		Label label = new Label(composite_5, SWT.NONE);
-		label.setText("(YYYY)");
-		label.setBounds(153, 88, 70, 20);
+		
+		Spinner spinner_1 = new Spinner(composite_5, SWT.BORDER);
+		spinner_1.setTextLimit(4);
+		spinner_1.setMaximum(2013);
+		spinner_1.setMinimum(1900);
+		spinner_1.setSelection(2103);
+		spinner_1.setBounds(47, 88, 62, 22);
 		xpndtmYear.setHeight(140);
 
 		ExpandItem xpndtmNewExpanditem_1 = new ExpandItem(expandBar, SWT.NONE);
