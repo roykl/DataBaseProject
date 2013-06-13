@@ -363,13 +363,7 @@ public class MainMenu extends Shell {
 						language = languageList.getSelection()[0];
 					System.out.println(language);
 					System.out.println(toYear);
-					System.out.println(actor3);
-
-					
-					//TODO - remove (for test purposes only)
-					System.out.println((languageList.getSelection()).length);
-					
-					
+					System.out.println(actor3);					
 				}
 				display.syncExec(new MultiThreadSearch(operations, selectMovie, fromMovie, whereMovie,
 							selectGenres, fromGenres, whereGenres, selectActors, fromActors, whereActors){
