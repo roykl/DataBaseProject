@@ -4,8 +4,10 @@ import db.IdbOparations;
 
 public class ThreadSearch extends Thread {
 	
-	IdbOparations oparations ;
-	String select, from, where;
+	protected IdbOparations oparations ;
+	protected String select;
+	protected String from;
+	protected String where;
 	private ResultSet result;
 
 
@@ -14,6 +16,10 @@ public class ThreadSearch extends Thread {
 		this.select = select;
 		this.from = from;
 		this.where = where;
+	}
+	
+	public ThreadSearch(){
+	 
 	}
 	
 	

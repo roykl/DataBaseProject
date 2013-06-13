@@ -28,6 +28,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.layout.GridData;
 
+import thread_logic.MultiThreadSearch;
+import thread_logic.ThreadSearch;
 import viewModelLayer.MoviesResults;
 import viewModelLayer.SearchQueries;
 import org.eclipse.swt.widgets.Table;
@@ -323,11 +325,11 @@ public class MainMenu extends Shell {
 			//Search button pressed
 			public void widgetSelected(SelectionEvent arg0) {
 				//parameters for select - if you need you can send few of these threads
-				String selectMovie = SearchQueries.MOVIE_SELECT;
-				String fromMovie = SearchQueries.MOVIE_FROM;
-				String whereMovie= null;
-				String selectGenres = SearchQueries.GENRES_SELECT;
-				String fromGenres = SearchQueries.GENRES_FROM;
+				final String selectMovie = SearchQueries.MOVIE_SELECT;
+				final String fromMovie = SearchQueries.MOVIE_FROM;
+			    String whereMovie= null;
+				final String selectGenres = SearchQueries.GENRES_SELECT;
+				final String fromGenres = SearchQueries.GENRES_FROM;
 				String whereGenres = null;
 				String selectActors = SearchQueries.ACTORS_SELECT;
 				String fromActors = SearchQueries.ACTORS_FROM;
@@ -372,19 +374,25 @@ public class MainMenu extends Shell {
 					
 					
 				}
-				display.syncExec(new thread_logic.ThreadSearch(operations,selectGenres,fromGenres,whereGenres){
-					@Override
+				display.syncExec(new MultiThreadSearch(operations, selectMovie, fromMovie, whereMovie,
+							selectGenres, fromGenres, whereGenres, selectActors, fromActors, whereActors){
+					@Override		
 					public void run(){
 						super.run();
-						ResultSet result = this.getResult();
-						MoviesResults moviesRes = new MoviesResults();
-						moviesRes.setResultsMoive(result);
-						moviesRes.setResultsGenre(result);
-						System.out.println(moviesRes.getMoviesResult().toString());
+						ResultSet resultMovie = this.getResultMovie();
+						ResultSet resultGenre = this.getResultGenre();
+						ResultSet resultActor = this.getResultActor();
 						
-						//  TODO: ResultSet => MovieInfo =>  table
+						MoviesResults moviesRes = new MoviesResults();
+						moviesRes.setResultsMoive(resultMovie);
+						moviesRes.setResultsGenre(resultGenre);
+						moviesRes.setResultsActors(resultActor);
+						moviesRes.addYoutubeAndPoster();
+						
+						System.out.println(moviesRes.getMoviesResult().toString());
 					}
-				});	
+				});
+				
 			}
 		});
 		
