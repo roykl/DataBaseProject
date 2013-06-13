@@ -2,6 +2,7 @@ package gui;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -29,12 +30,17 @@ import org.eclipse.swt.layout.GridData;
 
 import viewModelLayer.MoviesResults;
 import viewModelLayer.SearchQueries;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TableColumn;
+
 
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
 	private Text text_4;
 	private Text text_5;
 	private Text text_6;
+	private Table table;
 	private Text text;
 
 
@@ -70,140 +76,105 @@ public class MainMenu extends Shell {
 		list.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		list.setItems(new String[] {});
 		list.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-		list.setBounds(21, 20, 997, 481);
+		list.setBounds(21, 21, 997, 486);
 
 		Label lblNewLabel = new Label(composite, SWT.NONE);
 		lblNewLabel.setImage(SWTResourceManager.getImage(MainMenu.class, "/video screen.jpg"));
 		lblNewLabel.setBounds(10, 10, 1024, 628);
 
 		txtMovieTitle = new Text(this, SWT.BORDER);
+		txtMovieTitle.setToolTipText("Enter a movie title");
+		txtMovieTitle.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
 		FormData fd_txtMovieTitle = new FormData();
-		fd_txtMovieTitle.right = new FormAttachment(composite, -20);
-		fd_txtMovieTitle.left = new FormAttachment(0, 7);
+		fd_txtMovieTitle.right = new FormAttachment(composite, -24);
+		fd_txtMovieTitle.left = new FormAttachment(0, 10);
 		txtMovieTitle.setLayoutData(fd_txtMovieTitle);
 
 		Button btnSearch = new Button(this, SWT.NONE);
-		btnSearch.addSelectionListener(new SelectionAdapter() {
-			@Override
-			//Search button pressed
-			public void widgetSelected(SelectionEvent arg0) {
-				//parameters for select - if you need you can send few of these threads
-				String select = SearchQueries.MOVIE_SELECT;
-				String from = SearchQueries.MOVIE_FROM;
-				String where= null;
-				// check if user enered movie name
-				boolean eneredMoive = txtMovieTitle.getText().trim().isEmpty()? false : true;				
-				if (eneredMoive) // if entered a movie, find that movie
-					where = "movie.movieName = '" + txtMovieTitle.getText() +"'";
-				else // user didn't enter movieName so we use the advanced properties
-				    where ="";
-				display.syncExec(new thread_logic.ThreadSearch(operations,select,from,where){
-					@Override
-					public void run(){
-						super.run();
-						ResultSet result = this.getResult();
-						MoviesResults moviesRes = new MoviesResults();
-						moviesRes.setResultsMoive(result);
-						System.out.println(moviesRes.getMoviesResult().toString());
-						
-						//  TODO: ResultSet => MovieInfo =>  table
-					}
-					
-
-
-				});	
-			}
-		});
 		fd_expandBar.bottom = new FormAttachment(btnSearch, -6);
 
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmNewExpanditem.setText("Genre");
-
-		ScrolledComposite scrolledComposite = new ScrolledComposite(expandBar, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		xpndtmNewExpanditem.setControl(scrolledComposite);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
+		
+		table = new Table(expandBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
+		table.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		xpndtmNewExpanditem.setControl(table);
+		
+		TableItem tableItem = new TableItem(table, SWT.NONE);
+		tableItem.setText("Horror");
+		
+		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
+		tableItem_1.setText("Documentary");
+		
+		TableItem tableItem_2 = new TableItem(table, SWT.NONE);
+		tableItem_2.setText("Sci-Fi");
+		
+		TableItem tableItem_3 = new TableItem(table, SWT.NONE);
+		tableItem_3.setText("History");
+		
+		TableItem tableItem_4 = new TableItem(table, SWT.NONE);
+		tableItem_4.setText("Western");
+		
+		TableItem tableItem_5 = new TableItem(table, SWT.NONE);
+		tableItem_5.setText("Romance");
+		
+		TableItem tableItem_6 = new TableItem(table, SWT.NONE);
+		tableItem_6.setText("Musical");
+		
+		TableItem tableItem_7 = new TableItem(table, SWT.NONE);
+		tableItem_7.setText("Animation");
+		
+		TableItem tableItem_8 = new TableItem(table, SWT.NONE);
+		tableItem_8.setText("Mystery");
+		
+		TableItem tableItem_9 = new TableItem(table, SWT.NONE);
+		tableItem_9.setText("War");
+		
+		TableItem tableItem_10 = new TableItem(table, SWT.NONE);
+		tableItem_10.setText("News");
+		
+		TableItem tableItem_11 = new TableItem(table, SWT.NONE);
+		tableItem_11.setText("Crime");
+		
+		TableItem tableItem_12 = new TableItem(table, SWT.NONE);
+		tableItem_12.setText("Drama");
+		
+		TableItem tableItem_13 = new TableItem(table, SWT.NONE);
+		tableItem_13.setText("Music");
+		
+		TableItem tableItem_14 = new TableItem(table, SWT.NONE);
+		tableItem_14.setText("Short");
+		
+		TableItem tableItem_15 = new TableItem(table, SWT.NONE);
+		tableItem_15.setText("Sport");
+		
+		TableItem tableItem_16 = new TableItem(table, SWT.NONE);
+		tableItem_16.setText("Fantasy");
+		
+		TableItem tableItem_17 = new TableItem(table, SWT.NONE);
+		tableItem_17.setText("Reality-TV");
+		
+		TableItem tableItem_18 = new TableItem(table, SWT.NONE);
+		tableItem_18.setText("Film-Noir");
+		
+		TableItem tableItem_19 = new TableItem(table, SWT.NONE);
+		tableItem_19.setText("Adventure");
+		
+		TableItem tableItem_20 = new TableItem(table, SWT.NONE);
+		tableItem_20.setText("Thriller");
+		
+		TableItem tableItem_21 = new TableItem(table, SWT.NONE);
+		tableItem_21.setText("Action");
+		
+		TableItem tableItem_22 = new TableItem(table, SWT.NONE);
+		tableItem_22.setText("Comedy");
+		
+		TableItem tableItem_23 = new TableItem(table, SWT.NONE);
+		tableItem_23.setText("Biography");
+		
+		TableItem tableItem_24 = new TableItem(table, SWT.NONE);
+		tableItem_24.setText("Family");
 		xpndtmNewExpanditem.setHeight(120);
-
-		Composite composite_1 = new Composite(scrolledComposite, SWT.NONE);
-		composite_1.setLayout(new GridLayout(1, false));
-
-		Button btnHorror = new Button(composite_1, SWT.CHECK);
-		btnHorror.setText("Horror");
-
-		Button btnDocumentary = new Button(composite_1, SWT.CHECK);
-		btnDocumentary.setText("Documentary");
-
-		Button btnScifi = new Button(composite_1, SWT.CHECK);
-		btnScifi.setText("Sci-Fi");
-
-		Button btnHistory = new Button(composite_1, SWT.CHECK);
-		btnHistory.setText("History");
-
-		Button btnWestern = new Button(composite_1, SWT.CHECK);
-		btnWestern.setText("Western");
-
-		Button btnCheckButton_4 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_4.setText("Romance");
-
-		Button btnCheckButton_5 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_5.setText("Musical");
-
-		Button btnCheckButton_6 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_6.setText("Animation");
-
-		Button btnCheckButton_7 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_7.setText("Mystery");
-
-		Button btnCheckButton_8 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_8.setText("War");
-
-		Button btnCheckButton_9 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_9.setText("News");
-
-		Button btnCheckButton_10 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_10.setText("Crime");
-
-		Button btnCheckButton_11 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_11.setText("Drama");
-
-		Button btnCheckButton_12 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_12.setText("Music");
-
-		Button btnCheckButton_13 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_13.setText("Short");
-
-		Button btnCheckButton_14 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_14.setText("Sport");
-
-		Button btnCheckButton_15 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_15.setText("Fantasy");
-
-		Button btnCheckButton_16 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_16.setText("Reality-TV");
-
-		Button btnCheckButton_17 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_17.setText("Film-Noir");
-
-		Button btnCheckButton_18 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_18.setText("Adventure");
-
-		Button btnCheckButton_19 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_19.setText("Thriller");
-
-		Button btnCheckButton_20 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_20.setText("Action");
-
-		Button btnCheckButton_21 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_21.setText("Comedy");
-
-		Button btnCheckButton_22 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_22.setText("Biography");
-
-		Button btnCheckButton_23 = new Button(composite_1, SWT.CHECK);
-		btnCheckButton_23.setText("Family");
-		scrolledComposite.setContent(composite_1);
-		scrolledComposite.setMinSize(composite_1.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		FormData fd_btnSearch = new FormData();
 		fd_btnSearch.top = new FormAttachment(0, 473);
 		fd_btnSearch.left = new FormAttachment(0, 51);
@@ -212,18 +183,18 @@ public class MainMenu extends Shell {
 		btnSearch.setText("Search");
 
 		Label lblMovieTitle = new Label(this, SWT.NONE);
+		fd_txtMovieTitle.top = new FormAttachment(lblMovieTitle, 12);
 		lblMovieTitle.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		fd_txtMovieTitle.top = new FormAttachment(0, 51);
 		lblMovieTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
 		FormData fd_lblMovieTitle = new FormData();
-		fd_lblMovieTitle.bottom = new FormAttachment(txtMovieTitle, -9);
+		fd_lblMovieTitle.bottom = new FormAttachment(100, -591);
 		fd_lblMovieTitle.left = new FormAttachment(0, 10);
 		lblMovieTitle.setLayoutData(fd_lblMovieTitle);
 		lblMovieTitle.setText("Movie title");
 
 		Label lblAdvancedSearch = new Label(this, SWT.NONE);
+		fd_txtMovieTitle.bottom = new FormAttachment(lblAdvancedSearch, -30);
 		lblAdvancedSearch.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		fd_txtMovieTitle.bottom = new FormAttachment(lblAdvancedSearch, -43);
 		fd_expandBar.top = new FormAttachment(0, 135);
 
 		ExpandItem xpndtmDirectorName = new ExpandItem(expandBar, 0);
@@ -235,11 +206,11 @@ public class MainMenu extends Shell {
 		
 		text = new Text(composite_3, SWT.BORDER);
 		FormData fd_text = new FormData();
-		fd_text.right = new FormAttachment(0, 162);
-		fd_text.bottom = new FormAttachment(100, -8);
-		fd_text.left = new FormAttachment(0, 10);
+		fd_text.top = new FormAttachment(0, 10);
+		fd_text.right = new FormAttachment(100, -25);
+		fd_text.left = new FormAttachment(0, 32);
 		text.setLayoutData(fd_text);
-		xpndtmDirectorName.setHeight(40);
+		xpndtmDirectorName.setHeight(50);
 
 		ExpandItem xpndtmActors = new ExpandItem(expandBar, 0);
 		xpndtmActors.setText("Actors");
@@ -250,25 +221,25 @@ public class MainMenu extends Shell {
 		
 		text_6 = new Text(composite_4, SWT.BORDER);
 		FormData fd_text_6 = new FormData();
-		fd_text_6.right = new FormAttachment(100, -94);
-		fd_text_6.left = new FormAttachment(0, 10);
 		text_6.setLayoutData(fd_text_6);
 		
 		text_5 = new Text(composite_4, SWT.BORDER);
-		fd_text_6.bottom = new FormAttachment(text_5, -6);
+		fd_text_6.bottom = new FormAttachment(100, -51);
 		FormData fd_text_5 = new FormData();
 		fd_text_5.right = new FormAttachment(text_6, 0, SWT.RIGHT);
-		fd_text_5.top = new FormAttachment(0, 57);
-		fd_text_5.left = new FormAttachment(0, 10);
+		fd_text_5.left = new FormAttachment(text_6, 0, SWT.LEFT);
+		fd_text_5.top = new FormAttachment(text_6, 6);
 		text_5.setLayoutData(fd_text_5);
 		
 		text_4 = new Text(composite_4, SWT.BORDER);
+		fd_text_6.right = new FormAttachment(text_4, 0, SWT.RIGHT);
+		fd_text_6.left = new FormAttachment(text_4, 0, SWT.LEFT);
 		FormData fd_text_4 = new FormData();
-		fd_text_4.bottom = new FormAttachment(text_6, -6);
-		fd_text_4.left = new FormAttachment(text_6, 0, SWT.LEFT);
-		fd_text_4.right = new FormAttachment(100, -94);
+		fd_text_4.bottom = new FormAttachment(100, -83);
+		fd_text_4.left = new FormAttachment(0, 35);
+		fd_text_4.right = new FormAttachment(100, -26);
 		text_4.setLayoutData(fd_text_4);
-		xpndtmActors.setHeight(89);
+		xpndtmActors.setHeight(118);
 
 		ExpandItem xpndtmYear = new ExpandItem(expandBar, 0);
 		xpndtmYear.setText("Years");
@@ -278,28 +249,29 @@ public class MainMenu extends Shell {
 		composite_5.setLayout(null);
 
 		Label lblNewLabel_1 = new Label(composite_5, SWT.NONE);
-		lblNewLabel_1.setBounds(47, 4, 86, 20);
+		lblNewLabel_1.setBounds(47, 13, 48, 20);
 		lblNewLabel_1.setText("From:");
 		
-		Spinner spinner = new Spinner(composite_5, SWT.BORDER);
+		final Spinner spinner = new Spinner(composite_5, SWT.BORDER);
 		spinner.setTextLimit(4);
 		spinner.setMaximum(2013);
 		spinner.setMinimum(1900);
-		spinner.setBounds(47, 30, 62, 22);
+		spinner.setBounds(106, 13, 62, 22);
 
 		Label lblTo = new Label(composite_5, SWT.NONE);
 		lblTo.setText("To:");
-		lblTo.setBounds(48, 62, 86, 20);
+		lblTo.setBounds(47, 60, 48, 20);
 		
-		Spinner spinner_1 = new Spinner(composite_5, SWT.BORDER);
+		final Spinner spinner_1 = new Spinner(composite_5, SWT.BORDER);
 		spinner_1.setTextLimit(4);
-		spinner_1.setMaximum(2013);
+		spinner_1.setMaximum(2100);
 		spinner_1.setMinimum(1900);
 		spinner_1.setSelection(2103);
-		spinner_1.setBounds(47, 88, 62, 22);
-		xpndtmYear.setHeight(140);
+		spinner_1.setBounds(106, 57, 62, 22);
+		xpndtmYear.setHeight(115);
 
 		ExpandItem xpndtmNewExpanditem_1 = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmNewExpanditem_1.setExpanded(true);
 		xpndtmNewExpanditem_1.setText("Language");
 		
 		ScrolledComposite scrolledComposite_1 = new ScrolledComposite(expandBar, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -307,7 +279,7 @@ public class MainMenu extends Shell {
 		scrolledComposite_1.setExpandHorizontal(true);
 		scrolledComposite_1.setExpandVertical(true);
 		
-		Composite composite_2 = new Composite(scrolledComposite_1, SWT.NONE);
+		final Composite composite_2 = new Composite(scrolledComposite_1, SWT.NONE);
 		composite_2.setLayout(new GridLayout(1, false));
 		
 		Button btnRadioButton_1 = new Button(composite_2, SWT.RADIO);
@@ -396,6 +368,60 @@ public class MainMenu extends Shell {
 			fd_btnImport.right = new FormAttachment(btnSearch, 0, SWT.RIGHT);
 			btnImport.setLayoutData(fd_btnImport);
 		}
+		
+		//Search button listener - TODO: complete extracting data from search parameters
+		btnSearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			//Search button pressed
+			public void widgetSelected(SelectionEvent arg0) {
+				//parameters for select - if you need you can send few of these threads
+				String select = SearchQueries.MOVIE_SELECT;
+				String from = SearchQueries.MOVIE_FROM;
+				String where= null;
+				// check if user entered movie name
+				boolean eneredMoive = txtMovieTitle.getText().trim().isEmpty()? false : true;				
+				if (eneredMoive) // if entered a movie, find that movie
+					where = "movie.movieName = '" + txtMovieTitle.getText() +"'";
+				else {// user didn't enter movieName so we use the advanced properties
+					//genres
+					SearchQueries.createGenreWhere(table.getItems());
+					//director
+					String directorName = text.getText();
+					//actors
+					String actor1 = text_4.getText();
+					String actor2 = text_6.getText();
+					String actor3 = text_5.getText();
+					//year
+					String fromYear = spinner.getText();
+					String toYear = spinner_1.getText();
+					//language
+//					SearchQueries.createLangaugeWhere((Button[]) composite_2.getChildren())
+//					String language = composite_2.get
+					System.out.println(fromYear);
+					System.out.println(toYear);
+					System.out.println(actor3);
+//				    TableItem[] genres = table.getItems();
+//				    ArrayList<String> genreList = new ArrayList<String>();
+//				    for (TableItem ti: genres){
+//				    	if(ti.getChecked())
+//				    		genreList.add(ti.getText());
+//				    }
+				}
+				display.syncExec(new thread_logic.ThreadSearch(operations,select,from,where){
+					@Override
+					public void run(){
+						super.run();
+						ResultSet result = this.getResult();
+						MoviesResults moviesRes = new MoviesResults();
+						moviesRes.setResultsMoive(result);
+						System.out.println(moviesRes.getMoviesResult().toString());
+						
+						//  TODO: ResultSet => MovieInfo =>  table
+					}
+				});	
+			}
+		});
+		
 		createContents();
 	}
 
