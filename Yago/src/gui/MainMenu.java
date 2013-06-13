@@ -362,12 +362,7 @@ public class MainMenu extends Shell {
 					System.out.println(language);
 					System.out.println(toYear);
 					System.out.println(actor3);
-//				    TableItem[] genres = table.getItems();
-//				    ArrayList<String> genreList = new ArrayList<String>();
-//				    for (TableItem ti: genres){
-//				    	if(ti.getChecked())
-//				    		genreList.add(ti.getText());
-//				    }
+
 					
 					//TODO - remove (for test purposes only)
 					System.out.println((languageList.getSelection()).length);
