@@ -26,6 +26,19 @@ import parsing.Person;
 
 public class MovieInfo {
 
+	@Override
+	public String toString() {
+		return "MovieInfo [idMovie=" + idMovie + ", movieName=" + movieName
+				+ ", idLanguage=" + idLanguage + ", language=" + language
+				+ ", idDirector=" + idDirector + ", directorName="
+				+ directorName + ", year=" + year + ", wikiUrl=" + wikiUrl
+				+ ", duration=" + duration + ", plot=" + plot + ", grade="
+				+ grade + ", numRankers=" + numRankers + ", actorsList="
+				+ actorsList + ", genresList=" + genresList + ", youtubeUrl="
+				+ youtubeUrl + ", posterUrl=" + posterUrl + "]";
+	}
+
+
 	public int idMovie;
 	public String movieName;
 	public int idLanguage;

@@ -1,8 +1,10 @@
 package gui;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
@@ -22,9 +24,11 @@ import db.IdbOparations;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.layout.GridData;
+
+import viewModelLayer.MoviesResults;
+import viewModelLayer.SearchQueries;
 
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
@@ -45,7 +49,7 @@ public class MainMenu extends Shell {
 		setImage(SWTResourceManager.getImage(MainMenu.class, "/movies.png"));
 		setLayout(new FormLayout());
 
-		ExpandBar expandBar = new ExpandBar(this, SWT.V_SCROLL);
+		final ExpandBar expandBar = new ExpandBar(this, SWT.V_SCROLL);
 		expandBar.setSpacing(10);
 		expandBar.setBackground(SWTResourceManager.getColor(128, 0, 0));
 		FormData fd_expandBar = new FormData();
@@ -84,11 +88,24 @@ public class MainMenu extends Shell {
 			//Search button pressed
 			public void widgetSelected(SelectionEvent arg0) {
 				//parameters for select - if you need you can send few of these threads
-				display.syncExec(new thread_logic.ThreadSearch(operations,"addd select","add from","add where"){
+				String select = SearchQueries.MOVIE_SELECT;
+				String from = SearchQueries.MOVIE_FROM;
+				String where= null;
+				// check if user enered movie name
+				boolean eneredMoive = txtMovieTitle.getText().trim().isEmpty()? false : true;				
+				if (eneredMoive) // if entered a movie, find that movie
+					where = "movie.movieName = '" + txtMovieTitle.getText() +"'";
+				else // user didn't enter movieName so we use the advanced properties
+				    where ="";
+				display.syncExec(new thread_logic.ThreadSearch(operations,select,from,where){
 					@Override
 					public void run(){
 						super.run();
 						ResultSet result = this.getResult();
+						MoviesResults moviesRes = new MoviesResults();
+						moviesRes.setResultsMoive(result);
+						System.out.println(moviesRes.getMoviesResult().toString());
+						
 						//  TODO: ResultSet => MovieInfo =>  table
 					}
 					
@@ -210,7 +227,6 @@ public class MainMenu extends Shell {
 		fd_expandBar.top = new FormAttachment(0, 135);
 
 		ExpandItem xpndtmDirectorName = new ExpandItem(expandBar, 0);
-		xpndtmDirectorName.setExpanded(true);
 		xpndtmDirectorName.setText("Director");
 
 		Composite composite_3 = new Composite(expandBar, SWT.NONE);
