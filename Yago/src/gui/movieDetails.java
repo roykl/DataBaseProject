@@ -1,5 +1,11 @@
 package gui;
 
+
+//TODO: give constructor the user id and movie id
+//TODO: make movie name lable  
+
+import java.sql.SQLException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -7,7 +13,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
+
+import thread_logic.ThreadGrade;
+import thread_logic.ThreadSearch;
 import viewModelLayer.MovieInfo;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
+import db.IdbOparations;
 
 public class movieDetails extends Shell {
 	private MovieInfo movie;
@@ -31,24 +44,22 @@ public class movieDetails extends Shell {
 	private Text txtGen;
 	private Label lblYourRank;
 	private Button btnRankIt;
-	private Button btnRadioButton_1;
-	private Button button;
-	private Button button_1;
-	private Button button_2;
-	private Button button_3;
-	private Button button_4;
-	private Button button_5;
-	private Button button_6;
-	private Button button_7;
-
+	private Button button1;
+	private Button button2;
+	private Button button3;
+	private Button button4;
+	private Button button5;
+	private Button button6;
+	private Button button7;
+	private Button button8;
+	private Button button9;
+	private Button button10;
+	private int idMovie; // TODO
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	
-	public movieDetails(MovieInfo movie){
-		this.movie=movie;
-	}
 	
 	public static void main(String args[]) {
 		try {
@@ -74,52 +85,61 @@ public class movieDetails extends Shell {
 	 * @param display
 	 * @wbp.parser.constructor
 	 */
-	public movieDetails(Display display) {
+	public movieDetails(final Display display, final IdbOparations operations,final int idUser, MovieInfo movie) {
 		super(display, SWT.SHELL_TRIM);
 		setText("MovieDetailes");
 		setImage(SWTResourceManager.getImage(movieDetails.class, "/movieDetails.jpg"));
 		
-		button_7 = new Button(this, SWT.RADIO);
-		button_7.setText("10");
-		button_7.setBounds(447, 643, 27, 26);
+		this.movie = movie;
 		
-		button_6 = new Button(this, SWT.RADIO);
-		button_6.setText("9");
-		button_6.setBounds(414, 643, 27, 26);
+		button10 = new Button(this, SWT.RADIO);
+		button10.setText("10");
+		button10.setBounds(447, 643, 27, 26);
 		
-		button_5 = new Button(this, SWT.RADIO);
-		button_5.setText("8");
-		button_5.setBounds(381, 643, 27, 26);
+		button9 = new Button(this, SWT.RADIO);
+		button9.setText("9");
+		button9.setBounds(414, 643, 27, 26);
 		
-		button_4 = new Button(this, SWT.RADIO);
-		button_4.setText("7");
-		button_4.setBounds(348, 643, 27, 26);
+		button8 = new Button(this, SWT.RADIO);
+		button8.setText("8");
+		button8.setBounds(381, 643, 27, 26);
 		
-		button_3 = new Button(this, SWT.RADIO);
-		button_3.setText("6");
-		button_3.setBounds(315, 643, 27, 26);
+		button7 = new Button(this, SWT.RADIO);
+		button7.setText("7");
+		button7.setBounds(348, 643, 27, 26);
 		
-		button_2 = new Button(this, SWT.RADIO);
-		button_2.setText("5");
-		button_2.setBounds(281, 643, 27, 26);
+		button6 = new Button(this, SWT.RADIO);
+		button6.setText("6");
+		button6.setBounds(315, 643, 27, 26);
 		
-		button_1 = new Button(this, SWT.RADIO);
-		button_1.setText("4");
-		button_1.setBounds(248, 643, 27, 26);
+		button5 = new Button(this, SWT.RADIO);
+		button5.setText("5");
+		button5.setBounds(281, 643, 27, 26);
 		
-		button = new Button(this, SWT.RADIO);
-		button.setText("3");
-		button.setBounds(215, 643, 27, 26);
+		button4 = new Button(this, SWT.RADIO);
+		button4.setText("4");
+		button4.setBounds(248, 643, 27, 26);
 		
-		btnRadioButton_1 = new Button(this, SWT.RADIO);
-		btnRadioButton_1.setBounds(182, 643, 27, 26);
-		btnRadioButton_1.setText("2");
+		button3 = new Button(this, SWT.RADIO);
+		button3.setText("3");
+		button3.setBounds(215, 643, 27, 26);
 		
-		Button btnRadioButton = new Button(this, SWT.RADIO);
-		btnRadioButton.setBounds(149, 643, 27, 26);
-		btnRadioButton.setText("1");
+		button2 = new Button(this, SWT.RADIO);
+		button2.setBounds(182, 643, 27, 26);
+		button2.setText("2");
+		
+		button1 = new Button(this, SWT.RADIO);
+		button1.setBounds(149, 643, 27, 26);
+		button1.setText("1");
 		
 		btnRankIt = new Button(this, SWT.NONE);
+		btnRankIt.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				updateGrade(display,operations,idUser);
+				updateLabel(display, operations);
+			}
+		});
 		btnRankIt.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
 		btnRankIt.setBounds(281, 612, 75, 25);
 		btnRankIt.setText("Rank it!");
@@ -310,6 +330,64 @@ public class movieDetails extends Shell {
 
 	}
 
+	
+	private int getGrade(){
+		if(button1.getSelection())
+			return 1;
+		else if(button2.getSelection())
+			return 2;
+		else if(button3.getSelection())
+			return 3;
+		else if(button4.getSelection())
+			return 4;
+		else if(button5.getSelection())
+			return 5;
+		else if(button6.getSelection())
+			return 6;
+		else if(button7.getSelection())
+			return 7;
+		else if(button8.getSelection())
+			return 8;
+		else if(button9.getSelection())
+			return 9;
+		else if(button10.getSelection())
+			return 10;
+		return 0;
+	}
+	
+	private void updateGrade(Display display, IdbOparations operations, int idUser){
+		
+		display.syncExec(new ThreadGrade(operations, idUser, idMovie,  getGrade()){
+			@Override
+			public void run(){
+				super.run();
+				}
+			
+			
+		});
+	}
+	
+	private void updateLabel(Display display, IdbOparations operations){
+		display.syncExec(new ThreadSearch(operations, "grade, numbersOfRankers", "MoviesGrades", "idMovie = " + idMovie){
+			@Override
+			public void run(){
+				super.run();
+				try {
+					int numbersOfRankers = this.getResult().getInt("numbersOfRankers");
+					int grade = this.getResult().getInt("grade");
+					txtLul.setText(Integer.toString(grade));
+					//TODO: add number of rankers label
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+				}
+			
+			
+		});
+	}
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

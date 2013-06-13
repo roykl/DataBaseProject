@@ -308,7 +308,7 @@ public class MainMenu extends Shell {
 				@Override
 				//Import button pressed
 				public void widgetSelected(SelectionEvent arg0) {
-					//TODO
+					massiveImport(display, operations);
 				}
 			});
 			btnImport.setText("Import");
@@ -318,7 +318,9 @@ public class MainMenu extends Shell {
 			fd_btnImport.right = new FormAttachment(btnSearch, 0, SWT.RIGHT);
 			btnImport.setLayoutData(fd_btnImport);
 		}
-		
+
+
+			
 		//Search button listener - TODO: complete extracting data from search parameters
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -393,6 +395,19 @@ public class MainMenu extends Shell {
 		
 		createContents();
 	}
+	
+	
+	
+	private void massiveImport(Display display1, IdbOparations operations1 ){
+		display1.syncExec(new thread_logic.ThreadImport(operations1){
+			@Override
+			public void run(){
+				super.run();
+				
+			}
+		});	
+		}
+	
 
 	/**
 	 * Create contents of the shell.
