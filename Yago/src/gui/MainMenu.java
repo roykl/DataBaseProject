@@ -24,14 +24,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.layout.GridData;
 
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
-	private Text text;
-	private Text text_3;
 	private Text text_4;
 	private Text text_5;
 	private Text text_6;
+	private Text text;
 
 
 	/**
@@ -210,20 +210,20 @@ public class MainMenu extends Shell {
 		fd_expandBar.top = new FormAttachment(0, 135);
 
 		ExpandItem xpndtmDirectorName = new ExpandItem(expandBar, 0);
+		xpndtmDirectorName.setExpanded(true);
 		xpndtmDirectorName.setText("Director");
 
 		Composite composite_3 = new Composite(expandBar, SWT.NONE);
 		xpndtmDirectorName.setControl(composite_3);
 		composite_3.setLayout(new FormLayout());
-
+		
 		text = new Text(composite_3, SWT.BORDER);
 		FormData fd_text = new FormData();
-		fd_text.top = new FormAttachment(0, 10);
+		fd_text.right = new FormAttachment(0, 162);
+		fd_text.bottom = new FormAttachment(100, -8);
 		fd_text.left = new FormAttachment(0, 10);
-		fd_text.bottom = new FormAttachment(0, 36);
-		fd_text.right = new FormAttachment(0, 181);
 		text.setLayoutData(fd_text);
-		xpndtmDirectorName.setHeight(54);
+		xpndtmDirectorName.setHeight(40);
 
 		ExpandItem xpndtmActors = new ExpandItem(expandBar, 0);
 		xpndtmActors.setText("Actors");
@@ -248,14 +248,13 @@ public class MainMenu extends Shell {
 		
 		text_4 = new Text(composite_4, SWT.BORDER);
 		FormData fd_text_4 = new FormData();
-		fd_text_4.top = new FormAttachment(0, 3);
+		fd_text_4.bottom = new FormAttachment(text_6, -6);
+		fd_text_4.left = new FormAttachment(text_6, 0, SWT.LEFT);
 		fd_text_4.right = new FormAttachment(100, -94);
-		fd_text_4.left = new FormAttachment(0, 10);
 		text_4.setLayoutData(fd_text_4);
 		xpndtmActors.setHeight(89);
 
 		ExpandItem xpndtmYear = new ExpandItem(expandBar, 0);
-		xpndtmYear.setExpanded(true);
 		xpndtmYear.setText("Years");
 
 		Composite composite_5 = new Composite(expandBar, SWT.NONE);
@@ -286,13 +285,78 @@ public class MainMenu extends Shell {
 
 		ExpandItem xpndtmNewExpanditem_1 = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmNewExpanditem_1.setText("Language");
-
-		Composite composite_2 = new Composite(expandBar, SWT.NONE);
-		xpndtmNewExpanditem_1.setControl(composite_2);
-
-		text_3 = new Text(composite_2, SWT.BORDER);
-		text_3.setBounds(10, 0, 237, 41);
-		xpndtmNewExpanditem_1.setHeight(54);
+		
+		ScrolledComposite scrolledComposite_1 = new ScrolledComposite(expandBar, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		xpndtmNewExpanditem_1.setControl(scrolledComposite_1);
+		scrolledComposite_1.setExpandHorizontal(true);
+		scrolledComposite_1.setExpandVertical(true);
+		
+		Composite composite_2 = new Composite(scrolledComposite_1, SWT.NONE);
+		composite_2.setLayout(new GridLayout(1, false));
+		
+		Button btnRadioButton_1 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_1.setText("English");
+		
+		Button btnRadioButton_2 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_2.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
+		btnRadioButton_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+			}
+		});
+		btnRadioButton_2.setText("Hindi");
+		
+		Button btnRadioButton_3 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_3.setText("Spanish");
+		
+		Button btnRadioButton_4 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_4.setText("French");
+		
+		Button btnRadioButton_5 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_5.setText("Italian");
+		
+		Button btnRadioButton_6 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_6.setText("German");
+		
+		Button btnRadioButton_7 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_7.setText("Malayalam");
+		
+		Button btnRadioButton_8 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_8.setText("Telugu");
+		
+		Button btnRadioButton_9 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_9.setText("Japanese");
+		
+		Button btnRadioButton_10 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_10.setText("Bengali");
+		
+		Button btnRadioButton_11 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_11.setText("Danish");
+		
+		Button btnRadioButton_12 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_12.setText("Dutch");
+		
+		Button btnRadioButton = new Button(composite_2, SWT.RADIO);
+		btnRadioButton.setText("Filipino");
+		
+		Button btnRadioButton_13 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_13.setBounds(0, 0, 90, 16);
+		btnRadioButton_13.setText("Portuguese");
+		
+		Button btnRadioButton_14 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_14.setBounds(0, 0, 90, 16);
+		btnRadioButton_14.setText("Russian");
+		
+		Button btnRadioButton_15 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_15.setBounds(0, 0, 90, 16);
+		btnRadioButton_15.setText("Arabic");
+		
+		Button btnRadioButton_16 = new Button(composite_2, SWT.RADIO);
+		btnRadioButton_16.setBounds(0, 0, 90, 16);
+		btnRadioButton_16.setText("Hebrew");
+		scrolledComposite_1.setContent(composite_2);
+		scrolledComposite_1.setMinSize(composite_2.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		xpndtmNewExpanditem_1.setHeight(120);
 		lblAdvancedSearch.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
 		FormData fd_lblAdvancedSearch = new FormData();
 		fd_lblAdvancedSearch.bottom = new FormAttachment(expandBar, -1);
