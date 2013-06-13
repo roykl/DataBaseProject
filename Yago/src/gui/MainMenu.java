@@ -88,37 +88,6 @@ public class MainMenu extends Shell {
 		txtMovieTitle.setLayoutData(fd_txtMovieTitle);
 
 		Button btnSearch = new Button(this, SWT.NONE);
-		btnSearch.addSelectionListener(new SelectionAdapter() {
-			@Override
-			//Search button pressed
-			public void widgetSelected(SelectionEvent arg0) {
-				//parameters for select - if you need you can send few of these threads
-				String select = SearchQueries.MOVIE_SELECT;
-				String from = SearchQueries.MOVIE_FROM;
-				String where= null;
-				// check if user enered movie name
-				boolean eneredMoive = txtMovieTitle.getText().trim().isEmpty()? false : true;				
-				if (eneredMoive) // if entered a movie, find that movie
-					where = "movie.movieName = '" + txtMovieTitle.getText() +"'";
-				else // user didn't enter movieName so we use the advanced properties
-				    where ="";
-				display.syncExec(new thread_logic.ThreadSearch(operations,select,from,where){
-					@Override
-					public void run(){
-						super.run();
-						ResultSet result = this.getResult();
-						MoviesResults moviesRes = new MoviesResults();
-						moviesRes.setResultsMoive(result);
-						System.out.println(moviesRes.getMoviesResult().toString());
-						
-						//  TODO: ResultSet => MovieInfo =>  table
-					}
-					
-
-
-				});	
-			}
-		});
 		fd_expandBar.bottom = new FormAttachment(btnSearch, -6);
 
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(expandBar, SWT.NONE);
@@ -395,6 +364,37 @@ public class MainMenu extends Shell {
 			fd_btnImport.right = new FormAttachment(btnSearch, 0, SWT.RIGHT);
 			btnImport.setLayoutData(fd_btnImport);
 		}
+		
+		//Search button listener - TODO: complete extracting data from search parameters
+		btnSearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			//Search button pressed
+			public void widgetSelected(SelectionEvent arg0) {
+				//parameters for select - if you need you can send few of these threads
+				String select = SearchQueries.MOVIE_SELECT;
+				String from = SearchQueries.MOVIE_FROM;
+				String where= null;
+				// check if user entered movie name
+				boolean eneredMoive = txtMovieTitle.getText().trim().isEmpty()? false : true;				
+				if (eneredMoive) // if entered a movie, find that movie
+					where = "movie.movieName = '" + txtMovieTitle.getText() +"'";
+				else // user didn't enter movieName so we use the advanced properties
+				    where ="";
+				display.syncExec(new thread_logic.ThreadSearch(operations,select,from,where){
+					@Override
+					public void run(){
+						super.run();
+						ResultSet result = this.getResult();
+						MoviesResults moviesRes = new MoviesResults();
+						moviesRes.setResultsMoive(result);
+						System.out.println(moviesRes.getMoviesResult().toString());
+						
+						//  TODO: ResultSet => MovieInfo =>  table
+					}
+				});	
+			}
+		});
+		
 		createContents();
 	}
 
