@@ -15,6 +15,14 @@ public class SearchQueries {
 			"movie.idLanguage = language.idLanguage\n LEFT OUTER JOIN  director ON  "+
 			"movie.idDirector = director.idDirector\n LEFT OUTER JOIN moviesgrades ON "+
 			"movie.idMovie = moviesgrades.idMovie";
+	
+	public static final String GENRES_SELECT ="genremovie.idMovie, genremovie.idGenre, genre.genreName";
+	
+	public static final String GENRES_FROM ="movie, genremovie,genre";
+	
+	public static final String ACTORS_SELECT = "actormovie.idMovie, actormovie.idActor, actor.actorName";
+	
+	public static final String ACTORS_FROM = "movie, actormovie, actor";
 
 
 	public static void createGenreWhere(TableItem[] genres){
