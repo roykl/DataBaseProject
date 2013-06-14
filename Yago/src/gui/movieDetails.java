@@ -17,10 +17,12 @@ import org.eclipse.swt.widgets.Button;
 import thread_logic.ThreadGrade;
 import thread_logic.ThreadSearch;
 import viewModelLayer.MovieInfo;
+ 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import db.IdbOparations;
+
 
 public class movieDetails extends Shell {
 	private MovieInfo movie;
@@ -55,27 +57,17 @@ public class movieDetails extends Shell {
 	private Button button9;
 	private Button button10;
 	private int idMovie; // TODO
+	private Label lblNumberOfRankers;
+	private Text txtRankers;
+	private Label lblWiki;
+	private Text txtWikiurl;
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	
 	
-	public static void main(String args[]) {
-		try {
-			Display display = Display.getDefault();
-			movieDetails shell = new movieDetails(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 	
 	
 	
@@ -92,44 +84,68 @@ public class movieDetails extends Shell {
 		
 		this.movie = movie;
 		
-		button10 = new Button(this, SWT.RADIO);
+		txtWikiurl = new Text(this, SWT.BORDER);
+		txtWikiurl.setText(movie.wikiUrl);
+		txtWikiurl.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtWikiurl.setBounds(749, 429, 225, 27);
+		
+		lblWiki = new Label(this, SWT.BORDER);
+		lblWiki.setText("   WIKI");
+		lblWiki.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+		lblWiki.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.BOLD));
+		lblWiki.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblWiki.setBounds(613, 431, 88, 25);
+		
+		txtRankers = new Text(this, SWT.BORDER);
+		txtRankers.setText(Integer.toString(movie.numRankers));
+		txtRankers.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtRankers.setBounds(204, 625, 54, 24);
+		
+		lblNumberOfRankers = new Label(this, SWT.BORDER);
+		lblNumberOfRankers.setText("Number Of Rankers");
+		lblNumberOfRankers.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		lblNumberOfRankers.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
+		lblNumberOfRankers.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblNumberOfRankers.setBounds(23, 625, 172, 25);
+		
+		button10 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button10.setText("10");
-		button10.setBounds(447, 643, 27, 26);
+		button10.setBounds(480, 658, 37, 26);
 		
-		button9 = new Button(this, SWT.RADIO);
+		button9 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button9.setText("9");
-		button9.setBounds(414, 643, 27, 26);
+		button9.setBounds(447, 658, 27, 26);
 		
-		button8 = new Button(this, SWT.RADIO);
+		button8 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button8.setText("8");
-		button8.setBounds(381, 643, 27, 26);
+		button8.setBounds(414, 658, 27, 26);
 		
-		button7 = new Button(this, SWT.RADIO);
+		button7 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button7.setText("7");
-		button7.setBounds(348, 643, 27, 26);
+		button7.setBounds(381, 658, 27, 26);
 		
-		button6 = new Button(this, SWT.RADIO);
+		button6 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button6.setText("6");
-		button6.setBounds(315, 643, 27, 26);
+		button6.setBounds(348, 658, 27, 26);
 		
-		button5 = new Button(this, SWT.RADIO);
+		button5 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button5.setText("5");
-		button5.setBounds(281, 643, 27, 26);
+		button5.setBounds(314, 658, 27, 26);
 		
-		button4 = new Button(this, SWT.RADIO);
+		button4 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button4.setText("4");
-		button4.setBounds(248, 643, 27, 26);
+		button4.setBounds(281, 658, 27, 26);
 		
-		button3 = new Button(this, SWT.RADIO);
+		button3 = new Button(this, SWT.BORDER | SWT.RADIO);
 		button3.setText("3");
-		button3.setBounds(215, 643, 27, 26);
+		button3.setBounds(248, 658, 27, 26);
 		
-		button2 = new Button(this, SWT.RADIO);
-		button2.setBounds(182, 643, 27, 26);
+		button2 = new Button(this, SWT.BORDER | SWT.RADIO);
+		button2.setBounds(215, 658, 27, 26);
 		button2.setText("2");
 		
-		button1 = new Button(this, SWT.RADIO);
-		button1.setBounds(149, 643, 27, 26);
+		button1 = new Button(this, SWT.BORDER | SWT.RADIO);
+		button1.setBounds(182, 658, 27, 26);
 		button1.setText("1");
 		
 		btnRankIt = new Button(this, SWT.NONE);
@@ -141,184 +157,183 @@ public class movieDetails extends Shell {
 			}
 		});
 		btnRankIt.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
-		btnRankIt.setBounds(281, 612, 75, 25);
+		btnRankIt.setBounds(530, 657, 75, 25);
 		btnRankIt.setText("Rank it!");
 		
-		lblYourRank = new Label(this, SWT.NONE);
+		lblYourRank = new Label(this, SWT.BORDER);
 		lblYourRank.setText("   Your Rank");
-		lblYourRank.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblYourRank.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lblYourRank.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblYourRank.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblYourRank.setBounds(23, 643, 120, 25);
+		lblYourRank.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblYourRank.setBounds(23, 659, 143, 25);
 		
 		txtGen = new Text(this, SWT.BORDER);
 		if (movie.genresList.get(0)!=null)
 		txtGen.setText(movie.genresList.get(0));
-		txtGen.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtGen.setBounds(530, 598, 50, 24);
+		txtGen.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtGen.setBounds(748, 593, 226, 24);
 		
 		txtActor_3 = new Text(this, SWT.BORDER);
 		if (movie.actorsList.get(3) != null)
 			txtActor_3.setText(movie.actorsList.get(3));
 		 
-		txtActor_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtActor_3.setBounds(640, 657, 112, 26);
+		txtActor_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtActor_3.setBounds(748, 659, 112, 26);
 		
 		txtActor_2 = new Text(this, SWT.BORDER);
 		if (movie.actorsList.get(2) != null)
 			txtActor_2.setText(movie.actorsList.get(2));
 		 
-		txtActor_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtActor_2.setBounds(524, 657, 112, 26);
+		txtActor_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtActor_2.setBounds(866, 659, 108, 25);
 		
 		txtActor = new Text(this, SWT.BORDER);
 		if (movie.actorsList.get(0) != null)
 		txtActor.setText(movie.actorsList.get(0));
-		txtActor.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtActor.setBounds(524, 625, 112, 26);
+		txtActor.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtActor.setBounds(748, 629, 112, 26);
 		
-		lblMovieitGrade = new Label(this, SWT.NONE);
+		lblMovieitGrade = new Label(this, SWT.BORDER);
 		lblMovieitGrade.setText("Movie-it Rank");
-		lblMovieitGrade.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblMovieitGrade.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lblMovieitGrade.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblMovieitGrade.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblMovieitGrade.setBounds(23, 595, 120, 25);
+		lblMovieitGrade.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblMovieitGrade.setBounds(23, 578, 172, 25);
 		
 		txtGenre_2 = new Text(this, SWT.BORDER);
 		if (movie.genresList.get(3)!=null)
 			txtGenre_2.setText(movie.genresList.get(3));
 		 
-		txtGenre_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtGenre_2.setBounds(702, 598, 50, 24);
+		txtGenre_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtGenre_2.setBounds(918, 593, 56, 24);
 		
-		Label lblGenre = new Label(this, SWT.NONE);
+		Label lblGenre = new Label(this, SWT.BORDER);
 		lblGenre.setText("   Genre");
-		lblGenre.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblGenre.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lblGenre.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblGenre.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblGenre.setBounds(437, 592, 81, 23);
+		lblGenre.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblGenre.setBounds(613, 594, 88, 25);
 		
-		Label lblLanguage = new Label(this, SWT.NONE);
+		Label lblLanguage = new Label(this, SWT.BORDER);
 		lblLanguage.setText("Language");
-		lblLanguage.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblLanguage.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lblLanguage.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblLanguage.setBounds(437, 561, 81, 26);
+		lblLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblLanguage.setBounds(613, 560, 88, 27);
 		
-		Label lblDuration = new Label(this, SWT.NONE);
+		Label lblDuration = new Label(this, SWT.BORDER);
 		lblDuration.setText(" Duration");
-		lblDuration.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblDuration.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lblDuration.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblDuration.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblDuration.setBounds(437, 529, 81, 26);
+		lblDuration.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblDuration.setBounds(613, 528, 88, 26);
 		
 		txtYear = new Text(this, SWT.BORDER);
 		txtYear.setText(movie.year);
-		txtYear.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtYear.setBounds(557, 501, 195, 27);
+		txtYear.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtYear.setBounds(749, 495, 225, 27);
 		
-		Label lblYear = new Label(this, SWT.NONE);
+		Label lblYear = new Label(this, SWT.BORDER);
 		lblYear.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.BOLD));
 		lblYear.setText("    Year");
-		lblYear.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		lblYear.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblYear.setBounds(437, 498, 81, 26);
+		lblYear.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+		lblYear.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblYear.setBounds(613, 495, 88, 27);
 		
 		txtLul_1 = new Text(this, SWT.BORDER);
 		txtLul_1.setText(movie.directorName);
-		txtLul_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtLul_1.setBounds(557, 471, 195, 27);
+		txtLul_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtLul_1.setBounds(749, 462, 225, 27);
 		
-		Label lblNewLabel_2 = new Label(this, SWT.NONE);
-		lblNewLabel_2.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblNewLabel_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblNewLabel_2.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		lblNewLabel_2.setBounds(437, 471, 81, 26);
+		Label lblNewLabel_2 = new Label(this, SWT.BORDER);
+		lblNewLabel_2.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.BOLD));
+		lblNewLabel_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblNewLabel_2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+		lblNewLabel_2.setBounds(613, 462, 88, 25);
 		lblNewLabel_2.setText(" Director");
 		
 		Browser browser_1 = new Browser(this, SWT.NONE);
 		browser_1.setUrl(movie.posterUrl);
-		browser_1.setBounds(23, 213, 345, 287);
+		browser_1.setBounds(23, 79, 321, 410);
 		
 		txtMovieName_1 = new Text(this, SWT.BORDER);
 		txtMovieName_1.setText("     Trailer");
-		txtMovieName_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		txtMovieName_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
 		txtMovieName_1.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
-		txtMovieName_1.setBackground(SWTResourceManager.getColor(102, 102, 102));
-		txtMovieName_1.setBounds(557, 170, 112, 27);
+		txtMovieName_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtMovieName_1.setBounds(640, 28, 112, 27);
 		
-		Browser browser = new Browser(this, SWT.NONE);
+		Browser browser = new Browser(this, SWT.BORDER);
 		browser.setUrl(movie.youtubeUrl);
 		browser.setBackground(SWTResourceManager.getColor(102, 102, 102));
-		browser.setBounds(454, 202, 282, 260);
+		browser.setBounds(552, 61, 469, 361);
 		
 		txtMovieName = new Text(this, SWT.BORDER);
 		txtMovieName.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.BOLD));
-		txtMovieName.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		txtMovieName.setBackground(SWTResourceManager.getColor(102, 102, 102));
+		txtMovieName.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+		txtMovieName.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
 		txtMovieName.setText(movie.movieName);
-		txtMovieName.setBounds(23, 169, 238, 38);
+		txtMovieName.setBounds(23, 28, 238, 38);
 		
 		txtDuration = new Text(this, SWT.BORDER);
 		txtDuration.setText(movie.duration);
-		txtDuration.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtDuration.setBounds(557, 532, 195, 26);
+		txtDuration.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtDuration.setBounds(749, 528, 225, 26);
 		
 		txtLanguage = new Text(this, SWT.BORDER);
 		txtLanguage.setText(movie.language);
-		txtLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtLanguage.setBounds(557, 564, 195, 27);
+		txtLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtLanguage.setBounds(749, 560, 225, 27);
 		
-		Label lblPlot = new Label(this, SWT.NONE);
-		lblPlot.setText(movie.plot);
-		lblPlot.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		lblPlot.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblPlot.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblPlot.setBounds(23, 507, 44, 24);
+		Label lblPlot = new Label(this, SWT.BORDER | SWT.SHADOW_IN);
+		lblPlot.setText("  Plot");
+		lblPlot.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+		lblPlot.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+		lblPlot.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblPlot.setBounds(23, 495, 67, 32);
 		
 		txtPlot = new Text(this, SWT.BORDER);
-		txtPlot.setText("Plot");
-		txtPlot.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtPlot.setBounds(73, 510, 295, 77);
+		txtPlot.setText(movie.plot);
+		txtPlot.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtPlot.setBounds(110, 495, 295, 77);
 		
 		txtLul = new Text(this, SWT.BORDER);
 		txtLul.setText(Double.toString(movie.grade));
-		txtLul.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtLul.setBounds(159, 593, 50, 24);
+		txtLul.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtLul.setBounds(201, 578, 54, 24);
 		
-		lblActors = new Label(this, SWT.NONE);
+		lblActors = new Label(this, SWT.BORDER);
 		lblActors.setText("   Actors");
-		lblActors.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblActors.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lblActors.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblActors.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		lblActors.setBounds(437, 621, 81, 23);
+		lblActors.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblActors.setBounds(613, 628, 88, 23);
 		
 		txtActor_1 = new Text(this, SWT.BORDER);
 		if (movie.actorsList.get(1) != null)
 			txtActor_1.setText(movie.actorsList.get(1));
 
-		txtActor_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtActor_1.setBounds(640, 625, 112, 26);
+		txtActor_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtActor_1.setBounds(866, 629, 108, 26);
 		
 		txtGenre_1 = new Text(this, SWT.BORDER);
 		if (movie.genresList.get(2)!=null)
 			txtGenre_1.setText(movie.genresList.get(2));
 		
-		txtGenre_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtGenre_1.setBounds(646, 598, 50, 24);
+		txtGenre_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtGenre_1.setBounds(862, 593, 112, 24);
 		
 		txtGenre = new Text(this, SWT.BORDER);
 		if (movie.genresList.get(1)!=null)
 			txtGenre.setText(movie.genresList.get(1));
 		
-		txtGenre.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		txtGenre.setBounds(586, 598, 50, 24);
+		txtGenre.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		txtGenre.setBounds(806, 593, 168, 24);
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
-		lblNewLabel.setText("BackGround");
-		lblNewLabel.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD));
-		lblNewLabel.setImage(SWTResourceManager.getImage(movieDetails.class, "/movieDetails.jpg"));
-		lblNewLabel.setBounds(10, -140, 790, 1054);
+		lblNewLabel.setImage(SWTResourceManager.getImage(movieDetails.class, "/movie-theaters-and-venues.jpg"));
+		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblNewLabel.setBounds(10, -36, 1095, 809);
 		createContents();
 	}
 
@@ -326,7 +341,7 @@ public class movieDetails extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setSize(783, 798);
+		setSize(1064, 825);
 
 	}
 
