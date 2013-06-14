@@ -329,8 +329,8 @@ public class MainMenu extends Shell {
 			btnImport.setLayoutData(fd_btnImport);
 		}
 
-		
-		
+
+
 		//Search button listener - TODO: complete extracting data from search parameters
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -338,12 +338,12 @@ public class MainMenu extends Shell {
 			public void widgetSelected(SelectionEvent arg0) {
 				boolean enteredMovieName = false;
 				boolean performSearch = true;
-				
+
 				SearchQueries sq = new SearchQueries();
-				
+
 				//check if user entered movie name
 				if (!sq.createWheres(txtMovieTitle.getText())){
-					// the user didn't entered movie name
+					// the user didn't entered movie name so we use the advanced properties
 					System.out.println("user didn't enter movie name");
 
 					String language = null;
@@ -357,8 +357,8 @@ public class MainMenu extends Shell {
 					System.out.println("SELECT - " + sq.selectProp);
 					System.out.println("FROM- " + sq.fromProp);
 					System.out.println("WHERE- " + sq.whereProp);
-					
-					
+
+
 
 					display.syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp + " ORDER BY year desc LIMIT 0, 20"){
 						@Override
@@ -371,15 +371,15 @@ public class MainMenu extends Shell {
 								e.printStackTrace();
 							}
 
-							 moviesIds = this.getResult();
-						//	sq.createFromMoviesIds(moviesIds);
+							moviesIds = this.getResult();
+							//	sq.createFromMoviesIds(moviesIds);
 						}
 					});
-					
+
 					sq.createFromMoviesIds(moviesIds);
 				}
 				else {
-					// user enter movieName so we use the advanced properties
+					// user enter movieName 
 					enteredMovieName = true;				
 				}
 				if (sq.preformSearch){
@@ -387,18 +387,24 @@ public class MainMenu extends Shell {
 					System.out.println("SELECT - " + SearchQueries.MOVIE_SELECT);
 					System.out.println("FROM- " + SearchQueries.MOVIE_FROM);
 					System.out.println("WHERE- " + sq.whereMovie);
-					
+
 					display.syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie,
 							SearchQueries.GENRES_SELECT,  SearchQueries.GENRES_FROM,  sq.whereGenre,
 							SearchQueries.ACTORS_SELECT, SearchQueries.ACTORS_FROM, sq.whereActor){
 						@Override		
 						public void run(){
 							super.run();
+							try {
+								this.join();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							ResultSet resultMovie = this.getResultMovie();
 							ResultSet resultGenre = this.getResultGenre();
 							ResultSet resultActor = this.getResultActor();
 
-							MoviesResults moviesRes = new MoviesResults();
+							moviesRes = new MoviesResults();
 							moviesRes.setResultsMoive(resultMovie);
 							moviesRes.setResultsGenre(resultGenre);
 							moviesRes.setResultsActors(resultActor);
@@ -407,10 +413,10 @@ public class MainMenu extends Shell {
 							System.out.println(moviesRes.getMoviesResult().toString());
 						}
 					});
-
+					displaySearchResults(searchResultsList, moviesRes.getMoviesResult());
 				}			
 				else{
-					;
+					 displaySearchResults(searchResultsList, null);
 				}
 			}
 		});
@@ -427,7 +433,9 @@ public class MainMenu extends Shell {
 			}
 		});	
 	}
+	
 	ResultSet moviesIds;
+	MoviesResults moviesRes;
 
 	/**
 	 * Create contents of the shell.
@@ -453,34 +461,34 @@ public class MainMenu extends Shell {
 			//final boolean importRunnig ;
 			final AtomicBoolean importRunnig = new AtomicBoolean(true);
 			//progress bar thread
-			 new Thread() {
+			new Thread() {
 				@Override
 				public void run(){
-					
+
 					JFrame theFrame =  new JFrame();
 					showProgressBar(theFrame);
-					
-						while(importRunnig.get()){
-							try {
-								sleep(1000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+
+					while(importRunnig.get()){
+						try {
+							sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-					
-						theFrame.dispose();
-						
-						return;
-					
-					
+					}
+
+					theFrame.dispose();
+
+					return;
+
+
 				}
 			}.start();
 
 			//import thread
 			display.syncExec(new thread_logic.ThreadImport(operations){
-				 
-				
+
+
 				@Override
 				public void run(){
 					try {
@@ -492,7 +500,7 @@ public class MainMenu extends Shell {
 						setEnabledRecursive(display.getActiveShell(), true);
 						return;
 					} catch (InterruptedException e) {
-											}
+					}
 				}
 			});	
 			break; 
@@ -526,30 +534,30 @@ public class MainMenu extends Shell {
 		theFrame.setSize(500, 40);
 		theFrame.setLocation(450,350);
 		theFrame.show();
-		
+
 	}
 
-	
+
 	public static void setEnabledRecursive(final Composite composite, final boolean enabled)
 	{
-	    //Check.notNull(composite, "composite"); //$NON-NLS-1$
+		//Check.notNull(composite, "composite"); //$NON-NLS-1$
 
-	    Control[] children = composite.getChildren();
+		Control[] children = composite.getChildren();
 
-	    for (int i = 0; i < children.length; i++)
-	    {
-	        if (children[i] instanceof Composite)
-	        {
-	            setEnabledRecursive((Composite) children[i], enabled);
-	        }
-	        else
-	        {
-	            //children[i].setEnabled(enabled);
-	            children[i].setVisible(enabled);
-	        }
-	    }
+		for (int i = 0; i < children.length; i++)
+		{
+			if (children[i] instanceof Composite)
+			{
+				setEnabledRecursive((Composite) children[i], enabled);
+			}
+			else
+			{
+				//children[i].setEnabled(enabled);
+				children[i].setVisible(enabled);
+			}
+		}
 
-	    composite.setEnabled(enabled);
+		composite.setEnabled(enabled);
 	}
-	
+
 }
