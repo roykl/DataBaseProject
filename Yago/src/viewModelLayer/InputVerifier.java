@@ -19,7 +19,7 @@ public class InputVerifier {
 	public static boolean validateYear(String from, String to){
 		int fromYear = Integer.parseInt(from);
 		int toYear = Integer.parseInt(to);
-		if (toYear > fromYear || fromYear > 2013)
+		if (fromYear > toYear || fromYear > 2013 || (fromYear < 1901 && toYear > 2013))
 			return false;
 		else
 			return true;
