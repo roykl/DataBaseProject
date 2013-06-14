@@ -1,12 +1,22 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -308,7 +318,7 @@ public class MainMenu extends Shell {
 				@Override
 				//Import button pressed
 				public void widgetSelected(SelectionEvent arg0) {
-					massiveImport(display, operations);
+					Import(display,operations);
 				}
 			});
 			btnImport.setText("Import");
@@ -431,4 +441,115 @@ public class MainMenu extends Shell {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
+	private void Import(final Display display, IdbOparations operations ){
+
+		MessageBox messageBox = new MessageBox(display.getActiveShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		messageBox.setText("Import");
+		messageBox.setMessage("This action may take a few minutes.\nDo you wish to continue? ");
+		int buttonID = messageBox.open();
+		switch(buttonID) {
+		case SWT.YES: //call import thread
+
+			//final boolean importRunnig ;
+			final AtomicBoolean importRunnig = new AtomicBoolean(true);
+			//progress bar thread
+			 new Thread() {
+				@Override
+				public void run(){
+					
+					JFrame theFrame =  new JFrame();
+					showProgressBar(theFrame);
+					
+						while(importRunnig.get()){
+							try {
+								sleep(1000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					
+						theFrame.dispose();
+						
+						return;
+					
+					
+				}
+			}.start();
+
+			//import thread
+			display.syncExec(new thread_logic.ThreadImport(operations){
+				 
+				
+				@Override
+				public void run(){
+					try {
+						//disable form
+						setEnabledRecursive(display.getActiveShell(), false);
+						sleep(5000); //super.run();
+						importRunnig.set(false);
+						//enable form
+						setEnabledRecursive(display.getActiveShell(), true);
+						return;
+					} catch (InterruptedException e) {
+											}
+				}
+			});	
+			break; 
+
+		case SWT.NO:
+			//dispose();
+			break;
+
+		}
+
+
+
+	}
+
+	private void showProgressBar( JFrame theFrame){
+		final JProgressBar aJProgressBar = new JProgressBar(0, 100);
+		aJProgressBar.setIndeterminate(true);
+		aJProgressBar.setBackground(Color.DARK_GRAY);
+		//
+		theFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
+		JLabel label1 = new JLabel("Processing...",SwingConstants.CENTER );
+
+
+		Container contentPane = theFrame.getContentPane();
+		contentPane.add(aJProgressBar, BorderLayout.SOUTH);
+		contentPane.add(label1, BorderLayout.NORTH);
+		theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//on top
+		theFrame.setResizable(false);
+		theFrame.setUndecorated(true);
+		theFrame.setSize(500, 40);
+		theFrame.setLocation(450,350);
+		theFrame.show();
+		
+	}
+
+	
+	public static void setEnabledRecursive(final Composite composite, final boolean enabled)
+	{
+	    //Check.notNull(composite, "composite"); //$NON-NLS-1$
+
+	    Control[] children = composite.getChildren();
+
+	    for (int i = 0; i < children.length; i++)
+	    {
+	        if (children[i] instanceof Composite)
+	        {
+	            setEnabledRecursive((Composite) children[i], enabled);
+	        }
+	        else
+	        {
+	            //children[i].setEnabled(enabled);
+	            children[i].setVisible(enabled);
+	        }
+	    }
+
+	    composite.setEnabled(enabled);
+	}
+	
 }
