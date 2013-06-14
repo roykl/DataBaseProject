@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridData;
 
 import thread_logic.MultiThreadSearch;
 import thread_logic.ThreadSearch;
+import viewModelLayer.MovieInfo;
 import viewModelLayer.MoviesResults;
 import viewModelLayer.SearchQueries;
 import org.eclipse.swt.widgets.Table;
@@ -86,11 +87,11 @@ public class MainMenu extends Shell {
 		fd_composite.left = new FormAttachment(0, 292);
 		composite.setLayoutData(fd_composite);
 
-		List list = new List(composite, SWT.NONE);
-		list.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		list.setItems(new String[] {});
-		list.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-		list.setBounds(21, 21, 997, 486);
+		final List searchResultsList = new List(composite, SWT.NONE);
+		searchResultsList.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		searchResultsList.setItems(new String[] {});
+		searchResultsList.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+		searchResultsList.setBounds(21, 21, 997, 486);
 
 		Label lblNewLabel = new Label(composite, SWT.NONE);
 		lblNewLabel.setImage(SWTResourceManager.getImage(MainMenu.class, "/video screen.jpg"));
@@ -441,7 +442,7 @@ public class MainMenu extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("MoveIt!");
+		setText("MovIt!");
 
 	}
 
@@ -480,7 +481,6 @@ public class MainMenu extends Shell {
 					theFrame.dispose();
 
 					return;
-
 
 				}
 			}.start();
@@ -538,8 +538,7 @@ public class MainMenu extends Shell {
 	}
 
 
-	public static void setEnabledRecursive(final Composite composite, final boolean enabled)
-	{
+	public static void setEnabledRecursive(final Composite composite, final boolean enabled){
 		//Check.notNull(composite, "composite"); //$NON-NLS-1$
 
 		Control[] children = composite.getChildren();
@@ -559,5 +558,19 @@ public class MainMenu extends Shell {
 
 		composite.setEnabled(enabled);
 	}
+	
+	/**
+	 * 
+	 * @param searchResultsList
+	 * @param moviesResult
+	 */
+	private void displaySearchResults(List searchResultsList, ArrayList<MovieInfo> moviesResult) {
+		//clear the list of previous results
+		searchResultsList.removeAll();
+		if(moviesResult == null || moviesResult.isEmpty()){
+			searchResultsList.add("Oops...Your search did not return any matches");
+		}
+	}
+
 
 }
