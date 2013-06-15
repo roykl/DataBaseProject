@@ -166,8 +166,8 @@ public class SearchQueries {
 			}
 		}
 		if(actorExists)
-			whereProp +=  " AND actormovie.idActor= actor.idActor " +
-					" AND actormovie.idMovie = movie.idMovie) ";
+			whereProp +=  ") AND actormovie.idActor= actor.idActor " +
+					" AND actormovie.idMovie = movie.idMovie ";
 
 
 		

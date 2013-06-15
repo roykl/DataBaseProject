@@ -16,6 +16,12 @@ public class InputVerifier {
 		return true;
 	}
 	
+	public static boolean verifyInput(String input){
+		if(!input.matches("[a-zA-Z0-9]+"))
+			return false;
+		else return true;
+	}
+	
 	public static boolean validateYear(String from, String to){
 		int fromYear = Integer.parseInt(from);
 		int toYear = Integer.parseInt(to);
