@@ -361,7 +361,7 @@ public class MainMenu extends Shell {
 
 
 
-					display.syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp + " ORDER BY year desc LIMIT 0, 20"){
+					display.syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp + " ORDER BY year desc LIMIT 0, 80"){
 						@Override
 						public void run(){
 							super.run();
@@ -389,7 +389,7 @@ public class MainMenu extends Shell {
 					System.out.println("FROM- " + SearchQueries.MOVIE_FROM);
 					System.out.println("WHERE- " + sq.whereMovie);
 
-					display.syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie,
+					display.syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
 							SearchQueries.GENRES_SELECT,  SearchQueries.GENRES_FROM,  sq.whereGenre,
 							SearchQueries.ACTORS_SELECT, SearchQueries.ACTORS_FROM, sq.whereActor){
 						@Override		

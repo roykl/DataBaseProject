@@ -192,6 +192,7 @@ public class SearchQueries {
 		
 
 		System.out.println("Before LANGUAGE:");
+		
 		// language
 		if(language != null){
 			if(!isWhereEmpty)
@@ -215,22 +216,31 @@ public class SearchQueries {
 		try {			
 			System.out.println("I'm in createFromMoviesIds");
 			while(moviesIds.next()){
-				System.out.println("MOVIE ID: " + moviesIds.getInt(1));
 				if(isFirst){				
 					whereMovie = "movie.idMovie = " + moviesIds.getInt(1);
-					whereGenre =  "movie.idMovie = "  + moviesIds.getInt(1) +" AND genremovie.idMovie = movie.idMovie AND genremovie.idGenre = genre.idGenre";
-					whereActor =  "movie.idMovie = "  + moviesIds.getInt(1) +" AND actormovie.idMovie = movie.idMovie AND actormovie.idActor = actor.idActor";
+					whereGenre =  "(movie.idMovie = "  + moviesIds.getInt(1); 
+					whereActor =  "(movie.idMovie = "  + moviesIds.getInt(1);
 					isFirst = false;
 				}
 				else{
 				whereMovie += " OR movie.idMovie = " + moviesIds.getInt(1);
-				whereGenre +=  " OR movie.idMovie = "  + moviesIds.getInt(1) +" AND genremovie.idMovie = movie.idMovie AND genremovie.idGenre = genre.idGenre";
-				whereActor +=  " OR movie.idMovie = "  + moviesIds.getInt(1) +" AND actormovie.idMovie = movie.idMovie AND actormovie.idActor = actor.idActor";
+				whereGenre +=  " OR movie.idMovie = "  + moviesIds.getInt(1);
+				whereActor +=  " OR movie.idMovie = "  + moviesIds.getInt(1);
 				}
 			}
+			whereGenre += ") AND genremovie.idMovie = movie.idMovie AND genremovie.idGenre = genre.idGenre ";
+			whereActor += ") AND actormovie.idMovie = movie.idMovie AND actormovie.idActor = actor.idActor ";
+			
 			preformSearch = !isFirst;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally{
+			try {
+				moviesIds.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
