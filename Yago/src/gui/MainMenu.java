@@ -361,7 +361,7 @@ public class MainMenu extends Shell {
 
 
 
-					display.syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp + " ORDER BY year desc LIMIT 0, 80"){
+					display.syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp){
 						@Override
 						public void run(){
 							super.run();

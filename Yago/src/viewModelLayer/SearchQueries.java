@@ -199,6 +199,17 @@ public class SearchQueries {
 				whereProp += " AND ";
 			fromProp += ", language";
 			whereProp += " language.LanguageName = '" + language + "' AND language.idLanguage = movie.idLanguage";
+			
+			isWhereEmpty = false;
+		}
+		
+		if(isWhereEmpty){
+			//lets find movies with best grade
+			fromProp += ", moviesgrades";
+			whereProp += "movie.idMovie = moviesgrades.idMovie ORDER BY grade desc, year desc";			
+		}
+		else{
+		  whereProp += " ORDER BY year desc LIMIT 0, 40 ";
 		}
 		
 		System.out.println("AFTER LANGUAGE:");
