@@ -17,15 +17,13 @@ public class InputVerifier {
 	}
 	
 	public static boolean verifyInput(String input){
-		if(!input.matches("[a-zA-Z0-9]+"))
+		if(input.contains("'") || input.contains("\""))
 			return false;
 		else return true;
 	}
 	
-	public static boolean validateYear(String from, String to){
-		int fromYear = Integer.parseInt(from);
-		int toYear = Integer.parseInt(to);
-		if (fromYear > toYear || fromYear > 2013 || (fromYear < 1901 && toYear > 2013))
+	public static boolean validateYear(int from, int to){
+		if (from > to || from > 2013 || (from < 1901 && to > 2013))
 			return false;
 		else
 			return true;

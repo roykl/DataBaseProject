@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridData;
 
 import thread_logic.MultiThreadSearch;
 import thread_logic.ThreadSearch;
+import viewModelLayer.InputVerifier;
 import viewModelLayer.MovieInfo;
 import viewModelLayer.MoviesResults;
 import viewModelLayer.SearchQueries;
@@ -261,6 +262,7 @@ public class MainMenu extends Shell {
 		xpndtmActors.setHeight(118);
 
 		ExpandItem xpndtmYear = new ExpandItem(expandBar, 0);
+		xpndtmYear.setExpanded(true);
 		xpndtmYear.setText("Years");
 
 		Composite composite_5 = new Composite(expandBar, SWT.NONE);
@@ -350,13 +352,47 @@ public class MainMenu extends Shell {
 				if (!sq.createWheres(txtMovieTitle.getText())){
 					// the user didn't entered movie name so we use the advanced properties
 					System.out.println("user didn't enter movie name");
+					
+					//check director name is correct
+					if(!text.getText().trim().isEmpty() && !InputVerifier.verifyInput(text.getText())){
+						// director was entered but it's not correct
+						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+						messageBox.setText("Illegal Director Name");
+						messageBox.setMessage("Director Name should not contain ' or " + '"');
+						messageBox.open();	
+						return;
+					}
+					
+					//check actor name is correct
+					if((!actorTxtBox1.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox1.getText()))
+						|| (!actorTxtBox2.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox2.getText()))
+						|| (!actorTxtBox3.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox3.getText()))){
+						// actor was added but it's not correct
+						
+						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+						messageBox.setText("Illegal Actor Name");
+						messageBox.setMessage("Actor Name should not contain ' or " + '"');
+						messageBox.open();	
+						return;						
+					}
+					
+					System.out.println(yearFromSpinner.getSelection());
+					
+					//check years are correct
+					if(yearFromSpinner.getSelection() > yearToSpinner.getSelection()){
+						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+						messageBox.setText("Illegal Year Format");
+						messageBox.setMessage("From can't be greater than To");
+						messageBox.open();	
+						return;
+					}
 
 					String language = null;
 					if(languageList.getSelectionCount() > 0)
 						language = languageList.getSelection()[0];
 
 					sq.createWheresFromProperties(genreTable.getItems(), text.getText(), actorTxtBox3.getText(),
-							actorTxtBox2.getText(), actorTxtBox1.getText(), yearFromSpinner.getText(),yearToSpinner.getText(), language);
+							actorTxtBox2.getText(), actorTxtBox1.getText(), yearFromSpinner.getSelection(),yearToSpinner.getSelection(), language);
 
 					System.out.println("-----------------------------------");
 					System.out.println("SELECT - " + sq.selectProp);
@@ -385,7 +421,18 @@ public class MainMenu extends Shell {
 				}
 				else {
 					// user enter movieName 
-					enteredMovieName = true;				
+					enteredMovieName = true;
+					// verify that the input is ok
+					if (!InputVerifier.verifyInput(txtMovieTitle.getText())){
+						// input not ok
+						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+						messageBox.setText("Illegal Movie Title");
+						messageBox.setMessage("Movie Title should not contain ' or " + '"');
+						messageBox.open();	
+						return;
+					}
+						
+					
 				}
 				if (sq.preformSearch){
 					System.out.println("**********************************************");
@@ -421,7 +468,7 @@ public class MainMenu extends Shell {
 					displaySearchResults(searchResultsList, moviesRes.getMoviesResult());
 				}			
 				else{
-					 displaySearchResults(searchResultsList, null);
+					// displaySearchResults(searchResultsList, null);
 				}
 			}
 		});

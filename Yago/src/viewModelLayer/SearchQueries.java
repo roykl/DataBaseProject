@@ -68,7 +68,7 @@ public class SearchQueries {
 
 	public void createWheresFromProperties(TableItem[] genreItems,
 			String directorName, String actor1, String actor2, String actor3,
-			String yearFrom, String yearTo, String language) {
+			int yearFrom, int yearTo, String language) {
 
 
 		boolean isWhereEmpty = true;
