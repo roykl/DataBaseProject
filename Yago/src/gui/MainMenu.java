@@ -611,22 +611,35 @@ public class MainMenu extends Shell {
 	}
 	
 	/**
-	 * 
-	 * @param searchResultsList
-	 * @param moviesResult
-	 */
-	private void displaySearchResults(List searchResultsList, ArrayList<MovieInfo> moviesResult) {
-		//clear the list of previous results
-		searchResultsList.removeAll();
-		if(moviesResult == null || moviesResult.isEmpty()){
-			searchResultsList.add("Oops...Your search did not return any matches");
-		}
-		else{
-			if(moviesResult.size() == 1){
-				//MovieDetails details = new MovieDetails(display, operations, idUser, moviesResult.get(0));
-			}
-		}
-	}
+     * 
+     * @param searchResultsList
+     * @param moviesResult
+     */
+    private void displaySearchResults(List searchResultsList, ArrayList<MovieInfo> moviesResult) {
+        //clear the list of previous results
+        searchResultsList.removeAll();
+        //no search results found
+        if(moviesResult == null || moviesResult.isEmpty()){
+            searchResultsList.add("Oops...Your search did not return any matches");
+        }
+        else{
+            //one result opens movie details immediately
+            if(moviesResult.size() == 1){ //TODO - change idUser to meaningful
+                MovieDetails detailsShell = new MovieDetails(display, operations, 0, moviesResult.get(0));
+                detailsShell.open();
+                detailsShell.layout();
+                while (!detailsShell.isDisposed()) {
+                    if (!display.readAndDispatch()) {
+                        display.sleep();
+                    }
+                }
+            }
+            //add search results to the list
+            for (MovieInfo movieInfo : moviesResult) {
+                searchResultsList.add(movieInfo.movieName);
+            }
+        }
+    }
 
 
 }

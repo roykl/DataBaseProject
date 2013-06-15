@@ -51,8 +51,8 @@ public class MovieInfo {
 	public String plot;
 	public double grade;
 	public int numRankers;
-	public HashMap<Integer, String> actorsList;
-	public HashMap<Integer, String> genresList;
+	public HashMap<Integer, String> actorsList; //
+	public HashMap<Integer, String> genresList; //
 	public String youtubeUrl;
 	public String posterUrl;
 
