@@ -10,27 +10,27 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class SearchQueries {
 
-	public static final String MOVIE_SELECT = "movie.idMovie, movieName, movie.idLanguage, LanguageName, movie.idDirector, directorName, year, wiki," +
+	public static final String MOVIE_SELECT = "Movie.idMovie, movieName, Movie.idLanguage, LanguageName, Movie.idDirector, directorName, year, wiki," +
 			"duration, plot, grade, numberOfRankers";
 
-	public static final String MOVIE_FROM = "movie LEFT OUTER JOIN language ON " +
-			"movie.idLanguage = language.idLanguage\n LEFT OUTER JOIN  director ON  "+
-			"movie.idDirector = director.idDirector\n LEFT OUTER JOIN moviesgrades ON "+
-			"movie.idMovie = moviesgrades.idMovie";
+	public static final String MOVIE_FROM = "Movie LEFT OUTER JOIN Language ON " +
+			"Movie.idLanguage = Language.idLanguage\n LEFT OUTER JOIN  Director ON  "+
+			"Movie.idDirector = Director.idDirector\n LEFT OUTER JOIN MoviesGrades ON "+
+			"Movie.idMovie = MoviesGrades.idMovie";
 
-	public static final String GENRES_SELECT ="genremovie.idMovie, genremovie.idGenre, genre.genreName";
+	public static final String GENRES_SELECT ="GenreMovie.idMovie, GenreMovie.idGenre, Genre.genreName";
 
-	public static final String GENRES_FROM ="movie, genremovie,genre";
+	public static final String GENRES_FROM ="Movie, GenreMovie,Genre";
 
-	public static final String ACTORS_SELECT = "actormovie.idMovie, actormovie.idActor, actor.actorName";
+	public static final String ACTORS_SELECT = "ActorMovie.idMovie, ActorMovie.idActor, Actor.actorName";
 
-	public static final String ACTORS_FROM = "movie, actormovie, actor";
+	public static final String ACTORS_FROM = "Movie, ActorMovie, Actor";
 
 	public String whereMovie;
 	public String whereGenre;
 	public String whereActor;
-	public String selectProp = "DISTINCT movie.idMovie";
-	public String fromProp = "movie";
+	public String selectProp = "DISTINCT Movie.idMovie";
+	public String fromProp = "Movie";
 	public String whereProp = "";
 	public boolean preformSearch = true;
 
@@ -52,11 +52,11 @@ public class SearchQueries {
 	public  boolean createWheres(String movieName){
 		boolean enteredMoive = movieName.trim().isEmpty()? false : true;
 		if (enteredMoive){ // if entered a movie, find that movie
-			whereMovie = "movie.movieName = '" + movieName +"'";
-			whereGenre = "movie.movieName = '" + movieName +"'" +
-					" AND genremovie.idMovie = movie.idMovie AND genremovie.idGenre = genre.idGenre";
-			whereActor =  "movie.movieName = '" + movieName +"'" +
-					" AND actormovie.idMovie = movie.idMovie AND actormovie.idActor = actor.idactor";
+			whereMovie = "Movie.movieName = '" + movieName +"'";
+			whereGenre = "Movie.movieName = '" + movieName +"'" +
+					" AND GenreMovie.idMovie = Movie.idMovie AND GenreMovie.idGenre = Genre.idGenre";
+			whereActor =  "Movie.movieName = '" + movieName +"'" +
+					" AND ActorMovie.idMovie = Movie.idMovie AND ActorMovie.idActor = Actor.idactor";
 
 			System.out.println("user entered movie name!!!!");
 			return true;
@@ -82,20 +82,20 @@ public class SearchQueries {
 		}
 		else{
 			if(genreList.size() == 1){
-				fromProp +=", genremovie ";
-				whereProp += "genremovie.idGenre = " + genreList.get(0).hashCode() +
-							" AND genremovie.idMovie = movie.idMovie";
+				fromProp +=", GenreMovie ";
+				whereProp += "GenreMovie.idGenre = " + genreList.get(0).hashCode() +
+							" AND GenreMovie.idMovie = Movie.idMovie";
 			}
 			else if(genreList.size() == 2){
-				fromProp +=", genremovie as A, genremovie as B ";
+				fromProp +=", GenreMovie as A, GenreMovie as B ";
 				whereProp += "A.idGenre= " + genreList.get(0).hashCode() + " AND B.idGenre= " +
-						genreList.get(1).hashCode() + " AND A.idMovie = B.idMovie AND A.idMovie= movie.idMovie";
+						genreList.get(1).hashCode() + " AND A.idMovie = B.idMovie AND A.idMovie= Movie.idMovie";
 			}
 			else if(genreList.size() == 3){
-				fromProp +=", genremovie as A, genremovie as B , genremovie as C ";
+				fromProp +=", GenreMovie as A, GenreMovie as B , GenreMovie as C ";
 				whereProp += "A.idGenre= " + genreList.get(0).hashCode() + " AND B.idGenre= " +						
 						genreList.get(1).hashCode() + " AND C.idGenre= "+ genreList.get(2).hashCode()+
-						" AND A.idMovie = B.idMovie AND B.idMovie = C.idMovie AND A.idMovie = C.idMovie  AND A.idMovie= movie.idMovie";
+						" AND A.idMovie = B.idMovie AND B.idMovie = C.idMovie AND A.idMovie = C.idMovie  AND A.idMovie= Movie.idMovie";
 			}
 			isWhereEmpty = false;
 		}
@@ -109,11 +109,11 @@ public class SearchQueries {
 		// director
 		if(!directorName.trim().isEmpty()){
 			//user entered director name
-			fromProp += ", director";
+			fromProp += ", Director";
 			if(!isWhereEmpty)
 				whereProp += " AND ";
-			whereProp += "director.directorName = '" + directorName + "' AND director.idDirector =" +
-					" movie.idDirector";
+			whereProp += "Director.directorName = '" + directorName + "' AND Director.idDirector =" +
+					" Movie.idDirector";
 			isWhereEmpty = false;
 		}
 		
@@ -127,7 +127,7 @@ public class SearchQueries {
 		boolean actorExists = false;
 		int count = 0;
 		if(!actor1.trim().isEmpty() ||  !actor2.trim().isEmpty() || !actor3.trim().isEmpty()){
-			fromProp += ", actormovie, actor";
+			fromProp += ", ActorMovie, Actor";
 			if(!isWhereEmpty)
 				whereProp += " AND ";
 			whereProp += "(";
@@ -144,7 +144,7 @@ public class SearchQueries {
 		}
 
 		if(!actor1.trim().isEmpty()){
-			whereProp += "actor.actorName= '" + actor1 + "'";
+			whereProp += "Actor.actorName= '" + actor1 + "'";
 			if(count >1){
 				count--;
 				whereProp += " OR ";
@@ -152,22 +152,22 @@ public class SearchQueries {
 		}
 
 		if(!actor2.trim().isEmpty()){
-			whereProp += "actor.actorName= '" + actor2 + "'";	
+			whereProp += "Actor.actorName= '" + actor2 + "'";	
 			if(count >1){
 				count--;
 				whereProp += " OR ";
 			}
 		}
 		if(!actor3.trim().isEmpty()){
-			whereProp += "actor.actorName= '" + actor3 + "'";	
+			whereProp += "Actor.actorName= '" + actor3 + "'";	
 			if(count >1){
 				count--;
 				whereProp += " OR ";
 			}
 		}
 		if(actorExists)
-			whereProp +=  ") AND actormovie.idActor= actor.idActor " +
-					" AND actormovie.idMovie = movie.idMovie ";
+			whereProp +=  ") AND ActorMovie.idActor= Actor.idActor " +
+					" AND ActorMovie.idMovie = Movie.idMovie ";
 
 
 		
@@ -182,7 +182,7 @@ public class SearchQueries {
 		if(InputVerifier.validateYear(yearFrom, yearTo)){
 			if(!isWhereEmpty)
 				whereProp += " AND ";
-			whereProp += "movie.year >= "+ yearFrom + " AND movie.year <= " + yearTo;			
+			whereProp += "Movie.year >= "+ yearFrom + " AND Movie.year <= " + yearTo;			
 			isWhereEmpty = false;
 		}
 
@@ -197,16 +197,16 @@ public class SearchQueries {
 		if(language != null){
 			if(!isWhereEmpty)
 				whereProp += " AND ";
-			fromProp += ", language";
-			whereProp += " language.LanguageName = '" + language + "' AND language.idLanguage = movie.idLanguage";
+			fromProp += ", Language";
+			whereProp += " Language.LanguageName = '" + language + "' AND Language.idLanguage = Movie.idLanguage";
 			
 			isWhereEmpty = false;
 		}
 		
 		if(isWhereEmpty){
 			//lets find movies with best grade
-			fromProp += ", moviesgrades";
-			whereProp += "movie.idMovie = moviesgrades.idMovie ORDER BY grade desc, year desc";			
+			fromProp += ", MoviesGrades";
+			whereProp += "Movie.idMovie = MoviesGrades.idMovie ORDER BY grade desc, year desc";			
 		}
 		else{
 		  whereProp += " ORDER BY year desc LIMIT 0, 40 ";
@@ -228,19 +228,19 @@ public class SearchQueries {
 			System.out.println("I'm in createFromMoviesIds");
 			while(moviesIds.next()){
 				if(isFirst){				
-					whereMovie = "movie.idMovie = " + moviesIds.getInt(1);
-					whereGenre =  "(movie.idMovie = "  + moviesIds.getInt(1); 
-					whereActor =  "(movie.idMovie = "  + moviesIds.getInt(1);
+					whereMovie = "Movie.idMovie = " + moviesIds.getInt(1);
+					whereGenre =  "(Movie.idMovie = "  + moviesIds.getInt(1); 
+					whereActor =  "(Movie.idMovie = "  + moviesIds.getInt(1);
 					isFirst = false;
 				}
 				else{
-				whereMovie += " OR movie.idMovie = " + moviesIds.getInt(1);
-				whereGenre +=  " OR movie.idMovie = "  + moviesIds.getInt(1);
-				whereActor +=  " OR movie.idMovie = "  + moviesIds.getInt(1);
+				whereMovie += " OR Movie.idMovie = " + moviesIds.getInt(1);
+				whereGenre +=  " OR Movie.idMovie = "  + moviesIds.getInt(1);
+				whereActor +=  " OR Movie.idMovie = "  + moviesIds.getInt(1);
 				}
 			}
-			whereGenre += ") AND genremovie.idMovie = movie.idMovie AND genremovie.idGenre = genre.idGenre ";
-			whereActor += ") AND actormovie.idMovie = movie.idMovie AND actormovie.idActor = actor.idActor ";
+			whereGenre += ") AND GenreMovie.idMovie = Movie.idMovie AND GenreMovie.idGenre = Genre.idGenre ";
+			whereActor += ") AND ActorMovie.idMovie = Movie.idMovie AND ActorMovie.idActor = Actor.idActor ";
 			
 			preformSearch = !isFirst;
 		} catch (SQLException e) {
