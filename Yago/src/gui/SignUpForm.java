@@ -68,13 +68,13 @@ import viewModelLayer.InputVerifier;
 		 * @param display
 		 */
 		public SignUpForm(final Display display, final IdbOparations oparations) {
-			super(display, SWT.SHELL_TRIM);
+			super(display, SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
 			
 			setImage(SWTResourceManager.getImage(SignUpForm.class, "/movies.png"));
 			setLayout(null);
 			
 			Composite composite = new Composite(this, SWT.NONE);
-			composite.setBounds(0, 0, 782, 555);
+			composite.setBounds(0, 0, 800, 589);
 			
 			Button btnNewButton = new Button(composite, SWT.NONE);
 			btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -92,7 +92,7 @@ import viewModelLayer.InputVerifier;
 					}
 				}
 			});
-			btnNewButton.setBounds(269, 429, 90, 30);
+			btnNewButton.setBounds(269, 439, 90, 30);
 			btnNewButton.setText("Cancel");
 			
 			Button btnSign = new Button(composite, SWT.NONE);
@@ -162,21 +162,22 @@ import viewModelLayer.InputVerifier;
 				}
 			
 			});
-			btnSign.setBounds(488, 429, 90, 30);
+			btnSign.setBounds(488, 439, 90, 30);
 			btnSign.setText("Submit");
 			
 			repeatPasswordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 			repeatPasswordText.setBounds(269, 345, 309, 26);
 			
 			passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
-			passwordText.setBounds(269, 296, 309, 26);
+			passwordText.setBounds(269, 294, 309, 26);
 			
 			userNameText = new Text(composite, SWT.BORDER);
-			userNameText.setBounds(269, 249, 309, 26);
+			userNameText.setBounds(269, 241, 309, 26);
 			
 			Label signupBackground = new Label(composite, SWT.NONE);
+			signupBackground.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 			signupBackground.setImage(SWTResourceManager.getImage(SignUpForm.class, "/red-fabric-background-800x600-captioned.jpg"));
-			signupBackground.setBounds(0, 0, 782, 555);
+			signupBackground.setBounds(0, 0, 800, 589);
 			createContents();
 		}
 
@@ -184,8 +185,8 @@ import viewModelLayer.InputVerifier;
 		 * Create contents of the shell.
 		 */
 		protected void createContents() {
-			setText("MoveIt! - Create a new account");
-			setSize(800, 600);
+			setText("Signup To MovIt!");
+			setSize(806, 622);
 
 		}
 

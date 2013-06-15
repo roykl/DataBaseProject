@@ -57,6 +57,8 @@ public class MainMenu extends Shell {
 	private Text actorTxtBox1;
 	private Table genreTable;
 	private Text text;
+	private Display display;
+	private IdbOparations operations;
 
 
 	/**
@@ -65,6 +67,8 @@ public class MainMenu extends Shell {
 	 */ //
 	public MainMenu(final Display display, final IdbOparations operations,final boolean isAdmin) {
 		super(display, SWT.SHELL_TRIM);
+		this.display = display;
+		this.operations = operations;
 		setSize(1353, 678);
 		setBackground(SWTResourceManager.getColor(128, 0, 0));
 		setImage(SWTResourceManager.getImage(MainMenu.class, "/movies.png"));
@@ -569,6 +573,11 @@ public class MainMenu extends Shell {
 		searchResultsList.removeAll();
 		if(moviesResult == null || moviesResult.isEmpty()){
 			searchResultsList.add("Oops...Your search did not return any matches");
+		}
+		else{
+			if(moviesResult.size() == 1){
+				//MovieDetails details = new MovieDetails(display, operations, idUser, moviesResult.get(0));
+			}
 		}
 	}
 

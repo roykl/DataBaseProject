@@ -36,12 +36,15 @@ public class LoginWindow extends Shell {
 	 * @param display
 	 */
 	public LoginWindow(final Display display, final IdbOparations oparations) {
-		super(display, SWT.DIALOG_TRIM | SWT.MIN | SWT.MAX);
-		setMinimumSize(new Point(795, 600));
+		super(display, SWT.BORDER | SWT.CLOSE | SWT.MIN | SWT.MAX);
+		setSize(606, 844);
+		setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		setMinimumSize(new Point(600, 823));
 		setImage(SWTResourceManager.getImage(LoginWindow.class, "/movies.png"));
 		setLayout(new FormLayout());
 
 		Composite composite = new Composite(this, SWT.NONE);
+		composite.setBackground(SWTResourceManager.getColor(204, 51, 51));
 		composite.setLayout(null);
 		FormData fd_composite = new FormData();
 		fd_composite.left = new FormAttachment(0);
@@ -118,7 +121,7 @@ public class LoginWindow extends Shell {
 		});
 
 		button_1.setText("Login");
-		button_1.setBounds(273, 473, 90, 30);
+		button_1.setBounds(157, 327, 90, 30);
 
 		Button button = new Button(composite, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
@@ -140,47 +143,17 @@ public class LoginWindow extends Shell {
 
 		});
 		button.setText("Signup");
-		button.setBounds(447, 473, 90, 30);
+		button.setBounds(331, 327, 90, 30);
 
 		text_1 = new Text(composite, SWT.BORDER);
-		text_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent arg0) {
-				if(text_1.getText().equals("Username")){
-					text_1.setText("");
-				}
-			}
-			@Override
-			public void mouseUp(MouseEvent arg0) {
-				if(text.getText().isEmpty()){
-					text.setText("Password");
-				}
-			}
-		});
-		text_1.setText("Username");
-		text_1.setBounds(273, 364, 264, 30);
+		text_1.setBounds(157, 201, 264, 30);
 
-		text = new Text(composite, SWT.BORDER);
-		text.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent arg0) {
-				if(text.getText().equals("Password")){
-					text.setText("");
-				}
-			}
-			@Override
-			public void mouseUp(MouseEvent arg0) {
-				if(text_1.getText().isEmpty()){
-					text_1.setText("Username");
-				}
-			}
-		});
-		text.setText("Password");
-		text.setBounds(273, 411, 264, 30);
+		text = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		text.setBounds(157, 264, 264, 30);
 
-		Label lblNewLabel = new Label(composite, SWT.NONE);
-		lblNewLabel.setBounds(0, 0, 790, 568);
-		lblNewLabel.setImage(SWTResourceManager.getImage(LoginWindow.class, "/redcarpet background 2.jpg"));
+		Label loginBackground = new Label(composite, SWT.NONE);
+		loginBackground.setBounds(0, 0, 600, 811);
+		loginBackground.setImage(SWTResourceManager.getImage(LoginWindow.class, "/Welcome to movit.png"));
 		createContents();
 	}
 
@@ -188,8 +161,7 @@ public class LoginWindow extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("MoveIt!");
-		setSize(800, 573);
+		setText("MovIt!");
 
 	}
 
@@ -197,6 +169,4 @@ public class LoginWindow extends Shell {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-
-
 }
