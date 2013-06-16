@@ -66,7 +66,7 @@ public class MovieDetails extends Shell {
 	private Composite composite_6;
 	private Button btnNewButton_1;
 	private Button btnTrailer;
-
+	AddRemoveWindow shell;
 	/**
 	 * Create the shell.
 	 * 
@@ -74,7 +74,9 @@ public class MovieDetails extends Shell {
 	 */
 	public MovieDetails(final Display display, final IdbOparations operations,
 			final int idUser, final MovieInfo movie) {
+		
 		super(display, SWT.SHELL_TRIM);
+		
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
 		setSize(1042, 769);
 		setMinimumSize(new Point(1030, 760));
@@ -204,7 +206,7 @@ public class MovieDetails extends Shell {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					// call add remove form
-					AddRemoveWindow shell = new AddRemoveWindow(display,operations, movie);
+					 shell = new AddRemoveWindow(display,operations, movie);
 					shell.open();
 					shell.layout();
 					while (!shell.isDisposed()) {
@@ -390,6 +392,25 @@ public class MovieDetails extends Shell {
 
 			btnTrailer = new Button(composite, SWT.NONE);
 			fd_composite_6.bottom = new FormAttachment(btnTrailer, 0, SWT.BOTTOM);
+			
+			Button btnNewButton_2 = new Button(composite_6, SWT.NONE);
+			btnNewButton_2.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					
+					dispose();
+					MainMenu MainMenuShell = new MainMenu(display,operations,false, idUser);
+					MainMenuShell.open();
+					MainMenuShell.layout();
+					while (!MainMenuShell.isDisposed()) {
+						if (!display.readAndDispatch()) {
+							display.sleep();
+						}
+					}
+				}
+			});
+			btnNewButton_2.setBounds(24, 181, 75, 25);
+			btnNewButton_2.setText("New Button");
 			FormData fd_btnTrailer = new FormData();
 			fd_btnTrailer.bottom = new FormAttachment(100);
 			fd_btnTrailer.top = new FormAttachment(composite_4, 6);

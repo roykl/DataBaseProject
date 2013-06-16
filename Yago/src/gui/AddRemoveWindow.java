@@ -85,7 +85,7 @@ public class AddRemoveWindow extends Shell {
 	 * @param display
 	 */
 	public AddRemoveWindow(final Display display ,final IdbOparations operations ,final MovieInfo movie) {
-		super(display, SWT.SHELL_TRIM | SWT.BORDER);
+		super(display, SWT.DIALOG_TRIM | SWT.MIN | SWT.MAX);
 		this.movie = movie;
 
 		setImage(SWTResourceManager.getImage(AddRemoveWindow.class, "/movies.png"));
@@ -101,7 +101,7 @@ public class AddRemoveWindow extends Shell {
 
 		txtPleaseEnterValue = new Text(composite_2, SWT.READ_ONLY);
 		txtPleaseEnterValue.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-		txtPleaseEnterValue.setText("Please enter the value to add or remove");
+		txtPleaseEnterValue.setText("Please enter value to add or remove");
 		txtPleaseEnterValue.setBounds(147, 157, 285, 26);
 
 		editorText = new Text(composite_2, SWT.BORDER | SWT.WRAP);
@@ -210,7 +210,7 @@ public class AddRemoveWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText("MovIt!");
-		setSize(818, 624);
+		setSize(806, 612);
 
 	}
 

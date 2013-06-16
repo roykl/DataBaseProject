@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import db.IdbOparations;
 
 
-public class MultiThreadSearch extends ThreadSearch {
+public class MultiThreadSearch extends Thread{
 
 	public MultiThreadSearch(IdbOparations oparations, String selectM,
 			String fromM, String whereM, String selectG, String fromG,
@@ -36,8 +36,6 @@ public class MultiThreadSearch extends ThreadSearch {
 	private ResultSet resultActor;
 	
 
-
-	@Override
 	public void run() {
 		ThreadSearch t1 = new ThreadSearch(oparations, selectM, fromM, whereM);
 		ThreadSearch t2 = new ThreadSearch(oparations, selectG, fromG, whereG);

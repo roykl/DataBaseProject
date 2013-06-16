@@ -408,10 +408,12 @@ public class MainMenu extends Shell {
 							super.run();
 							moviesIds = this.getResult();
 							//	sq.createFromMoviesIds(moviesIds);
+							return;
 						}
 					});
 
 					sq.createFromMoviesIds(moviesIds);
+					moviesIds= null;
 				}
 				else {
 					// user enter movieName 
@@ -457,6 +459,7 @@ public class MainMenu extends Shell {
 							moviesRes.addYoutubeAndPoster();
 
 							System.out.println(moviesRes.getMoviesResult().toString());
+							return;
 						}
 					});
 					displaySearchResults(searchResultsList, moviesRes.getMoviesResult(),idUser);
@@ -632,10 +635,15 @@ public class MainMenu extends Shell {
 					}
 				}
 			}
+			
 			searchResultsList.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent arg0) {
 					//TODO - change idUser to meaningful
+					
+					int selectionIndex = searchResultsList.getSelectionIndex();
+			        if(selectionIndex <= 0)
+			        	return;
 					MovieDetails detailsShell = new MovieDetails(display, operations, idUser, 
 							moviesResult.get(searchResultsList.getSelectionIndex()));
 					
@@ -644,6 +652,7 @@ public class MainMenu extends Shell {
 						System.out.println(movieInfo.movieName);
 					}
 					System.out.println("**************************************************************************************************************************");
+					dispose();
 					detailsShell.open();
 					detailsShell.layout();
 					while (!detailsShell.isDisposed()) {
@@ -651,12 +660,13 @@ public class MainMenu extends Shell {
 							display.sleep();
 						}
 					}
+					
 					System.out.println("Disposed");
 				}
 			});
 		}
 	}
 
-
+	 
 
 }
