@@ -496,8 +496,8 @@ public class MovieDetails extends Shell {
 
 
 				}
-				else if(returnVal == NOT_EXIST){
-					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_ERROR);
+				else if(returnVal == ERR){
+					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 					messageBox.setText("Error");
 					messageBox.setMessage("Value must exist in our " +tableName+ " data.");
 					messageBox.open();

@@ -197,18 +197,18 @@ public class DBOparations implements IdbOparations {
 		HashMap<String, Movie> moviesList = new HashMap<String, Movie>();
 
 		// parse yago and imdb files 
-		//		Iparser parser = new Parser();
-		//		parser.parse();
-		//		moviesList = parser.getMoviesTable();
+				Iparser parser = new Parser();
+				parser.parse();
+				moviesList = parser.getMoviesTable();
 
-		try {
-			moviesList = (HashMap<String, Movie>) TestConsole
-					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
-		} catch (ClassNotFoundException e2) {		
-			e2.printStackTrace();
-		} catch (IOException e2) {		
-			e2.printStackTrace();
-		}
+//		try {
+//			moviesList = (HashMap<String, Movie>) TestConsole
+//					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
+//		} catch (ClassNotFoundException e2) {		
+//			e2.printStackTrace();
+//		} catch (IOException e2) {		
+//			e2.printStackTrace();
+//		}
 
 		// get the connection and statement
 		Connection conn = getConnection();

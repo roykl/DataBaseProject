@@ -228,7 +228,7 @@ public class AddRemoveWindow extends Shell {
 		final String message2 = actor ? "actors":"genres";
 
 
-
+		
 		display.syncExec(new ThreadUserUpdate(operations,table,firstKey,secondKey,column,newVal){
 			@Override
 			public void run(){
@@ -240,6 +240,7 @@ public class AddRemoveWindow extends Shell {
 					messageBox.setText(add ? "Insert":"Delete");
 					messageBox.setMessage(message1 +" "+ message2  +" successfully commited.");
 					messageBox.open();
+					//add\remove value to\from directly list
 				}
 				else if(returnVal == ERR){
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
