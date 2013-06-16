@@ -16,11 +16,11 @@ public class mainTest {
 		
 		//***  add user test  ***//
 		
-//		ThreadAddUser t1 = new ThreadAddUser(oparations , "Omri", "1234");
-//		ThreadAddUser t2 = new ThreadAddUser(oparations , "roy", "1234");
-//		ThreadAddUser t3 = new ThreadAddUser(oparations , "nir", "1234");
-//		ThreadAddUser t4 = new ThreadAddUser(oparations , "yoni", "12345");
-//		ThreadAddUser t5 = new ThreadAddUser(oparations , "naknik", "bulfdwml");
+//		ThreadAddUser t1 = new ThreadAddUser(oparations , "aaa", "1234");
+//		ThreadAddUser t2 = new ThreadAddUser(oparations , "bbb", "1234");
+//		ThreadAddUser t3 = new ThreadAddUser(oparations , "ccc", "1234");
+//		ThreadAddUser t4 = new ThreadAddUser(oparations , "ddd", "12345");
+//		ThreadAddUser t5 = new ThreadAddUser(oparations , "eee", "bulfdwml");
 //		t1.start();
 //		t2.start();
 //		t3.start();
@@ -52,12 +52,12 @@ public class mainTest {
 		ThreadGrade t6 = new ThreadGrade(oparations, "yoni".hashCode(), -2106016793, 5);
 		ThreadGrade t7 = new ThreadGrade(oparations, "nir".hashCode(), -2106016793, 9);
 
-//		t1.start();
-//		t2.start();
-//		t3.start();
-//		t4.start();
-//		t5.start();
-//		t6.start();
+		t1.start();
+		t2.start();
+		t3.start();
+		t4.start();
+		t5.start();
+		t6.start();
 		t7.start();
 		
 		//***  search test ***//

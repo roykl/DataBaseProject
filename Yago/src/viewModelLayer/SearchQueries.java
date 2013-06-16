@@ -52,10 +52,10 @@ public class SearchQueries {
 	public  boolean createWheres(String movieName){
 		boolean enteredMoive = movieName.trim().isEmpty()? false : true;
 		if (enteredMoive){ // if entered a movie, find that movie
-			whereMovie = "Movie.movieName = '" + movieName +"'";
-			whereGenre = "Movie.movieName = '" + movieName +"'" +
+			whereMovie = "Movie.movieName LIKE '%" + movieName +"%'";
+			whereGenre = "Movie.movieName LIKE '%" + movieName +"%'" +
 					" AND GenreMovie.idMovie = Movie.idMovie AND GenreMovie.idGenre = Genre.idGenre";
-			whereActor =  "Movie.movieName = '" + movieName +"'" +
+			whereActor =  "Movie.movieName LIKE '%" + movieName +"%'" +
 					" AND ActorMovie.idMovie = Movie.idMovie AND ActorMovie.idActor = Actor.idactor";
 
 			System.out.println("user entered movie name!!!!");
@@ -75,7 +75,7 @@ public class SearchQueries {
 
 		// create genres from and where
 		
-		System.out.println("about to get genre");
+//		System.out.println("about to get genre");
 		ArrayList<String> genreList = this.createGenreWhere(genreItems);
 		if(genreList.isEmpty() || genreList.size()>3){
 			//TODO- we don't ignore the genres
@@ -100,12 +100,12 @@ public class SearchQueries {
 			isWhereEmpty = false;
 		}
 		
-		System.out.println("After genres:");
-		System.out.println("FROM- " + fromProp);
-		System.out.println("WHERE- " + whereProp);
+//		System.out.println("After genres:");
+//		System.out.println("FROM- " + fromProp);
+//		System.out.println("WHERE- " + whereProp);
 		
 
-		System.out.println("BEFOR DIRECTOR");
+//		System.out.println("BEFOR DIRECTOR");
 		// director
 		if(!directorName.trim().isEmpty()){
 			//user entered director name
@@ -117,12 +117,12 @@ public class SearchQueries {
 			isWhereEmpty = false;
 		}
 		
-		System.out.println("After DIRECTOR:");
-		System.out.println("FROM- " + fromProp);
-		System.out.println("WHERE- " + whereProp);
+//		System.out.println("After DIRECTOR:");
+//		System.out.println("FROM- " + fromProp);
+//		System.out.println("WHERE- " + whereProp);
 		
 
-		System.out.println("BEFOR ACTORS:");
+//		System.out.println("BEFOR ACTORS:");
 		// actors
 		boolean actorExists = false;
 		int count = 0;
@@ -171,13 +171,13 @@ public class SearchQueries {
 
 
 		
-		System.out.println("After ACTORS:");
-		System.out.println("FROM- " + fromProp);
-		System.out.println("WHERE- " + whereProp);
+//		System.out.println("After ACTORS:");
+//		System.out.println("FROM- " + fromProp);
+//		System.out.println("WHERE- " + whereProp);
 		
 		
 
-		System.out.println("Before YEAR: " + yearFrom);
+//		System.out.println("Before YEAR: " + yearFrom);
 		// year
 		if(InputVerifier.validateYear(yearFrom, yearTo)){
 			if(!isWhereEmpty)
@@ -191,7 +191,7 @@ public class SearchQueries {
 		System.out.println("WHERE- " + whereProp);
 		
 
-		System.out.println("Before LANGUAGE:");
+	//	System.out.println("Before LANGUAGE:");
 		
 		// language
 		if(language != null){
@@ -211,10 +211,10 @@ public class SearchQueries {
 		else{
 		  whereProp += " ORDER BY year desc LIMIT 0, 40 ";
 		}
-		
-		System.out.println("AFTER LANGUAGE:");
-		System.out.println("FROM- " + fromProp);
-		System.out.println("WHERE- " + whereProp);
+	
+//		System.out.println("AFTER LANGUAGE:");
+//		System.out.println("FROM- " + fromProp);
+//		System.out.println("WHERE- " + whereProp);
 
 
 	}

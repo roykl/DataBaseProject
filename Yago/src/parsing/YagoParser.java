@@ -273,6 +273,7 @@ public class YagoParser extends Parser{
 		String wikiURL = strArr[2].substring(0, strArr[2].length()-2);
 		if(getMoviesTable().containsKey(currentMovie)){
 			Movie movie = getMoviesTable().get(currentMovie);
+			wikiURL = wikiURL.substring(1, wikiURL.length()-1);
 			movie.setWikiURL(wikiURL);
 		}		
 	}

@@ -52,6 +52,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 
 
+
 public class MainMenu extends Shell {
 	private Text txtMovieTitle;
 	private Text actorTxtBox3;
@@ -71,7 +72,7 @@ public class MainMenu extends Shell {
 		super(display, SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
 		this.display = display;
 		this.operations = operations;
-		setSize(1338, 671);
+		setSize(1168, 671);
 		setBackground(SWTResourceManager.getColor(128, 0, 0));
 		setImage(SWTResourceManager.getImage(MainMenu.class, "/movies.png"));
 		setLayout(new FormLayout());
@@ -89,7 +90,7 @@ public class MainMenu extends Shell {
 		FormData fd_composite = new FormData();
 		fd_composite.top = new FormAttachment(0);
 		fd_composite.right = new FormAttachment(100, 5);
-		fd_composite.bottom = new FormAttachment(0, 648);
+		fd_composite.bottom = new FormAttachment(0, 638);
 		fd_composite.left = new FormAttachment(0, 292);
 		composite.setLayoutData(fd_composite);
 
@@ -97,11 +98,11 @@ public class MainMenu extends Shell {
 		searchResultsList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		searchResultsList.setItems(new String[] {});
 		searchResultsList.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-		searchResultsList.setBounds(21, 21, 997, 486);
+		searchResultsList.setBounds(10, 10, 855, 497);
 
 		Label lblNewLabel = new Label(composite, SWT.NONE);
 		lblNewLabel.setImage(SWTResourceManager.getImage(MainMenu.class, "/video screen.jpg"));
-		lblNewLabel.setBounds(10, 10, 1024, 628);
+		lblNewLabel.setBounds(0, 10, 875, 628);
 
 		txtMovieTitle = new Text(this, SWT.BORDER);
 		txtMovieTitle.setToolTipText("Enter a movie title");
@@ -646,6 +647,13 @@ public class MainMenu extends Shell {
 					//TODO - change idUser to meaningful
 					MovieDetails detailsShell = new MovieDetails(display, operations, 0, 
 							moviesResult.get(searchResultsList.getSelectionIndex()));
+					
+					System.out.println("************************"+moviesResult.get(searchResultsList.getSelectionIndex()).movieName+"********************************************");
+					for (MovieInfo movieInfo : moviesResult) {
+						System.out.println(movieInfo.movieName);
+					}
+					System.out.println("**************************************************************************************************************************");
+					
 					detailsShell.open();
 					detailsShell.layout();
 					while (!detailsShell.isDisposed()) {
@@ -653,6 +661,7 @@ public class MainMenu extends Shell {
 							display.sleep();
 						}
 					}
+					System.out.println("Disposed");
 				}
 			});
 		}

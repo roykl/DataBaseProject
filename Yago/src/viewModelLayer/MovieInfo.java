@@ -69,7 +69,7 @@ public class MovieInfo {
 		}
 
 		// get the video with max number of views (most viewed first)
-		query.setOrderBy(YouTubeQuery.OrderBy.VIEW_COUNT);
+		//query.setOrderBy(YouTubeQuery.OrderBy.VIEW_COUNT);
 		query.setMaxResults(1);
 
 		// search for movie trailer and include restricted content in the search results

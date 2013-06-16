@@ -36,15 +36,15 @@ public class TestConsole {
 
 public static void main(String[] args) throws IOException, SQLException {
 	
-	viewModelLayer.MovieInfo mi = new viewModelLayer.MovieInfo(); 
-	mi.directorName ="fdsafas";
-	mi.movieName = "walk on water movie";
-	mi.duration= "123";
-	mi.grade =  6;
-	mi.language = "englis";
-	mi.plot = "FDSF FSDFSD FSDFSD";
-	//mi.addYoutubeUrl(mi.movieName);
-	mi.addPosterUrl(mi.movieName);
+//	viewModelLayer.MovieInfo mi = new viewModelLayer.MovieInfo(); 
+//	mi.directorName ="fdsafas";
+//	mi.movieName = "walk on water movie";
+//	mi.duration= "123";
+//	mi.grade =  6;
+//	mi.language = "englis";
+//	mi.plot = "FDSF FSDFSD FSDFSD";
+//	//mi.addYoutubeUrl(mi.movieName);
+//	mi.addPosterUrl(mi.movieName);
 	
 	
 //	System.out.println(InputVerifier.verifiUsername("Shakom"));
@@ -97,18 +97,17 @@ public static void main(String[] args) throws IOException, SQLException {
 //	        im.parseGenre(new HashMap<String,Movie>());
 		
 		
-//		
-//		HashMap<String,Movie> p = new HashMap<String, Movie>();
-//		Parser yp = new Parser();
-//		yp.parse();
-//		System.out.println(yp.getDirectorsTable().size());
-//		Set<Integer> s = new HashSet<Integer>();
-//		for(Movie l : yp.getMoviesTable().values()){
-//			if(l.getDirector() != null)
-//		    	s.add(l.getDirector().getId().hashCode());
-//		}
-//		System.out.println(s.size());
-//		
+		
+		HashMap<String,Movie> p = new HashMap<String, Movie>();
+		Parser yp = new Parser();
+		yp.parse();
+		System.out.println(yp.getDirectorsTable().size());
+		Set<Integer> s = new HashSet<Integer>();
+		for(Movie l : yp.getMoviesTable().values()){
+			System.out.println(l.getWikiURL());
+		}
+		System.out.println(s.size());
+		
 
 //		long start = System.currentTimeMillis();
 //		yp.parse();

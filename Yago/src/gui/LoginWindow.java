@@ -37,9 +37,9 @@ public class LoginWindow extends Shell {
 	 */
 	public LoginWindow(final Display display, final IdbOparations oparations) {
 		super(display, SWT.BORDER | SWT.CLOSE | SWT.MIN | SWT.MAX);
-		setSize(606, 844);
+		setSize(606, 763);
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		setMinimumSize(new Point(600, 823));
+		setMinimumSize(new Point(600, 750));
 		setImage(SWTResourceManager.getImage(LoginWindow.class, "/movies.png"));
 		setLayout(new FormLayout());
 
