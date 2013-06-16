@@ -69,8 +69,9 @@ public class LoginWindow extends Shell {
 				}
 				//if ADMINISTRATOR 
 				else if(text_1.getText().equals("admin") && text.getText().equals("admin")){
+					int idUser =  text_1.getText().hashCode();
+					MainMenu MainMenuShell = new MainMenu(display,oparations,true,idUser);
 					dispose();
-					MainMenu MainMenuShell = new MainMenu(display,oparations,true);
 					MainMenuShell.open();
 					MainMenuShell.layout();
 					while (!MainMenuShell.isDisposed()) {
@@ -90,10 +91,10 @@ public class LoginWindow extends Shell {
 
 
 							if(result == OK){
-								// user authentication OK
-								System.out.println("im in result ok");
+								// user authentication OK								
+								int idUser =  text_1.getText().hashCode();
 								dispose();
-								MainMenu MainMenuShell = new MainMenu(display,oparations,false);
+								MainMenu MainMenuShell = new MainMenu(display,oparations,false,idUser);
 								MainMenuShell.open();
 								MainMenuShell.layout();
 								while (!MainMenuShell.isDisposed()) {

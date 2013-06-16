@@ -68,6 +68,8 @@ public class MultiThreadSearch extends ThreadSearch {
 			e.printStackTrace();
 		}
 		resultActor = t3.getResult();
+		
+		return;
 	}
 
 	

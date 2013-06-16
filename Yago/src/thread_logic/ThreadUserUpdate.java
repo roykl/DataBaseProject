@@ -225,6 +225,7 @@ public class ThreadUserUpdate extends Thread {
 
 	public void run(){
 		value = userUpdate();
+		return;
 	}
 
 

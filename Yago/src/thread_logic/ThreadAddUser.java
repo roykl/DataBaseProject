@@ -57,6 +57,7 @@ public class ThreadAddUser extends Thread {
 
 	public void run(){
 		value = this.addUser(); 
+		return;
 		
 	}
 	

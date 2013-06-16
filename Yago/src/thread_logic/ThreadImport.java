@@ -24,5 +24,6 @@ public class ThreadImport extends Thread {
 
 	public void run(){
 		value = oparations.importData();
+		return;
 	}
 }

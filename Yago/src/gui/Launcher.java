@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Window;
 import java.sql.SQLException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -49,6 +51,7 @@ private static void start(){
 		
 	} catch ( Exception e) {
 		System.out.println("ERROR");
+		e.printStackTrace();
 		
 		Shell shell = new Shell(display);
 		MessageBox messageBox =  new MessageBox(shell, SWT.ICON_WARNING);
@@ -62,7 +65,10 @@ private static void start(){
 		
 	}
 	finally{
-		
+		 Queue<Thread> allThreads = new ConcurrentLinkedQueue<Thread>();  
+		for (Thread t; (t = allThreads.poll()) != null; )  
+           // t.join();
+			System.out.println(t.isAlive());
 		pool.stop();
 		System.out.println(t1.isAlive());
 		display.dispose();

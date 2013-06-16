@@ -44,6 +44,7 @@ public class ThreadUserAuthentication extends Thread {
 
 	public void run(){
 		value = this.UserAuthentication();
+		return;
 	}
 
 	public int getValue(){

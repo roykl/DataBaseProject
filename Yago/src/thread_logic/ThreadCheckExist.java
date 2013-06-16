@@ -48,6 +48,7 @@ public class ThreadCheckExist extends Thread {
 
 	public void run(){
 		value = this.checkExist(); 		
+		return;
 	}
 
 

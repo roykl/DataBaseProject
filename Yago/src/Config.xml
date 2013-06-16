@@ -15,6 +15,6 @@
 		<DbName>DbMysql05</DbName>
 		<UserName>root</UserName>
 		<Password>61088</Password>
-		<NumOfConnections>5</NumOfConnections>
+		<NumOfConnections>1</NumOfConnections>
 	</DB>
 </Configuration>

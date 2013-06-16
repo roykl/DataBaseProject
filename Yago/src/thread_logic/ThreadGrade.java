@@ -142,7 +142,8 @@ public class ThreadGrade extends Thread {
 	//public setV
 
 	public void run(){
-		value = this.grade(); 		
+		value = this.grade(); 	
+		return;
 	}
 
 }

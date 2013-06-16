@@ -68,7 +68,7 @@ public class MainMenu extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */ //
-	public MainMenu(final Display display, final IdbOparations operations,final boolean isAdmin) {
+	public MainMenu(final Display display, final IdbOparations operations,final boolean isAdmin,final int idUser) {
 		super(display, SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
 		this.display = display;
 		this.operations = operations;
@@ -406,13 +406,6 @@ public class MainMenu extends Shell {
 						@Override
 						public void run(){
 							super.run();
-							try {
-								this.join();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
 							moviesIds = this.getResult();
 							//	sq.createFromMoviesIds(moviesIds);
 						}
@@ -447,12 +440,12 @@ public class MainMenu extends Shell {
 						@Override		
 						public void run(){
 							super.run();
-							try {
-								this.join();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+//							try {
+//								this.join();
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
 							ResultSet resultMovie = this.getResultMovie();
 							ResultSet resultGenre = this.getResultGenre();
 							ResultSet resultActor = this.getResultActor();
@@ -466,7 +459,8 @@ public class MainMenu extends Shell {
 							System.out.println(moviesRes.getMoviesResult().toString());
 						}
 					});
-					displaySearchResults(searchResultsList, moviesRes.getMoviesResult());
+					displaySearchResults(searchResultsList, moviesRes.getMoviesResult(),idUser);
+					moviesRes = null;
 				}			
 				else{
 					// displaySearchResults(searchResultsList, null);
@@ -562,9 +556,6 @@ public class MainMenu extends Shell {
 			break;
 
 		}
-
-
-
 	}
 
 	private void showProgressBar( JFrame theFrame){
@@ -617,7 +608,7 @@ public class MainMenu extends Shell {
 	 * @param moviesResult
 	 */
 	@SuppressWarnings("unchecked")
-	private void displaySearchResults(final List searchResultsList, final ArrayList<MovieInfo> moviesResult) {
+	private void displaySearchResults(final List searchResultsList, final ArrayList<MovieInfo> moviesResult,final int idUser) {
 		//clear the list of previous results
 		searchResultsList.removeAll();
 		//no search results found
@@ -632,7 +623,7 @@ public class MainMenu extends Shell {
 			//one result opens movie details immediately
 			if(moviesResult.size() == 1){
 				//TODO - change idUser to meaningful
-				MovieDetails detailsShell = new MovieDetails(display, operations, 0, moviesResult.get(0));
+				MovieDetails detailsShell = new MovieDetails(display, operations, idUser,moviesResult.get(0));
 				detailsShell.open();
 				detailsShell.layout();
 				while (!detailsShell.isDisposed()) {
@@ -645,7 +636,7 @@ public class MainMenu extends Shell {
 				@Override
 				public void mouseDoubleClick(MouseEvent arg0) {
 					//TODO - change idUser to meaningful
-					MovieDetails detailsShell = new MovieDetails(display, operations, 0, 
+					MovieDetails detailsShell = new MovieDetails(display, operations, idUser, 
 							moviesResult.get(searchResultsList.getSelectionIndex()));
 					
 					System.out.println("************************"+moviesResult.get(searchResultsList.getSelectionIndex()).movieName+"********************************************");
@@ -653,11 +644,10 @@ public class MainMenu extends Shell {
 						System.out.println(movieInfo.movieName);
 					}
 					System.out.println("**************************************************************************************************************************");
-					
 					detailsShell.open();
 					detailsShell.layout();
 					while (!detailsShell.isDisposed()) {
-						if (!display.readAndDispatch()) {
+						if (!display.readAndDispatch()) {							
 							display.sleep();
 						}
 					}

@@ -130,8 +130,9 @@ import viewModelLayer.InputVerifier;
 								messageBox.open();
 								
 								// open main menu
+								int idUser = userNameText.getText().hashCode();
 								dispose();
-								MainMenu MainMenuShell = new MainMenu(display,oparations,false);
+								MainMenu MainMenuShell = new MainMenu(display,oparations,false, idUser);
 								MainMenuShell.open();
 								MainMenuShell.layout();
 								while (!MainMenuShell.isDisposed()) {
