@@ -181,7 +181,7 @@ public class MovieDetails extends Shell {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					// call add remove form
-					AddRemoveWindow shell = new AddRemoveWindow(display,operations, new MovieInfo());
+					AddRemoveWindow shell = new AddRemoveWindow(display,operations, movie);
 					shell.open();
 					shell.layout();
 					while (!shell.isDisposed()) {
