@@ -43,7 +43,7 @@ public static void main(String[] args) throws IOException, SQLException {
 	mi.grade =  6;
 	mi.language = "englis";
 	mi.plot = "FDSF FSDFSD FSDFSD";
-	mi.addYoutubeUrl(mi.movieName);
+	//mi.addYoutubeUrl(mi.movieName);
 	mi.addPosterUrl(mi.movieName);
 	
 	

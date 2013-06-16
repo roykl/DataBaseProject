@@ -56,7 +56,7 @@ public class MovieInfo {
 	public String youtubeUrl;
 	public String posterUrl;
 
-	public void addYoutubeUrl(String movieName) {
+	public void addYoutubeUrl(String movieName, String year) {
 		/** get the trailer of the <movieName> */
 
 		// create a service and a new youtube query
@@ -73,7 +73,10 @@ public class MovieInfo {
 		query.setMaxResults(1);
 
 		// search for movie trailer and include restricted content in the search results
-		query.setFullTextQuery(movieName + "Trailer");
+		if (year != null)
+			query.setFullTextQuery(movieName +" " +year  + " Trailer");
+		else
+			query.setFullTextQuery(movieName + " Trailer");
 		query.setSafeSearch(YouTubeQuery.SafeSearch.NONE);
 
 		//execute the query and get the video feed

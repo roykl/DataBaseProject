@@ -81,7 +81,7 @@ public class MoviesResults {
 
 	public void addYoutubeAndPoster(){
 		for(MovieInfo m: moviesResult){
-			m.addYoutubeUrl(m.movieName);
+			m.addYoutubeUrl(m.movieName, m.year);
 			m.addPosterUrl(m.movieName);
 		}
 	}

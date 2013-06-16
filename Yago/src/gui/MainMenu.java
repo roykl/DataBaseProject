@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
@@ -67,10 +68,10 @@ public class MainMenu extends Shell {
 	 * @param display
 	 */ //
 	public MainMenu(final Display display, final IdbOparations operations,final boolean isAdmin) {
-		super(display, SWT.SHELL_TRIM);
+		super(display, SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
 		this.display = display;
 		this.operations = operations;
-		setSize(1353, 678);
+		setSize(1338, 671);
 		setBackground(SWTResourceManager.getColor(128, 0, 0));
 		setImage(SWTResourceManager.getImage(MainMenu.class, "/movies.png"));
 		setLayout(new FormLayout());
@@ -92,8 +93,8 @@ public class MainMenu extends Shell {
 		fd_composite.left = new FormAttachment(0, 292);
 		composite.setLayoutData(fd_composite);
 
-		final List searchResultsList = new List(composite, SWT.NONE);
-		searchResultsList.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		final List searchResultsList = new List(composite, SWT.V_SCROLL);
+		searchResultsList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		searchResultsList.setItems(new String[] {});
 		searchResultsList.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 		searchResultsList.setBounds(21, 21, 997, 486);
@@ -262,7 +263,6 @@ public class MainMenu extends Shell {
 		xpndtmActors.setHeight(118);
 
 		ExpandItem xpndtmYear = new ExpandItem(expandBar, 0);
-		xpndtmYear.setExpanded(true);
 		xpndtmYear.setText("Years");
 
 		Composite composite_5 = new Composite(expandBar, SWT.NONE);
@@ -352,7 +352,7 @@ public class MainMenu extends Shell {
 				if (!sq.createWheres(txtMovieTitle.getText())){
 					// the user didn't entered movie name so we use the advanced properties
 					System.out.println("user didn't enter movie name");
-					
+
 					//check director name is correct
 					if(!text.getText().trim().isEmpty() && !InputVerifier.verifyInput(text.getText())){
 						// director was entered but it's not correct
@@ -362,22 +362,22 @@ public class MainMenu extends Shell {
 						messageBox.open();	
 						return;
 					}
-					
+
 					//check actor name is correct
 					if((!actorTxtBox1.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox1.getText()))
-						|| (!actorTxtBox2.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox2.getText()))
-						|| (!actorTxtBox3.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox3.getText()))){
+							|| (!actorTxtBox2.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox2.getText()))
+							|| (!actorTxtBox3.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox3.getText()))){
 						// actor was added but it's not correct
-						
+
 						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 						messageBox.setText("Illegal Actor Name");
 						messageBox.setMessage("Actor Name should not contain ' or " + '"');
 						messageBox.open();	
 						return;						
 					}
-					
+
 					System.out.println(yearFromSpinner.getSelection());
-					
+
 					//check years are correct
 					if(yearFromSpinner.getSelection() > yearToSpinner.getSelection()){
 						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
@@ -431,8 +431,8 @@ public class MainMenu extends Shell {
 						messageBox.open();	
 						return;
 					}
-						
-					
+
+
 				}
 				if (sq.preformSearch){
 					System.out.println("**********************************************");
@@ -485,7 +485,7 @@ public class MainMenu extends Shell {
 			}
 		});	
 	}
-	
+
 	ResultSet moviesIds;
 	MoviesResults moviesRes;
 
@@ -609,37 +609,55 @@ public class MainMenu extends Shell {
 
 		composite.setEnabled(enabled);
 	}
-	
+
 	/**
-     * 
-     * @param searchResultsList
-     * @param moviesResult
-     */
-    private void displaySearchResults(List searchResultsList, ArrayList<MovieInfo> moviesResult) {
-        //clear the list of previous results
-        searchResultsList.removeAll();
-        //no search results found
-        if(moviesResult == null || moviesResult.isEmpty()){
-            searchResultsList.add("Oops...Your search did not return any matches");
-        }
-        else{
-            //one result opens movie details immediately
-            if(moviesResult.size() == 1){ //TODO - change idUser to meaningful
-                MovieDetails detailsShell = new MovieDetails(display, operations, 0, moviesResult.get(0));
-                detailsShell.open();
-                detailsShell.layout();
-                while (!detailsShell.isDisposed()) {
-                    if (!display.readAndDispatch()) {
-                        display.sleep();
-                    }
-                }
-            }
-            //add search results to the list
-            for (MovieInfo movieInfo : moviesResult) {
-                searchResultsList.add(movieInfo.movieName);
-            }
-        }
-    }
+	 * 
+	 * @param searchResultsList
+	 * @param moviesResult
+	 */
+	@SuppressWarnings("unchecked")
+	private void displaySearchResults(final List searchResultsList, final ArrayList<MovieInfo> moviesResult) {
+		//clear the list of previous results
+		searchResultsList.removeAll();
+		//no search results found
+		if(moviesResult == null || moviesResult.isEmpty()){
+			searchResultsList.add("Oops...Your search did not return any matches");
+		}
+		else{
+			//add search results to the list
+			for (MovieInfo movieInfo : moviesResult) {
+				searchResultsList.add(movieInfo.movieName);
+			}
+			//one result opens movie details immediately
+			if(moviesResult.size() == 1){
+				//TODO - change idUser to meaningful
+				MovieDetails detailsShell = new MovieDetails(display, operations, 0, moviesResult.get(0));
+				detailsShell.open();
+				detailsShell.layout();
+				while (!detailsShell.isDisposed()) {
+					if (!display.readAndDispatch()) {
+						display.sleep();
+					}
+				}
+			}
+			searchResultsList.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent arg0) {
+					//TODO - change idUser to meaningful
+					MovieDetails detailsShell = new MovieDetails(display, operations, 0, 
+							moviesResult.get(searchResultsList.getSelectionIndex()));
+					detailsShell.open();
+					detailsShell.layout();
+					while (!detailsShell.isDisposed()) {
+						if (!display.readAndDispatch()) {
+							display.sleep();
+						}
+					}
+				}
+			});
+		}
+	}
+
 
 
 }
