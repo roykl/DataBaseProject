@@ -348,6 +348,41 @@ public class MainMenu extends Shell {
 				boolean performSearch = true;
 
 				SearchQueries sq = new SearchQueries();
+				
+				//final boolean importRunnig ;
+				final AtomicBoolean searchRunning = new AtomicBoolean(true);
+				//progress bar thread
+				new Thread() {
+					@Override
+					public void run(){
+
+						JFrame theFrame =  new JFrame();
+						showProgressBar(theFrame);
+
+						while(searchRunning.get()){
+							try {
+								sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+
+						theFrame.dispose();
+
+						return;
+
+					}
+				}.start();
+				
+				
+			//disable form
+				setEnabledRecursive(display.getActiveShell(), false);
+				
+				
+
+					
+				
+				
 
 				//check if user entered movie name
 				if (!sq.createWheres(txtMovieTitle.getText())){
@@ -402,7 +437,7 @@ public class MainMenu extends Shell {
 
 
 
-					display.syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp){
+					Display.getCurrent().syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp){
 						@Override
 						public void run(){
 							super.run();
@@ -436,7 +471,7 @@ public class MainMenu extends Shell {
 					System.out.println("FROM- " + SearchQueries.MOVIE_FROM);
 					System.out.println("WHERE- " + sq.whereMovie);
 
-					display.syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
+					Display.getCurrent().syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
 							SearchQueries.GENRES_SELECT,  SearchQueries.GENRES_FROM,  sq.whereGenre,
 							SearchQueries.ACTORS_SELECT, SearchQueries.ACTORS_FROM, sq.whereActor){
 						@Override		
@@ -468,8 +503,12 @@ public class MainMenu extends Shell {
 				else{
 					// displaySearchResults(searchResultsList, null);
 				}
+				searchRunning.set(false);
+				//enable form
+				setEnabledRecursive(display.getActiveShell(), true);
 			}
 		});
+		
 		createContents();
 	}
 
@@ -540,16 +579,19 @@ public class MainMenu extends Shell {
 
 				@Override
 				public void run(){
-					try {
-						//disable form
-						setEnabledRecursive(display.getActiveShell(), false);
-						sleep(5000); //super.run();
-						importRunnig.set(false);
-						//enable form
-						setEnabledRecursive(display.getActiveShell(), true);
-						return;
-					} catch (InterruptedException e) {
-					}
+					//disable form
+					setEnabledRecursive(display.getActiveShell(), false);
+	try {
+		sleep(10000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} //super.run();
+	//				super.run();
+					importRunnig.set(false);
+					//enable form
+					setEnabledRecursive(display.getActiveShell(), true);
+					return;
 				}
 			});	
 			break; 
@@ -586,7 +628,7 @@ public class MainMenu extends Shell {
 
 	public static void setEnabledRecursive(final Composite composite, final boolean enabled){
 		//Check.notNull(composite, "composite"); //$NON-NLS-1$
-
+		
 		Control[] children = composite.getChildren();
 
 		for (int i = 0; i < children.length; i++)
@@ -597,12 +639,13 @@ public class MainMenu extends Shell {
 			}
 			else
 			{
-				//children[i].setEnabled(enabled);
+				children[i].setEnabled(enabled);
 				children[i].setVisible(enabled);
 			}
 		}
 
 		composite.setEnabled(enabled);
+		
 	}
 
 	/**
@@ -627,6 +670,7 @@ public class MainMenu extends Shell {
 			if(moviesResult.size() == 1){
 				//TODO - change idUser to meaningful
 				MovieDetails detailsShell = new MovieDetails(display, operations, idUser,moviesResult.get(0));
+				dispose();
 				detailsShell.open();
 				detailsShell.layout();
 				while (!detailsShell.isDisposed()) {
@@ -642,7 +686,7 @@ public class MainMenu extends Shell {
 					//TODO - change idUser to meaningful
 					
 					int selectionIndex = searchResultsList.getSelectionIndex();
-			        if(selectionIndex <= 0)
+			        if(selectionIndex < 0)
 			        	return;
 					MovieDetails detailsShell = new MovieDetails(display, operations, idUser, 
 							moviesResult.get(searchResultsList.getSelectionIndex()));
