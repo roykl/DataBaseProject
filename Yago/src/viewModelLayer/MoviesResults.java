@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class MoviesResults {
 
-	ArrayList<MovieInfo> moviesResult = new ArrayList<MovieInfo>(); 
+	static ArrayList<MovieInfo> moviesResult = new ArrayList<MovieInfo>(); 
 
 	public void setResultsMoive(ResultSet results){
 		try {

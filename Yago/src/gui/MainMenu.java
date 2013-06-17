@@ -471,7 +471,7 @@ public class MainMenu extends Shell {
 					System.out.println("FROM- " + SearchQueries.MOVIE_FROM);
 					System.out.println("WHERE- " + sq.whereMovie);
 
-					Display.getCurrent().syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
+					display.syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
 							SearchQueries.GENRES_SELECT,  SearchQueries.GENRES_FROM,  sq.whereGenre,
 							SearchQueries.ACTORS_SELECT, SearchQueries.ACTORS_FROM, sq.whereActor){
 						@Override		

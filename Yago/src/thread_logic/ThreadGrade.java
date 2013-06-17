@@ -128,11 +128,7 @@ public class ThreadGrade extends Thread {
 
 
 	private  int grade(){
-
 		return updateAvarage();		
-
-
-
 	}
 
 	public int getValue() {

@@ -3,6 +3,7 @@ package gui;
 //TODO: give constructor the user id and movie id
 //TODO: make movie name lable  
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.eclipse.swt.SWT;
@@ -22,6 +23,7 @@ import viewModelLayer.MovieInfo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import db.DBOparations;
 import db.IdbOparations;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -29,6 +31,7 @@ import org.eclipse.swt.events.KeyEvent;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.internal.theme.Theme;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Composite;
@@ -74,9 +77,9 @@ public class MovieDetails extends Shell {
 	 */
 	public MovieDetails(final Display display, final IdbOparations operations,
 			final int idUser, final MovieInfo movie) {
-		
+
 		super(display, SWT.SHELL_TRIM);
-		
+
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
 		setSize(1042, 769);
 		setMinimumSize(new Point(1030, 760));
@@ -144,8 +147,9 @@ public class MovieDetails extends Shell {
 			btnRankIt.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					grade = userRank.getSelectionIndex();
-					updateGrade(display, operations, idUser);
+					int grade = userRank.getSelectionIndex()+1;
+					System.out.println(grade);
+					updateGrade(display, operations, idUser, grade);
 					updateLabel(display, operations);
 				}
 			});
@@ -206,7 +210,7 @@ public class MovieDetails extends Shell {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					// call add remove form
-					 shell = new AddRemoveWindow(display,operations, movie);
+					shell = new AddRemoveWindow(display,operations, movie);
 					shell.open();
 					shell.layout();
 					while (!shell.isDisposed()) {
@@ -236,6 +240,7 @@ public class MovieDetails extends Shell {
 			lblLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
 
 			txtYear = new Text(composite_3, SWT.BORDER);
+			txtYear.setToolTipText("Enter the correct year");
 			txtYear.setBounds(10, 44, 138, 27);
 			txtYear.addKeyListener(new KeyAdapter() {
 				@Override
@@ -260,6 +265,7 @@ public class MovieDetails extends Shell {
 			lblYear.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
 
 			txtLanguage = new Text(composite_3, SWT.BORDER);
+			txtLanguage.setToolTipText("Enter a language (Starting with Capital letter)");
 			txtLanguage.setBounds(10, 106, 138, 27);
 			txtLanguage.addKeyListener(new KeyAdapter() {
 				@Override
@@ -284,6 +290,7 @@ public class MovieDetails extends Shell {
 			lblNewLabel_2.setText("Director");
 
 			txtDirector = new Text(composite_3, SWT.BORDER);
+			txtDirector.setToolTipText("Enter Director Name");
 			txtDirector.setBounds(10, 168, 138, 27);
 			txtDirector.addKeyListener(new KeyAdapter() {
 				@Override
@@ -324,14 +331,89 @@ public class MovieDetails extends Shell {
 			txtWikiurl.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 
 			Button btnYear = new Button(composite_3, SWT.NONE);
+			btnYear.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					if (movie.year.equals(txtYear.getText()) || !txtYear.getText().matches("[0-9]+") 
+							|| txtYear.getText().length() != 4 || Integer.parseInt(txtYear.getText()) < 1990
+							|| Integer.parseInt(txtYear.getText()) > 2100)
+						return;				
+				}
+			});
 			btnYear.setBounds(167, 42, 58, 30);
 			btnYear.setText("Update");
 
 			Button buttonLanguage = new Button(composite_3, SWT.NONE);
+			buttonLanguage.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					System.out.println("IM IN LANGUAGE UPDATE");
+					if(txtLanguage.getText().equals(movie.language))
+						return;
+					else
+					{
+						System.out.println("ABOUT TO UPDATE");
+						update(operations, "Movie", movie.idMovie, movie.idLanguage, "idLanguage", txtLanguage.getText(), null, display);
+					}
+				}
+			});
 			buttonLanguage.setText("Update");
 			buttonLanguage.setBounds(167, 104, 58, 30);
 
 			Button buttonDirector = new Button(composite_3, SWT.NONE);
+			buttonDirector.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					if(txtDirector.getText().equals(movie.directorName))
+						return;
+					else
+						display.asyncExec(new ThreadSearch(operations, "Distinct idDirector", "Director", "directorName = '" + txtDirector.getText() +"'"){
+							@Override
+							public void run() {
+								super.run();
+								ResultSet res = this.getResult();
+								try {
+									if (res.next()){
+										int idDirector = res.getInt(1);
+										ThreadUserUpdate t1 = new ThreadUserUpdate(operations, "Movie", movie.idMovie, movie.idDirector, "idDirector", idDirector);
+										t1.start();
+										try {
+											t1.join();
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+										int returnVal = t1.getValue();
+										t1.interrupt();
+										if (returnVal==1){
+											MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
+											messageBox.setText("Your changes have been saved!");
+											messageBox.setMessage("successfully Updated!");
+											messageBox.open();
+										}
+										else if(returnVal == 0){
+											MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+											messageBox.setText("Error");
+											messageBox.setMessage("Value must exist in our  data.");
+											messageBox.open();
+
+										}
+									}else{
+										MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+										messageBox.setText("Error");
+										messageBox.setMessage("Value must exist in our  data.");
+										messageBox.open();
+									}
+								} catch (SQLException e) {
+									MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+									messageBox.setText("Error");
+									messageBox.setMessage("Couldn't update");
+									messageBox.open();
+								}
+							}
+						});
+				}
+			});
 			buttonDirector.setText("Update");
 			buttonDirector.setBounds(167, 166, 58, 30);
 
@@ -392,12 +474,12 @@ public class MovieDetails extends Shell {
 
 			btnTrailer = new Button(composite, SWT.NONE);
 			fd_composite_6.bottom = new FormAttachment(btnTrailer, 0, SWT.BOTTOM);
-			
+
 			Button btnNewButton_2 = new Button(composite_6, SWT.NONE);
 			btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					
+
 					dispose();
 					MainMenu MainMenuShell = new MainMenu(display,operations,false, idUser);
 					MainMenuShell.open();
@@ -439,7 +521,7 @@ public class MovieDetails extends Shell {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						try {
-							trailerWindow shell = new trailerWindow(display, movie);
+							TrailerWindow shell = new TrailerWindow(display, movie);
 							shell.open();
 							shell.layout();
 							while (!shell.isDisposed()) {
@@ -488,20 +570,17 @@ public class MovieDetails extends Shell {
 				super.run();
 				int returnVal= this.getValue();
 				if (returnVal==OK){
-					txtBox.setText(newVal);
+					//				txtBox.setText(newVal);
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
 					messageBox.setText("Your changes have been saved!");
 					messageBox.setMessage("successfully Updated!");
 					messageBox.open();
-
-
 				}
 				else if(returnVal == ERR){
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 					messageBox.setText("Error");
 					messageBox.setMessage("Value must exist in our " +tableName+ " data.");
 					messageBox.open();
-
 				}
 
 			}
@@ -515,10 +594,9 @@ public class MovieDetails extends Shell {
 	protected void createContents() {
 	}
 
-	private void updateGrade(Display display, IdbOparations operations,
-			int idUser) {
+	private void updateGrade(Display display, IdbOparations operations, int idUser, int grade) {
 
-		display.syncExec(new ThreadGrade(operations, idUser, idMovie, grade) {
+		display.syncExec(new ThreadGrade(operations, idUser, movie.idMovie, grade) {
 			@Override
 			public void run() {
 				super.run();
@@ -528,13 +606,13 @@ public class MovieDetails extends Shell {
 
 	private void updateLabel(Display display, IdbOparations operations) {
 		display.syncExec(new ThreadSearch(operations,
-				"grade, numbersOfRankers", "MoviesGrades", "idMovie = "
+				"grade, numberOfRankers", "MoviesGrades", "idMovie = "
 						+ idMovie) {
 			@Override
 			public void run() {
 				super.run();
 				try {
-					int numbersOfRankers = this.getResult().getInt("numbersOfRankers");
+					int numberOfRankers = this.getResult().getInt("numberOfRankers");
 					int grade = this.getResult().getInt("grade");
 					txtRating.setText(Integer.toString(grade));
 					// TODO: add number of rankers label

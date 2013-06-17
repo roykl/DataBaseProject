@@ -9,15 +9,15 @@ import org.eclipse.swt.browser.Browser;
 
 import viewModelLayer.MovieInfo;
 
-public class trailerWindow extends Shell {
+public class TrailerWindow extends Shell {
 
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public trailerWindow(Display display, final MovieInfo movie) {
+	public TrailerWindow(Display display, final MovieInfo movie) {
 		super(display, SWT.SHELL_TRIM);
-		setImage(SWTResourceManager.getImage(trailerWindow.class, "/movies.png"));
+		setImage(SWTResourceManager.getImage(TrailerWindow.class, "/movies.png"));
 		setMinimumSize(new Point(800, 600));
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		Browser trailerBrowser = new Browser(this, SWT.BORDER);
