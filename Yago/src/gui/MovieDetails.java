@@ -612,8 +612,8 @@ public class MovieDetails extends Shell {
 			public void run() {
 				super.run();
 				try {
-					int numberOfRankers = this.getResult().getInt("numberOfRankers");
-					int grade = this.getResult().getInt("grade");
+					int numberOfRankers = this.getResult().getInt(2);
+					int grade = this.getResult().getInt(1);
 					txtRating.setText(Integer.toString(grade));
 					// TODO: add number of rankers label
 				} catch (SQLException e) {

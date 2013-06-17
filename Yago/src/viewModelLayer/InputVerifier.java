@@ -17,7 +17,7 @@ public class InputVerifier {
 	}
 	
 	public static boolean verifyInput(String input){
-		if(input.contains("'") || input.contains("\""))
+		if(input.contains("\""))
 			return false;
 		else return true;
 	}

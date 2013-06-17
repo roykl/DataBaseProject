@@ -107,18 +107,18 @@ public class ThreadGrade extends Thread {
 		//if (retVal == 2) -> (function succeed) else (error)
 		if(!userRanked && !movieRanked){
 			//insert to MoviesGrades
-			retVal =+ oparations.insert("MoviesGrades", Integer.toString(IDmovie), Double.toString(newGrade), Integer.toString(newCount) );
+			retVal += oparations.insert("MoviesGrades", Integer.toString(IDmovie), Double.toString(newGrade), Integer.toString(newCount) );
 			//insert to UsersMovies
-			retVal =+ oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
+			retVal += oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
 		} else if(!userRanked && movieRanked){
 			//insert to UsersMovies
-			retVal =+ oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
+			retVal += oparations.insert("UsersMovies", Integer.toString(IDuser),Integer.toString(IDmovie),Integer.toString(grade));
 			//update MoviesGrades
-			retVal =+ oparations.update("MoviesGrades", "grade = " + newGrade + " , numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
+			retVal += oparations.update("MoviesGrades", "grade = " + newGrade + " , numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
 		} else if(userRanked && movieRanked){
-			retVal =+ oparations.update("MoviesGrades", "grade = " + newGrade + " ,numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
+			retVal += oparations.update("MoviesGrades", "grade = " + newGrade + " ,numberOfRankers = "+ newCount, "idMovie = " + IDmovie);
 			//update UsersMovies
-			retVal =+ oparations.update("UsersMovies", "rank = " + grade, "idUser = " + IDuser + " AND idMovie" + IDmovie);
+			retVal += oparations.update("UsersMovies", "rank = " + grade, "idUser = " + IDuser + " AND idMovie" + IDmovie);
 		}
 		if(retVal == 2)
 			return OK;
