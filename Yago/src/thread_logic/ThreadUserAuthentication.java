@@ -7,17 +7,17 @@ import utils.Configuration;
 
 import db.IdbOparations;
 
-public class ThreadUserAuthentication extends Thread {
+public class ThreadUserAuthentication implements Runnable {
 
 	private IdbOparations oparations ;
 	private String userName;
 	private String password;
 	private int value;
-	
+
 	private static final int USER_NOT_EXIST = 2;
 	private static final int OK = 1;
 	private static final int ERR = 0;
-	
+
 	public  ThreadUserAuthentication(IdbOparations inOpp, String userName, String password){
 
 		oparations = inOpp;
@@ -31,15 +31,15 @@ public class ThreadUserAuthentication extends Thread {
 		ResultSet result = oparations.select("idUsers", "Users", "idUsers = " +Integer.toString(userName.hashCode()) + " AND hashPassword = "+ Integer.toString(password.hashCode()));
 
 		try {
-					retVal = result.next() ? OK: USER_NOT_EXIST;
-					result.close();
-					return retVal;
+			retVal = result.next() ? OK: USER_NOT_EXIST;
+			result.close();
+			return retVal;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERR;
 		}
-	
+
 	}
 
 	public void run(){

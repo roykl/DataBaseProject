@@ -9,7 +9,7 @@ import db.IdbOparations;
 // DELETE - newVal = 0 - only to ActorMovie, GenreMovie
 
 
-public class ThreadUserUpdate extends Thread {
+public class ThreadUserUpdate implements Runnable {
 
 	IdbOparations oparations ;
 	String table;

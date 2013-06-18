@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import db.IdbOparations;
 
 
-public class MultiThreadSearch extends Thread{
+public class MultiThreadSearch extends ThreadSearch {
 
 	public MultiThreadSearch(IdbOparations oparations, String selectM,
 			String fromM, String whereM, String selectG, String fromG,
@@ -36,10 +36,17 @@ public class MultiThreadSearch extends Thread{
 	private ResultSet resultActor;
 	
 
+
+	@Override
 	public void run() {
-		ThreadSearch t1 = new ThreadSearch(oparations, selectM, fromM, whereM);
-		ThreadSearch t2 = new ThreadSearch(oparations, selectG, fromG, whereG);
-		ThreadSearch t3 = new ThreadSearch(oparations, selectA, fromA, whereA);
+		ThreadSearch t11 = new ThreadSearch(oparations, selectM, fromM, whereM);
+		ThreadSearch t22 = new ThreadSearch(oparations, selectG, fromG, whereG);
+		ThreadSearch t33 = new ThreadSearch(oparations, selectA, fromA, whereA);
+		
+		Thread t1 = new Thread(t11);
+		Thread t2 = new Thread(t22);
+		Thread t3 = new Thread(t33);
+		
 		t1.start();
 		try {
 			t1.join();
@@ -47,7 +54,7 @@ public class MultiThreadSearch extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		resultMovie = t1.getResult();
+		resultMovie = t11.getResult();
 		
 		t2.start();
 		try {
@@ -56,7 +63,7 @@ public class MultiThreadSearch extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		resultGenre = t2.getResult();
+		resultGenre = t22.getResult();
 		
 		t3.start();
 		try {
@@ -65,9 +72,7 @@ public class MultiThreadSearch extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		resultActor = t3.getResult();
-		
-		return;
+		resultActor = t33.getResult();
 	}
 
 	

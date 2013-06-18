@@ -2,7 +2,7 @@ package thread_logic;
 import java.sql.ResultSet;
 import db.IdbOparations;
 
-public class ThreadSearch extends Thread {
+public class ThreadSearch implements Runnable {
 	
 	protected IdbOparations oparations ;
 	protected String select;

@@ -2,10 +2,7 @@ package gui;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import gui.SWTResourceManager;
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,16 +16,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import db.DBOparations;
 import db.IdbOparations;
 import db.JDBCConnectionPooling;
-
-import thread_logic.ThreadSearch;
-import thread_logic.ThreadUserUpdate;
+import runnableLogic.Search;
+import runnableLogic.UserUpdate;
 import viewModelLayer.MovieInfo;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
+
 
 public class AddRemoveWindow extends Shell {
 	private Text editorText;
@@ -160,7 +155,7 @@ public class AddRemoveWindow extends Shell {
 				else if( btnActor.getSelection()){		// actor - calc id actor
 
 
-					display.syncExec(new ThreadSearch(operations,"idActor","Actor","actorName = '" + editorText.getText()+ "'"){
+					display.syncExec(new Search(operations,"idActor","Actor","actorName = '" + editorText.getText()+ "'"){
 
 						int newVal;
 						@Override
@@ -174,14 +169,7 @@ public class AddRemoveWindow extends Shell {
 
 
 							try {
-								//								if(!result.next()){ // check that actor is in the system
-								////									MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
-								////									messageBox.setText("Warning");
-								////									messageBox.setMessage("Value must exists in actors repository.");
-								////									messageBox.open();
-								////									
-								//								}
-								//								
+														
 
 								newVal = result.getInt("idActor");
 
@@ -228,8 +216,8 @@ public class AddRemoveWindow extends Shell {
 		final String message2 = actor ? "actors":"genres";
 
 
-		
-		display.syncExec(new ThreadUserUpdate(operations,table,firstKey,secondKey,column,newVal){
+
+		display.syncExec(new UserUpdate(operations,table,firstKey,secondKey,column,newVal){
 			@Override
 			public void run(){
 				super.run();
@@ -238,9 +226,8 @@ public class AddRemoveWindow extends Shell {
 				if(returnVal == OK){ 
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
 					messageBox.setText(add ? "Insert":"Delete");
-					messageBox.setMessage(message1 +" "+ message2  +" successfully commited.");
+					messageBox.setMessage(message1 +" "+ message2  +" successfully commited.\n Updates will be applied on the next search.");
 					messageBox.open();
-					//add\remove value to\from directly list
 				}
 				else if(returnVal == ERR){
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);

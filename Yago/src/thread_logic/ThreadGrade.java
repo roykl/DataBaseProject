@@ -7,7 +7,7 @@ import utils.Configuration;
 
 import db.IdbOparations;
 
-public class ThreadGrade extends Thread {
+public class ThreadGrade implements Runnable {
 
 	IdbOparations oparations ;
 	private int IDuser;

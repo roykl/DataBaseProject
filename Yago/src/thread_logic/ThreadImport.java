@@ -3,7 +3,7 @@ package thread_logic;
 import db.IdbOparations;
 
 
-public class ThreadImport extends Thread {
+public class ThreadImport implements Runnable {
 
 	private IdbOparations oparations ;
 	private int value; // returned value

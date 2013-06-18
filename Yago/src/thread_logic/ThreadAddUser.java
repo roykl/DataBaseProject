@@ -8,7 +8,7 @@ import utils.Configuration;
 
 import db.IdbOparations;
 
-public class ThreadAddUser extends Thread {
+public class ThreadAddUser implements Runnable{
 	
 	private IdbOparations oparations ;
 	private String userName;

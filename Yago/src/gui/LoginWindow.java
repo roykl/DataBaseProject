@@ -18,7 +18,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-import thread_logic.ThreadUserAuthentication;
+import runnableLogic.UserAuthentication;
 import viewModelLayer.InputVerifier;
 
 import db.IdbOparations;
@@ -36,7 +36,7 @@ public class LoginWindow extends Shell {
 	 * @param display
 	 */
 	public LoginWindow(final Display display, final IdbOparations oparations) {
-		super(display, SWT.BORDER | SWT.CLOSE | SWT.MIN | SWT.MAX);
+		super(display, SWT.BORDER | SWT.CLOSE | SWT.MIN);
 		setSize(606, 763);
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		setMinimumSize(new Point(600, 750));
@@ -57,19 +57,19 @@ public class LoginWindow extends Shell {
 			public void widgetSelected(SelectionEvent arg0) {
 
 				if(!InputVerifier.verifyUsername(text_1.getText())){ // illegal user name
-					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+					MessageBox messageBox = new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 					messageBox.setText("Illegal Username");
 					messageBox.setMessage("Username must contain 3 - 12 chars\n Only letters or numbers allowed.");
 					messageBox.open();
 				}else if(!InputVerifier.verifyPass(text.getText())){ // invalid password
-					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+					MessageBox messageBox = new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 					messageBox.setText("Illegal Password");
 					messageBox.setMessage("Password must contain 3 - 12 chars.");
 					messageBox.open();
 				}
-				//if ADMINISTRATOR 
+				//if ADMINISTRATOR
 				else if(text_1.getText().equals("admin") && text.getText().equals("admin")){
-					int idUser =  text_1.getText().hashCode();
+					int idUser = text_1.getText().hashCode();
 					MainMenu MainMenuShell = new MainMenu(display,oparations,true,idUser);
 					dispose();
 					MainMenuShell.open();
@@ -81,9 +81,9 @@ public class LoginWindow extends Shell {
 					}
 				}
 				else{ //not admin
-					
+
 					// check authentication
-					display.syncExec(new ThreadUserAuthentication(oparations, text_1.getText() , text.getText()){
+					display.syncExec(new UserAuthentication(oparations, text_1.getText() , text.getText()){
 						@Override
 						public void run(){
 							super.run();
@@ -91,8 +91,8 @@ public class LoginWindow extends Shell {
 
 
 							if(result == OK){
-								// user authentication OK								
-								int idUser =  text_1.getText().hashCode();
+								// user authentication OK
+								int idUser = text_1.getText().hashCode();
 								dispose();
 								MainMenu MainMenuShell = new MainMenu(display,oparations,false,idUser);
 								MainMenuShell.open();
@@ -103,10 +103,10 @@ public class LoginWindow extends Shell {
 									}
 								}
 							}
-							else if (result == USER_NOT_EXIST) //  user authentication NOT OK
+							else if (result == USER_NOT_EXIST) // user authentication NOT OK
 							{
-								
-								MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+
+								MessageBox messageBox = new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 								messageBox.setText("User doesn't exist");
 								messageBox.setMessage("User doesn't exist: please sign up first.");
 								messageBox.open();
@@ -117,7 +117,7 @@ public class LoginWindow extends Shell {
 
 					});
 
-				}		
+				}	
 			}	
 		});
 

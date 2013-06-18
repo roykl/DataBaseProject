@@ -18,7 +18,6 @@ public class Launcher {
 
 	//main loop
 	public static void main(String[] args) {
-
 		start();
 	}
 
@@ -48,18 +47,13 @@ public class Launcher {
 				}
 			}
 
-		}
-
-		catch (org.eclipse.swt.SWTException e){
-			// if you are he
-			//	return;
 
 		} catch ( Exception e) {
 			System.out.println("ERROR");
 			e.printStackTrace();
 
 			Shell shell = new Shell(display);
-			MessageBox messageBox =  new MessageBox(shell, SWT.ICON_WARNING);
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING);
 			messageBox.setText("Error");
 			messageBox.setMessage("Connection Error: Check Internet OR SSL connection.");
 			messageBox.open();
@@ -70,8 +64,8 @@ public class Launcher {
 
 		}
 		finally{
-			Queue<Thread> allThreads = new ConcurrentLinkedQueue<Thread>();  
-			for (Thread t; (t = allThreads.poll()) != null; )  
+			Queue<Thread> allThreads = new ConcurrentLinkedQueue<Thread>();
+			for (Thread t; (t = allThreads.poll()) != null; )
 				// t.join();
 				System.out.println(t.isAlive());
 			pool.stop();

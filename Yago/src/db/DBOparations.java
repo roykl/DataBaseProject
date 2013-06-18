@@ -593,7 +593,6 @@ public class DBOparations implements IdbOparations {
 							str2);
 				}
 			}
-
 		}
 		catch (SQLException e) {
 			System.out.println("Updates Failed");

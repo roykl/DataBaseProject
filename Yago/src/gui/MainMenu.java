@@ -39,8 +39,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.layout.GridData;
 
-import thread_logic.MultiThreadSearch;
-import thread_logic.ThreadSearch;
+import runnableLogic.MultiThreadSearch;
+import runnableLogic.Search;
 import viewModelLayer.InputVerifier;
 import viewModelLayer.MovieInfo;
 import viewModelLayer.MoviesResults;
@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Point;
 
 
 
@@ -68,52 +69,53 @@ public class MainMenu extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */ //
-	public MainMenu(final Display display, final IdbOparations operations,final boolean isAdmin,final int idUser) {
-		super(display, SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
+	public MainMenu(final Display display, final IdbOparations operations, final boolean isAdmin, final int idUser) {
+		super(display, SWT.CLOSE | SWT.MIN | SWT.TITLE);
+		setMinimumSize(new Point(370, 650));
 		this.display = display;
 		this.operations = operations;
-		setSize(1168, 671);
+		setSize(370, 744);
 		setBackground(SWTResourceManager.getColor(128, 0, 0));
 		setImage(SWTResourceManager.getImage(MainMenu.class, "/movies.png"));
 		setLayout(new FormLayout());
 
-		final ExpandBar expandBar = new ExpandBar(this, SWT.V_SCROLL);
-		expandBar.setSpacing(10);
-		expandBar.setBackground(SWTResourceManager.getColor(128, 0, 0));
-		FormData fd_expandBar = new FormData();
-		fd_expandBar.left = new FormAttachment(0);
-		expandBar.setLayoutData(fd_expandBar);
-
-		Composite composite = new Composite(this, SWT.NONE);
-		fd_expandBar.right = new FormAttachment(composite, -13);
-		composite.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		FormData fd_composite = new FormData();
-		fd_composite.top = new FormAttachment(0);
-		fd_composite.right = new FormAttachment(100, 5);
-		fd_composite.bottom = new FormAttachment(0, 638);
-		fd_composite.left = new FormAttachment(0, 292);
-		composite.setLayoutData(fd_composite);
-
-		final List searchResultsList = new List(composite, SWT.V_SCROLL);
-		searchResultsList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		searchResultsList.setItems(new String[] {});
-		searchResultsList.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-		searchResultsList.setBounds(10, 10, 855, 497);
-
-		Label lblNewLabel = new Label(composite, SWT.NONE);
-		lblNewLabel.setImage(SWTResourceManager.getImage(MainMenu.class, "/video screen.jpg"));
-		lblNewLabel.setBounds(0, 10, 875, 628);
+		Label lblMovieTitle = new Label(this, SWT.NONE);
+		FormData fd_lblMovieTitle = new FormData();
+		fd_lblMovieTitle.top = new FormAttachment(0, 5);
+		fd_lblMovieTitle.left = new FormAttachment(0, 5);
+		lblMovieTitle.setLayoutData(fd_lblMovieTitle);
+		lblMovieTitle.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblMovieTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblMovieTitle.setText("Movie title");
 
 		txtMovieTitle = new Text(this, SWT.BORDER);
+		FormData fd_txtMovieTitle = new FormData();
+		fd_txtMovieTitle.right = new FormAttachment(100, -23);
+		fd_txtMovieTitle.left = new FormAttachment(0, 15);
+		fd_txtMovieTitle.top = new FormAttachment(0, 30);
+		txtMovieTitle.setLayoutData(fd_txtMovieTitle);
 		txtMovieTitle.setToolTipText("Enter a movie title");
 		txtMovieTitle.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
-		FormData fd_txtMovieTitle = new FormData();
-		fd_txtMovieTitle.right = new FormAttachment(composite, -24);
-		fd_txtMovieTitle.left = new FormAttachment(0, 10);
-		txtMovieTitle.setLayoutData(fd_txtMovieTitle);
 
-		Button btnSearch = new Button(this, SWT.NONE);
-		fd_expandBar.bottom = new FormAttachment(btnSearch, -6);
+		Label lblAdvancedSearch = new Label(this, SWT.NONE);
+		FormData fd_lblAdvancedSearch = new FormData();
+		fd_lblAdvancedSearch.top = new FormAttachment(0, 64);
+		fd_lblAdvancedSearch.left = new FormAttachment(0, 5);
+		lblAdvancedSearch.setLayoutData(fd_lblAdvancedSearch);
+		lblAdvancedSearch.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblAdvancedSearch.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		lblAdvancedSearch.setText("Advanced search options");
+		
+
+		final ExpandBar expandBar = new ExpandBar(this, SWT.V_SCROLL);
+		FormData fd_expandBar = new FormData();
+		fd_expandBar.bottom = new FormAttachment(0, 454);
+		fd_expandBar.right = new FormAttachment(100, -10);
+		fd_expandBar.left = new FormAttachment(0, 5);
+		fd_expandBar.top = new FormAttachment(0, 89);
+		expandBar.setLayoutData(fd_expandBar);
+		expandBar.setSpacing(10);
+		expandBar.setBackground(SWTResourceManager.getColor(128, 0, 0));
 
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmNewExpanditem.setText("Genre");
@@ -197,27 +199,6 @@ public class MainMenu extends Shell {
 		TableItem tableItem_24 = new TableItem(genreTable, SWT.NONE);
 		tableItem_24.setText("Family");
 		xpndtmNewExpanditem.setHeight(120);
-		FormData fd_btnSearch = new FormData();
-		fd_btnSearch.top = new FormAttachment(0, 473);
-		fd_btnSearch.left = new FormAttachment(0, 51);
-		fd_btnSearch.right = new FormAttachment(0, 223);
-		btnSearch.setLayoutData(fd_btnSearch);
-		btnSearch.setText("Search");
-
-		Label lblMovieTitle = new Label(this, SWT.NONE);
-		fd_txtMovieTitle.top = new FormAttachment(lblMovieTitle, 12);
-		lblMovieTitle.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblMovieTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
-		FormData fd_lblMovieTitle = new FormData();
-		fd_lblMovieTitle.bottom = new FormAttachment(100, -591);
-		fd_lblMovieTitle.left = new FormAttachment(0, 10);
-		lblMovieTitle.setLayoutData(fd_lblMovieTitle);
-		lblMovieTitle.setText("Movie title");
-
-		Label lblAdvancedSearch = new Label(this, SWT.NONE);
-		fd_txtMovieTitle.bottom = new FormAttachment(lblAdvancedSearch, -30);
-		lblAdvancedSearch.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		fd_expandBar.top = new FormAttachment(0, 135);
 
 		ExpandItem xpndtmDirectorName = new ExpandItem(expandBar, 0);
 		xpndtmDirectorName.setText("Director");
@@ -313,12 +294,14 @@ public class MainMenu extends Shell {
 		scrolledComposite_1.setContent(languageList);
 		scrolledComposite_1.setMinSize(languageList.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		xpndtmNewExpanditem_1.setHeight(110);
-		lblAdvancedSearch.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
-		FormData fd_lblAdvancedSearch = new FormData();
-		fd_lblAdvancedSearch.bottom = new FormAttachment(expandBar, -1);
-		fd_lblAdvancedSearch.left = new FormAttachment(0, 10);
-		lblAdvancedSearch.setLayoutData(fd_lblAdvancedSearch);
-		lblAdvancedSearch.setText("Advanced search options");
+
+		Button btnSearch = new Button(this, SWT.NONE);
+		FormData fd_btnSearch = new FormData();
+		fd_btnSearch.bottom = new FormAttachment(100, -106);
+		fd_btnSearch.left = new FormAttachment(0, 125);
+		fd_btnSearch.right = new FormAttachment(0, 223);
+		btnSearch.setLayoutData(fd_btnSearch);
+		btnSearch.setText("Search");
 
 		if(isAdmin){
 			Button btnImport = new Button(this, SWT.NONE);
@@ -331,58 +314,29 @@ public class MainMenu extends Shell {
 			});
 			btnImport.setText("Import");
 			FormData fd_btnImport = new FormData();
+			fd_btnImport.bottom = new FormAttachment(100, -36);
 			fd_btnImport.left = new FormAttachment(btnSearch, 0, SWT.LEFT);
-			fd_btnImport.top = new FormAttachment(btnSearch, 19);
 			fd_btnImport.right = new FormAttachment(btnSearch, 0, SWT.RIGHT);
 			btnImport.setLayoutData(fd_btnImport);
 		}
 
 
 
-		//Search button listener - TODO: complete extracting data from search parameters
+		//Search button listener 
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			//Search button pressed
 			public void widgetSelected(SelectionEvent arg0) {
-				boolean enteredMovieName = false;
-				boolean performSearch = true;
 
-				SearchQueries sq = new SearchQueries();
-				
-				//final boolean importRunnig ;
-				final AtomicBoolean searchRunning = new AtomicBoolean(true);
+				final AtomicBoolean searchRunnig = new AtomicBoolean(true);
 				//progress bar thread
-				new Thread() {
+				display.syncExec(new Runnable() {
 					@Override
 					public void run(){
-
-						JFrame theFrame =  new JFrame();
-						showProgressBar(theFrame);
-
-						while(searchRunning.get()){
-							try {
-								sleep(1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-
-						theFrame.dispose();
-
-						return;
-
-					}
-				}.start();
-				
-				
-			//disable form
-				setEnabledRecursive(display.getActiveShell(), false);
-				
-				
-
-					
-				
-				
+						//System.out.println("im in progress bar thread before while");
+						setEnabledRecursive(display.getActiveShell(), false);
+						//import thread
+				SearchQueries sq = new SearchQueries();
 
 				//check if user entered movie name
 				if (!sq.createWheres(txtMovieTitle.getText())){
@@ -412,7 +366,7 @@ public class MainMenu extends Shell {
 						return;						
 					}
 
-					System.out.println(yearFromSpinner.getSelection());
+					//System.out.println(yearFromSpinner.getSelection());
 
 					//check years are correct
 					if(yearFromSpinner.getSelection() > yearToSpinner.getSelection()){
@@ -437,22 +391,30 @@ public class MainMenu extends Shell {
 
 
 
-					Display.getCurrent().syncExec(new ThreadSearch(operations, sq.selectProp, sq.fromProp, sq.whereProp){
+					Thread search1 = new Thread (new Search(operations, sq.selectProp, sq.fromProp, sq.whereProp){
 						@Override
 						public void run(){
 							super.run();
 							moviesIds = this.getResult();
+							System.out.println("im in search1");
 							//	sq.createFromMoviesIds(moviesIds);
 							return;
 						}
 					});
+					search1.start();
+					try {
+						search1.join();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 					sq.createFromMoviesIds(moviesIds);
 					moviesIds= null;
 				}
 				else {
 					// user enter movieName 
-					enteredMovieName = true;
+					//enteredMovieName = true;
 					// verify that the input is ok
 					if (!InputVerifier.verifyInput(txtMovieTitle.getText())){
 						// input not ok
@@ -471,18 +433,19 @@ public class MainMenu extends Shell {
 					System.out.println("FROM- " + SearchQueries.MOVIE_FROM);
 					System.out.println("WHERE- " + sq.whereMovie);
 
-					display.syncExec(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
+					Thread search2 = new Thread(new MultiThreadSearch(operations, SearchQueries.MOVIE_SELECT, SearchQueries.MOVIE_FROM, sq.whereMovie + " order by grade desc, year desc",
 							SearchQueries.GENRES_SELECT,  SearchQueries.GENRES_FROM,  sq.whereGenre,
 							SearchQueries.ACTORS_SELECT, SearchQueries.ACTORS_FROM, sq.whereActor){
 						@Override		
 						public void run(){
 							super.run();
-//							try {
-//								this.join();
-//							} catch (InterruptedException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
+							System.out.println("im in search2");
+							//							try {
+							//								this.join();
+							//							} catch (InterruptedException e) {
+							//								// TODO Auto-generated catch block
+							//								e.printStackTrace();
+							//							}
 							ResultSet resultMovie = this.getResultMovie();
 							ResultSet resultGenre = this.getResultGenre();
 							ResultSet resultActor = this.getResultActor();
@@ -492,29 +455,46 @@ public class MainMenu extends Shell {
 							moviesRes.setResultsGenre(resultGenre);
 							moviesRes.setResultsActors(resultActor);
 							moviesRes.addYoutubeAndPoster();
-
+							searchRunnig.set(false);
 							System.out.println(moviesRes.getMoviesResult().toString());
 							return;
 						}
 					});
-					displaySearchResults(searchResultsList, moviesRes.getMoviesResult(),idUser);
-					moviesRes = null;
+					search2.start();
+					
+					
 				}			
 				else{
-					// displaySearchResults(searchResultsList, null);
+					searchRunnig.set(false);
 				}
-				searchRunning.set(false);
-				//enable form
+				JFrame theFrame =  new JFrame();
+				showProgressBar(theFrame);
+				System.out.println("im in progress bar thread before while");
+				while (searchRunnig.get()) {
+
+					display.sleep();
+				}
+				//System.out.println("im in progress bar thread after while");
+				
 				setEnabledRecursive(display.getActiveShell(), true);
+				displaySearchResults( moviesRes.getMoviesResult(),idUser);
+				moviesRes = null;
+				theFrame.dispose();
+				return;
+				
 			}
-		});
-		
+					
+				});
+			}
+			});
+
 		createContents();
 	}
 
 
+
 	private void massiveImport(Display display1, IdbOparations operations1 ){
-		display1.syncExec(new thread_logic.ThreadImport(operations1){
+		display1.syncExec(new runnableLogic.Import(operations1){
 			@Override
 			public void run(){
 				super.run();
@@ -538,7 +518,7 @@ public class MainMenu extends Shell {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	private void Import(final Display display, IdbOparations operations ){
+	private void Import(final Display display, final IdbOparations operations ){
 
 		MessageBox messageBox = new MessageBox(display.getActiveShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 		messageBox.setText("Import");
@@ -550,50 +530,48 @@ public class MainMenu extends Shell {
 			//final boolean importRunnig ;
 			final AtomicBoolean importRunnig = new AtomicBoolean(true);
 			//progress bar thread
-			new Thread() {
+			display.syncExec(new Runnable() {
 				@Override
 				public void run(){
+					System.out.println("im in progress bar thread before while");
+					setEnabledRecursive(display.getActiveShell(), false);
+					//import thread
+					Thread importThread = new Thread(	new runnableLogic.Import(operations){
 
+
+						@Override
+						public void run(){
+							System.out.println("im in import thread before false");
+							//disable form
+							
+							// //////////////////super.run();
+							importRunnig.set(false);
+							//enable form
+							System.out.println("im in import thread after false");
+							
+						}
+					});
+
+					//progressThread.start();
+					importThread.start();
 					JFrame theFrame =  new JFrame();
 					showProgressBar(theFrame);
 
-					while(importRunnig.get()){
-						try {
-							sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+					while (importRunnig.get()) {
+
+						display.sleep();
 					}
-
-					theFrame.dispose();
-
-					return;
-
-				}
-			}.start();
-
-			//import thread
-			display.syncExec(new thread_logic.ThreadImport(operations){
-
-
-				@Override
-				public void run(){
-					//disable form
-					setEnabledRecursive(display.getActiveShell(), false);
-	try {
-		sleep(10000);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} //super.run();
-	//				super.run();
-					importRunnig.set(false);
-					//enable form
+					System.out.println("im in progress bar thread after while");
+					
 					setEnabledRecursive(display.getActiveShell(), true);
+					theFrame.dispose();
 					return;
+
+
 				}
-			});	
+			});
+
+
 			break; 
 
 		case SWT.NO:
@@ -628,7 +606,7 @@ public class MainMenu extends Shell {
 
 	public static void setEnabledRecursive(final Composite composite, final boolean enabled){
 		//Check.notNull(composite, "composite"); //$NON-NLS-1$
-		
+
 		Control[] children = composite.getChildren();
 
 		for (int i = 0; i < children.length; i++)
@@ -639,14 +617,15 @@ public class MainMenu extends Shell {
 			}
 			else
 			{
-				children[i].setEnabled(enabled);
+				//children[i].setEnabled(enabled);
 				children[i].setVisible(enabled);
 			}
 		}
-
 		composite.setEnabled(enabled);
-		
 	}
+
+
+
 
 	/**
 	 * 
@@ -654,63 +633,22 @@ public class MainMenu extends Shell {
 	 * @param moviesResult
 	 */
 	@SuppressWarnings("unchecked")
-	private void displaySearchResults(final List searchResultsList, final ArrayList<MovieInfo> moviesResult,final int idUser) {
-		//clear the list of previous results
-		searchResultsList.removeAll();
-		//no search results found
-		if(moviesResult == null || moviesResult.isEmpty()){
-			searchResultsList.add("Oops...Your search did not return any matches");
-		}
-		else{
-			//add search results to the list
-			for (MovieInfo movieInfo : moviesResult) {
-				searchResultsList.add(movieInfo.movieName);
-			}
-			//one result opens movie details immediately
-			if(moviesResult.size() == 1){
-				//TODO - change idUser to meaningful
-				MovieDetails detailsShell = new MovieDetails(display, operations, idUser,moviesResult.get(0));
-				dispose();
-				detailsShell.open();
-				detailsShell.layout();
-				while (!detailsShell.isDisposed()) {
-					if (!display.readAndDispatch()) {
-						display.sleep();
-					}
+	private void displaySearchResults(final ArrayList<MovieInfo> moviesResult, final int idUser) {
+		try {
+			Display display = Display.getDefault();
+			SearchResultsWindow shell = new SearchResultsWindow(display, operations, idUser, moviesResult);
+			shell.open();
+			shell.layout();
+			while (!shell.isDisposed()) {
+				if (!display.readAndDispatch()) {
+					display.sleep();
 				}
 			}
-			
-			searchResultsList.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent arg0) {
-					//TODO - change idUser to meaningful
-					
-					int selectionIndex = searchResultsList.getSelectionIndex();
-			        if(selectionIndex < 0)
-			        	return;
-					MovieDetails detailsShell = new MovieDetails(display, operations, idUser, 
-							moviesResult.get(searchResultsList.getSelectionIndex()));
-					
-					System.out.println("************************"+moviesResult.get(searchResultsList.getSelectionIndex()).movieName+"********************************************");
-					for (MovieInfo movieInfo : moviesResult) {
-						System.out.println(movieInfo.movieName);
-					}
-					System.out.println("**************************************************************************************************************************");
-					dispose();
-					detailsShell.open();
-					detailsShell.layout();
-					while (!detailsShell.isDisposed()) {
-						if (!display.readAndDispatch()) {							
-							display.sleep();
-						}
-					}
-					
-					System.out.println("Disposed");
-				}
-			});
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	 
+
 
 }
