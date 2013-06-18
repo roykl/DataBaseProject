@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Button;
 import runnableLogic.Grade;
 import runnableLogic.Search;
 import runnableLogic.UserUpdate;
+import viewModelLayer.InputVerifier;
 import viewModelLayer.MovieInfo;
 
 import org.eclipse.swt.events.SelectionAdapter;
@@ -144,9 +145,11 @@ public class MovieDetails extends Shell {
 			btnRankIt.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					int grade = userRank.getSelectionIndex() +1 ;
-					updateGrade(display, operations, idUser, grade);
-					updateLabel(display, operations);
+					if(!userRank.getText().equals("")){
+						int grade = Integer.parseInt(userRank.getText());
+						updateGrade(display, operations, idUser, grade);
+						updateLabel(display, operations);
+					}
 				}
 			});
 			btnRankIt.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
@@ -247,6 +250,7 @@ public class MovieDetails extends Shell {
 			lblYear.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
 
 			txtLanguage = new Text(composite_3, SWT.BORDER);
+			txtLanguage.setToolTipText("Enter a language. Please use Capital letter at the beginning of the word");
 			txtLanguage.setBounds(10, 106, 138, 27);
 
 			txtLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
@@ -295,6 +299,13 @@ public class MovieDetails extends Shell {
 						lang ="";
 					if(txtLanguage.getText().equals(lang))
 						return;
+					else if (!InputVerifier.verifyInput(txtLanguage.getText()) || !InputVerifier.verifyInjection(txtLanguage.getText())){
+						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+						messageBox.setText("Illegal Language");
+						messageBox.setMessage("Language is Illegal");
+						messageBox.open();	
+						return;
+					}
 					else
 					{
 						update(operations, "Movie", movie.idMovie, movie.idLanguage, "idLanguage", txtLanguage.getText(), null, display);
@@ -313,6 +324,13 @@ public class MovieDetails extends Shell {
 						dire = "";
 					if(txtDirector.getText().equals(dire))
 						return;
+					else if (!InputVerifier.verifyInput(txtDirector.getText()) || !InputVerifier.verifyInjection(txtDirector.getText())){
+						MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+						messageBox.setText("Illegal Director");
+						messageBox.setMessage("Director name is Illegal");
+						messageBox.open();	
+						return;
+					}
 					else
 						display.syncExec(new Search(operations, "Distinct idDirector", "Director", "directorName = '" + txtDirector.getText() +"'"){
 							@Override
@@ -324,29 +342,29 @@ public class MovieDetails extends Shell {
 										int idDirector = res.getInt(1);
 
 										UserUpdate update = new UserUpdate(operations, "Movie", movie.idMovie, movie.idDirector, "idDirector", idDirector);
-											
-											
-												update.run();
-												int returnVal;
-												returnVal = update.getValue();
 
-												if (returnVal==1){
-													MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
-													messageBox.setText("Your changes have been saved!\nChanges will apply on next search");
-													messageBox.setMessage("Successfully Updated!");
-													messageBox.open();
-												}
-												else if(returnVal == 0){
-													MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
-													messageBox.setText("Error");
-													messageBox.setMessage("Value must exist in our  data.");
-													messageBox.open();
 
-												}
-											
-										
-									
-										
+										update.run();
+										int returnVal;
+										returnVal = update.getValue();
+
+										if (returnVal==1){
+											MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
+											messageBox.setText("Your changes have been saved!\nChanges will apply on next search");
+											messageBox.setMessage("Successfully Updated!");
+											messageBox.open();
+										}
+										else if(returnVal == 0){
+											MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
+											messageBox.setText("Error");
+											messageBox.setMessage("Value must exist in our  data.");
+											messageBox.open();
+
+										}
+
+
+
+
 									}else{
 										MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 										messageBox.setText("Error");
@@ -361,7 +379,7 @@ public class MovieDetails extends Shell {
 								}
 							}
 						});
-					
+
 				}
 			});
 			buttonDirector.setText("Update");

@@ -338,8 +338,8 @@ public class MainMenu extends Shell {
 				display.syncExec(new Runnable() {
 					@Override
 					public void run(){
-						//System.out.println("im in progress bar thread before while");
-						setEnabledRecursive(display.getActiveShell(), false);
+						
+						
 						//import thread
 						SearchQueries sq = new SearchQueries();
 
@@ -349,24 +349,28 @@ public class MainMenu extends Shell {
 							System.out.println("user didn't enter movie name");
 
 							//check director name is correct
-							if(!text.getText().trim().isEmpty() && !InputVerifier.verifyInput(text.getText())){
+							if(!text.getText().trim().isEmpty() && (!InputVerifier.verifyInput(text.getText()) ||
+									!InputVerifier.verifyInjection(text.getText()))){
 								// director was entered but it's not correct
 								MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 								messageBox.setText("Illegal Director Name");
-								messageBox.setMessage("Director Name should not contain ' or " + '"');
+								messageBox.setMessage("Director Name is Illegal");
 								messageBox.open();	
 								return;
 							}
 
 							//check actor name is correct
-							if((!actorTxtBox1.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox1.getText()))
-									|| (!actorTxtBox2.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox2.getText()))
-									|| (!actorTxtBox3.getText().trim().isEmpty() &&  !InputVerifier.verifyInput(actorTxtBox3.getText()))){
+							if((!actorTxtBox1.getText().trim().isEmpty() && (!InputVerifier.verifyInput(actorTxtBox1.getText())
+									|| !InputVerifier.verifyInjection(actorTxtBox1.getText())))
+									|| (!actorTxtBox2.getText().trim().isEmpty() && (!InputVerifier.verifyInput(actorTxtBox2.getText())
+											|| !InputVerifier.verifyInjection(actorTxtBox2.getText())))
+									|| (!actorTxtBox3.getText().trim().isEmpty() &&(!InputVerifier.verifyInput(actorTxtBox3.getText())
+											|| !InputVerifier.verifyInjection(actorTxtBox3.getText())))){
 								// actor was added but it's not correct
 
 								MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 								messageBox.setText("Illegal Actor Name");
-								messageBox.setMessage("Actor Name should not contain ' or " + '"');
+								messageBox.setMessage("Actor Name is Illegal");
 								messageBox.open();	
 								return;						
 							}
@@ -395,7 +399,7 @@ public class MainMenu extends Shell {
 							System.out.println("WHERE- " + sq.whereProp);
 
 
-
+							setEnabledRecursive(display.getActiveShell(), false);
 							Thread search1 = new Thread (new Search(operations, sq.selectProp, sq.fromProp, sq.whereProp){
 								@Override
 								public void run(){
@@ -421,11 +425,11 @@ public class MainMenu extends Shell {
 							// user enter movieName 
 							//enteredMovieName = true;
 							// verify that the input is ok
-							if (!InputVerifier.verifyInput(txtMovieTitle.getText())){
+							if (!InputVerifier.verifyInput(txtMovieTitle.getText()) || !InputVerifier.verifyInjection(txtMovieTitle.getText())){
 								// input not ok
 								MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 								messageBox.setText("Illegal Movie Title");
-								messageBox.setMessage("Movie Title should not contain ' or " + '"');
+								messageBox.setMessage("Movie Title is Illegal");
 								messageBox.open();	
 								return;
 							}

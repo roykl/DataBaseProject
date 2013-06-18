@@ -26,6 +26,7 @@ import db.JDBCConnectionPooling;
 
 import runnableLogic.Search;
 import runnableLogic.UserUpdate;
+import viewModelLayer.InputVerifier;
 import viewModelLayer.MovieInfo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -152,7 +153,7 @@ public class AddRemoveWindow extends Shell {
 			@Override
 			//commit pressed
 			public void widgetSelected(SelectionEvent arg0) {
-				if(editorText.getText().equals("")){
+				if(editorText.getText().equals("") || !InputVerifier.verifyInput(editorText.getText()) || !InputVerifier.verifyInjection(editorText.getText())){
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 					messageBox.setText("Warning");
 					messageBox.setMessage("Value must exists in actors repository.");
