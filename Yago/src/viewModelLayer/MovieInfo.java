@@ -21,23 +21,13 @@ import com.google.gdata.data.youtube.YouTubeMediaGroup;
 import com.google.gdata.util.ServiceException;
 
 import parsing.Person;
-//import youTube.YouTubeMedia;
-//import youTube.YouTubeVideo;
 
+/**
+ * Create an object with all the data we need about
+ * a movie. We get the information from the data base
+ * and then we show all details in the gui
+ */
 public class MovieInfo {
-
-	@Override
-	public String toString() {
-		return "MovieInfo [idMovie=" + idMovie + ", movieName=" + movieName
-				+ ", idLanguage=" + idLanguage + ", language=" + language
-				+ ", idDirector=" + idDirector + ", directorName="
-				+ directorName + ", year=" + year + ", wikiUrl=" + wikiUrl
-				+ ", duration=" + duration + ", plot=" + plot + ", grade="
-				+ grade + ", numRankers=" + numRankers + ", actorsList="
-				+ actorsList + ", genresList=" + genresList + ", youtubeUrl="
-				+ youtubeUrl + ", posterUrl=" + posterUrl + "]";
-	}
-
 
 	public int idMovie;
 	public String movieName;
@@ -56,6 +46,8 @@ public class MovieInfo {
 	public String youtubeUrl;
 	public String posterUrl;
 
+	
+	/** add the youTube URL of that movie (find it via youtube api- searching <movieName> + <year> + <"trailer"> **/
 	public void addYoutubeUrl(String movieName, String year) {
 		/** get the trailer of the <movieName> */
 
@@ -68,8 +60,7 @@ public class MovieInfo {
 			e.printStackTrace();
 		}
 
-		// get the video with max number of views (most viewed first)
-		//query.setOrderBy(YouTubeQuery.OrderBy.VIEW_COUNT);
+		// return only ine result (the first movie in the youtube list
 		query.setMaxResults(1);
 
 		// search for movie trailer and include restricted content in the search results
@@ -109,7 +100,7 @@ public class MovieInfo {
 		}		
 	}
 
-
+    /** get the poster url of the movie **/
 	public void addPosterUrl(String movieName) {
 		int i;
 		String posterUrl;
@@ -134,6 +125,19 @@ public class MovieInfo {
 			this.posterUrl= null;
 		}
 
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "MovieInfo [idMovie=" + idMovie + ", movieName=" + movieName
+				+ ", idLanguage=" + idLanguage + ", language=" + language
+				+ ", idDirector=" + idDirector + ", directorName="
+				+ directorName + ", year=" + year + ", wikiUrl=" + wikiUrl
+				+ ", duration=" + duration + ", plot=" + plot + ", grade="
+				+ grade + ", numRankers=" + numRankers + ", actorsList="
+				+ actorsList + ", genresList=" + genresList + ", youtubeUrl="
+				+ youtubeUrl + ", posterUrl=" + posterUrl + "]";
 	}
 
 }

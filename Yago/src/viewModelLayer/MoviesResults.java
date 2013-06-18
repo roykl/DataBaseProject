@@ -5,11 +5,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * This class get many result sets from the DB
+ * And with the methods in it creates moviesResult list
+ * of MovieInfo.
+ */
 public class MoviesResults {
 
-	static ArrayList<MovieInfo> moviesResult = new ArrayList<MovieInfo>(); 
+	ArrayList<MovieInfo> moviesResult; 
+	
+	/** constructor **/
+	public MoviesResults(){
+		this.moviesResult = new ArrayList<MovieInfo>();
+	}
 
+	/** add information about the movie (still no info from the many-to-many table) */
 	public void setResultsMoive(ResultSet results){
 		try {
 			while(results.next()){				
@@ -42,6 +52,7 @@ public class MoviesResults {
 		}	
 	}
 
+	/** add information about the actors playing in that movie */
 	public void setResultsActors(ResultSet results){
 		try {
 			while (results.next()){
@@ -54,8 +65,17 @@ public class MoviesResults {
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				results.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
+	/** add information about the actors playing in that movie */
 	private MovieInfo getMovieInfo(int idMovie) {
 		for(MovieInfo m : moviesResult){
 			if (m.idMovie == idMovie){
@@ -65,6 +85,7 @@ public class MoviesResults {
 		return null;
 	}
 
+	/** add information about the Genres of that movie */
 	public void setResultsGenre(ResultSet results){
 		try {
 			while (results.next()){
@@ -77,8 +98,17 @@ public class MoviesResults {
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				results.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
+	/** add youtube and url poster */
 	public void addYoutubeAndPoster(){
 		for(MovieInfo m: moviesResult){
 			m.addYoutubeUrl(m.movieName, m.year);
@@ -86,6 +116,7 @@ public class MoviesResults {
 		}
 	}
 
+	/** getter */
 	public ArrayList<MovieInfo> getMoviesResult(){
 		return moviesResult;
 	}

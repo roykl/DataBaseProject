@@ -8,9 +8,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TableItem;
 
+/**
+ * Create the search queries for the DB
+ * after user press the search button
+ * most of the search queries depends on 
+ * the user input
+ */
 public class SearchQueries {
 
-	public static final String MOVIE_SELECT = "Movie.idMovie, movieName, Movie.idLanguage, LanguageName, Movie.idDirector, directorName, year, wiki," +
+	public static final String MOVIE_SELECT = "DISTINCT Movie.idMovie, movieName, Movie.idLanguage, LanguageName, Movie.idDirector, directorName, year, wiki," +
 			"duration, plot, grade, numberOfRankers";
 
 	public static final String MOVIE_FROM = "Movie LEFT OUTER JOIN Language ON " +
@@ -34,11 +40,11 @@ public class SearchQueries {
 	public String whereProp = "";
 	public boolean preformSearch = true;
 
-	public SearchQueries(){
-		
+	public SearchQueries(){		
 	}
 	
-	public  ArrayList<String> createGenreWhere(TableItem[] genres){
+	/** create the where with the genres get fron the user input*/
+	public ArrayList<String> createGenreWhere(TableItem[] genres){
 		ArrayList<String> genreList = new ArrayList<String>();
 		for (TableItem ti: genres){
 			if(ti.getChecked())
@@ -48,8 +54,8 @@ public class SearchQueries {
 		return genreList;
 	}
 
-
-	public  boolean createWheres(String movieName){
+	/**create WHERE with the movie name */
+	public boolean createWheres(String movieName){
 		boolean enteredMoive = movieName.trim().isEmpty()? false : true;
 		if (enteredMoive){ // if entered a movie, find that movie
 			whereMovie = "Movie.movieName LIKE '%" + movieName +"%'";
@@ -58,14 +64,15 @@ public class SearchQueries {
 			whereActor =  "Movie.movieName LIKE '%" + movieName +"%'" +
 					" AND ActorMovie.idMovie = Movie.idMovie AND ActorMovie.idActor = Actor.idactor";
 
-			System.out.println("user entered movie name!!!!");
 			return true;
 		}
 		else return false;
 
 	}
 
-
+	/**if the user didn't search by movie name, we create the "WHERE" with
+	 * the properties he entered
+	 */
 	public void createWheresFromProperties(TableItem[] genreItems,
 			String directorName, String actor1, String actor2, String actor3,
 			int yearFrom, int yearTo, String language) {
@@ -219,9 +226,8 @@ public class SearchQueries {
 
 	}
 
-
-
-
+	/**if many movies returned from db, we create the FROM here
+	 * in order to get all the details for those movies */
 	public void createFromMoviesIds(ResultSet moviesIds) {
 		boolean isFirst = true;
 		try {			
