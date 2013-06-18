@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.browser.Browser;
+
 import viewModelLayer.MovieInfo;
 
 public class TrailerWindow extends Shell {

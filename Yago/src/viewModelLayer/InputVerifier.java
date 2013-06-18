@@ -25,6 +25,15 @@ public class InputVerifier {
 		else return true;
 	}
 	
+	public static boolean verifyInjection(String input){
+		if((input.toLowerCase().contains("select") && input.toLowerCase().contains("from"))
+				|| (input.toLowerCase().contains("delete") && input.toLowerCase().contains("from"))
+				|| (input.toLowerCase().contains("insert") && input.toLowerCase().contains("into"))
+				|| (input.toLowerCase().contains("update") && input.toLowerCase().contains("set")))
+			return false;
+		else return true;
+	}
+	
 	/** verify the correctness of the year */
 	public static boolean validateYear(int from, int to){
 		if (from > to || from > 2013 || (from < 1901 && to > 2013))

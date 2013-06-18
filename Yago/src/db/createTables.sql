@@ -103,6 +103,8 @@ CREATE TABLE `UsersMovies` (
   CONSTRAINT `idUser` FOREIGN KEY (`idUser`) REFERENCES `Users` (`idUsers`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO Users Values (92668751 ,'admin', 'admin' , 92668751);
+
 
 
 

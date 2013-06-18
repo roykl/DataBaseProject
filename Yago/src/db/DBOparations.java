@@ -201,14 +201,6 @@ public class DBOparations implements IdbOparations {
 				parser.parse();
 				moviesList = parser.getMoviesTable();
 
-//		try {
-//			moviesList = (HashMap<String, Movie>) TestConsole
-//					.getObjFromFile("C:\\Users\\Roy\\Dropbox\\DB Project\\object");
-//		} catch (ClassNotFoundException e2) {		
-//			e2.printStackTrace();
-//		} catch (IOException e2) {		
-//			e2.printStackTrace();
-//		}
 
 		// get the connection and statement
 		Connection conn = getConnection();
@@ -292,6 +284,8 @@ public class DBOparations implements IdbOparations {
 			genreMovieStmt.executeBatch();
 			actorMovieStmt.executeBatch();
 			stmt = getStatement(conn);
+			
+			conn.commit();
 
 			//check for updates made by users and update the tables accordingly
 			commitUpdates(stmt);
@@ -597,6 +591,14 @@ public class DBOparations implements IdbOparations {
 		catch (SQLException e) {
 			System.out.println("Updates Failed");
 			e.printStackTrace();
+		}
+		finally{
+			try {
+				updateSet.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

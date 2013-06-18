@@ -290,12 +290,13 @@ public class MovieDetails extends Shell {
 			buttonLanguage.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-
-					if(txtLanguage.getText().equals(movie.language))
+					String lang = movie.language;
+					if(lang == null)
+						lang ="";
+					if(txtLanguage.getText().equals(lang))
 						return;
 					else
 					{
-
 						update(operations, "Movie", movie.idMovie, movie.idLanguage, "idLanguage", txtLanguage.getText(), null, display);
 					}
 				}
@@ -307,7 +308,10 @@ public class MovieDetails extends Shell {
 			buttonDirector.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					if(txtDirector.getText().equals(movie.directorName))
+					String dire = movie.directorName;
+					if(dire == null)
+						dire = "";
+					if(txtDirector.getText().equals(dire))
 						return;
 					else
 						display.syncExec(new Search(operations, "Distinct idDirector", "Director", "directorName = '" + txtDirector.getText() +"'"){
@@ -319,25 +323,17 @@ public class MovieDetails extends Shell {
 									if (res.next()){
 										int idDirector = res.getInt(1);
 
-										Thread t1 = new Thread(new UserUpdate(operations, "Movie", movie.idMovie, movie.idDirector, "idDirector", idDirector){
-											@Override
-											public void run(){
-												super.run();
+										UserUpdate update = new UserUpdate(operations, "Movie", movie.idMovie, movie.idDirector, "idDirector", idDirector);
+											
+											
+												update.run();
 												int returnVal;
-												returnVal = this.getValue();
+												returnVal = update.getValue();
 
-												//										try {
-												//											t1.join();
-												//										} catch (InterruptedException e) {
-												//											// TODO Auto-generated catch block
-												//											e.printStackTrace();
-												//										}
-
-												//t1.interrupt();
 												if (returnVal==1){
 													MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
-													messageBox.setText("Your changes have been saved!");
-													messageBox.setMessage("successfully Updated!");
+													messageBox.setText("Your changes have been saved!\nChanges will apply on next search");
+													messageBox.setMessage("Successfully Updated!");
 													messageBox.open();
 												}
 												else if(returnVal == 0){
@@ -347,10 +343,10 @@ public class MovieDetails extends Shell {
 													messageBox.open();
 
 												}
-											}
-										});
-										t1.start();
-
+											
+										
+									
+										
 									}else{
 										MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 										messageBox.setText("Error");
@@ -365,6 +361,7 @@ public class MovieDetails extends Shell {
 								}
 							}
 						});
+					
 				}
 			});
 			buttonDirector.setText("Update");
@@ -494,7 +491,7 @@ public class MovieDetails extends Shell {
 				if (returnVal==OK){
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_INFORMATION);
 					messageBox.setText("Your changes have been saved!");
-					messageBox.setMessage("successfully Updated!");
+					messageBox.setMessage("Successfully Updated!\nChanges will apply on next search");
 					messageBox.open();
 				}
 				else if(returnVal == ERR){

@@ -2,7 +2,10 @@ package gui;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import gui.SWTResourceManager;
+
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -16,14 +19,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
 import db.DBOparations;
 import db.IdbOparations;
 import db.JDBCConnectionPooling;
+
 import runnableLogic.Search;
 import runnableLogic.UserUpdate;
 import viewModelLayer.MovieInfo;
 import org.eclipse.swt.widgets.Label;
-
+import org.eclipse.swt.widgets.List;
 
 public class AddRemoveWindow extends Shell {
 	private Text editorText;
@@ -75,6 +80,7 @@ public class AddRemoveWindow extends Shell {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
+	int newVal;
 	/**
 	 * Create the shell.
 	 * @param display
@@ -100,6 +106,7 @@ public class AddRemoveWindow extends Shell {
 		txtPleaseEnterValue.setBounds(147, 157, 285, 26);
 
 		editorText = new Text(composite_2, SWT.BORDER | SWT.WRAP);
+		editorText.setToolTipText("Please use Capital letter in the beginning of every word");
 		editorText.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		editorText.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 		editorText.setBounds(147, 198, 483, 46);
@@ -157,7 +164,7 @@ public class AddRemoveWindow extends Shell {
 
 					display.syncExec(new Search(operations,"idActor","Actor","actorName = '" + editorText.getText()+ "'"){
 
-						int newVal;
+						
 						@Override
 						public void run(){
 
@@ -165,18 +172,24 @@ public class AddRemoveWindow extends Shell {
 							super.run();
 
 							result = this.getResult();
-
-
-
-							try {
-														
-
-								newVal = result.getInt("idActor");
-
-
-							} catch (SQLException e) {}
-
-							commit(btnRadioButton.getSelection(), btnActor.getSelection(), display, operations, newVal);
+							
+								try {
+															
+									result.next();
+									 newVal = result.getInt("idActor");
+									System.out.println(newVal+ "new valllll");
+									commit(btnRadioButton.getSelection(), btnActor.getSelection(), display, operations, newVal);
+								} catch (SQLException e) {}
+							
+								finally{
+									try {
+										result.close();
+									} catch (SQLException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							
 
 						}
 					});	
@@ -216,7 +229,7 @@ public class AddRemoveWindow extends Shell {
 		final String message2 = actor ? "actors":"genres";
 
 
-
+System.out.println("******************" + newVal);
 		display.syncExec(new UserUpdate(operations,table,firstKey,secondKey,column,newVal){
 			@Override
 			public void run(){
@@ -232,7 +245,7 @@ public class AddRemoveWindow extends Shell {
 				else if(returnVal == ERR){
 					MessageBox messageBox =  new MessageBox(display.getActiveShell(), SWT.ICON_WARNING);
 					messageBox.setText(add ? "Insert":"Delete");
-					messageBox.setMessage("Value must exists in "+ message2 + " repository.");
+					messageBox.setMessage("Illegal value.");
 					messageBox.open();
 
 				}
