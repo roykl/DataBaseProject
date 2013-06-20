@@ -244,8 +244,7 @@ public class DBOparations implements IdbOparations {
 			int  count =0;
 			//update the tables 
 			for (Movie movie : moviesList.values()) {
-//								if(count>1000)
-//									break;
+
 				count++;
 
 				// calculate movieHashValue to be the idMovie and insert it to the table
@@ -589,7 +588,7 @@ public class DBOparations implements IdbOparations {
 			}
 		}
 		catch (SQLException e) {
-			System.out.println("Updates Failed");
+			System.out.println("Failed to merge the users Updates");
 			e.printStackTrace();
 		}
 		finally{

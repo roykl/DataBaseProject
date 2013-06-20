@@ -36,6 +36,11 @@ public class TestConsole {
 
 public static void main(String[] args) throws IOException, SQLException {
 	
+	Configuration c = new Configuration();
+	System.out.println(c.getImdbGenres());
+	System.out.println(c.getImdbPlot());
+	System.out.println(c.getImdblanguage());
+	
 //	viewModelLayer.MovieInfo mi = new viewModelLayer.MovieInfo(); 
 //	mi.directorName ="fdsafas";
 //	mi.movieName = "walk on water movie";

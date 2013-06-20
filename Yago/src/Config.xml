@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Parsing>
-		<YagoSimpleTypesFilePath>c:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
-		<YagoFactsFilePath>c:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
-		<YagoLiteralFactsFilePath>c:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
-		<YagoWikipediaInfoFilePath>c:\Users\Roy\Dropbox\DB Project\Yago Tables\yagoWikipediaInfo.ttl</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->
-		<IMDBgenreListFilePath> </IMDBgenreListFilePath> <!-- genres.list file path. if empty, use the file attached with the application  -->
-		<IMDBplotListFilePath> </IMDBplotListFilePath> <!-- plot.list file path. if empty, use the file attached with the application  -->
-		<IMDBlanguageFilePat> </IMDBlanguageFilePat> <!-- language.list file path. if empty, use the file attached with the application  -->	 
+		<YagoSimpleTypesFilePath>C:\Users\Roy\Desktop\ToBurn\Required files\yagoSimpleTypes.ttl</YagoSimpleTypesFilePath> <!-- yagoSimpleTypes.ttl file path -->
+		<YagoFactsFilePath>C:\Users\Roy\Desktop\ToBurn\Required files\yagoFacts.ttl</YagoFactsFilePath> <!-- yagoFacts.ttl file path -->
+		<YagoLiteralFactsFilePath>C:\Users\Roy\Desktop\ToBurn\Required files\yagoLiteralFacts.ttl</YagoLiteralFactsFilePath> <!-- yagoLiteralFacts.ttl file path -->
+		<YagoWikipediaInfoFilePath>C:\Users\Roy\Desktop\ToBurn\Required files\yagoWikipediaInfo.ttl</YagoWikipediaInfoFilePath> <!-- yagoWikipediaInfo.ttl file path -->
+		<IMDBgenreListFilePath>C:\Users\Roy\Desktop\ToBurn\Required files\genres.list</IMDBgenreListFilePath> <!-- genres.list file path. if empty, use the file attached with the application  -->
+		<IMDBplotListFilePath>C:\Users\Roy\Desktop\ToBurn\Required files\plot.list</IMDBplotListFilePath> <!-- plot.list file path. if empty, use the file attached with the application  -->
+		<IMDBlanguageFilePat>C:\Users\Roy\Desktop\ToBurn\Required files\language.list</IMDBlanguageFilePat> <!-- language.list file path. if empty, use the file attached with the application  -->	 
 	</Parsing>
 	<DB>
 		<Host>localhost</Host>
-		<Port>3306</Port>
+		<Port>3305</Port>
 		<DbName>DbMysql05</DbName>
-		<UserName>root</UserName>
-		<Password>61088</Password>
-		<NumOfConnections>1</NumOfConnections>
+		<UserName>DbMysql05</UserName>
+		<Password>DbMysql05</Password>
+		<NumOfConnections>2</NumOfConnections>
 	</DB>
 </Configuration>

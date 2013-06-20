@@ -115,7 +115,12 @@ public class IMDBParser {
 	 **/
 	private void parsePlot(){
 		//set the file path
-		String filePath = currentDir+"\\"+PLOT_FILE;
+		String filePath;
+		if (settings.getImdbPlot() == null || settings.getImdbPlot().length() < 3)
+			filePath = currentDir + "\\" + PLOT_FILE;
+		else
+			// take it from the current directory
+			filePath = settings.getImdbPlot();
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(filePath));	
 			boolean listStartReached = false;
@@ -166,7 +171,12 @@ public class IMDBParser {
 	 **/
 	private void parseLanguage(){
 		//set the file path
-		String filePath = currentDir+"\\"+LANGUAGE_FILE;
+		String filePath;
+		if (settings.getImdblanguage() == null || settings.getImdblanguage().length() < 3)
+			filePath = currentDir + "\\" + LANGUAGE_FILE;
+		else
+			// take it from the current directory
+			filePath = settings.getImdblanguage();
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
 			boolean listStartReached = false;
